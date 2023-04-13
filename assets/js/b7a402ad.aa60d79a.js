@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdfx_website=self.webpackChunkdfx_website||[]).push([[6433],{3635:e=>{e.exports=JSON.parse('{"label":"docusaurus","permalink":"/dfx-website-new/blog/tags/docusaurus","allTagsPath":"/dfx-website-new/blog/tags","count":4}')}}]);
