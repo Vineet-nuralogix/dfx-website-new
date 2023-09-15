@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkdfx_website=self.webpackChunkdfx_website||[]).push([[9726],{781:e=>{e.exports=JSON.parse('{"permalink":"/dfx-website-new/blog/tags/hello","page":1,"postsPerPage":10,"totalPages":1,"totalCount":2,"blogDescription":"Blog","blogTitle":"Blog"}')}}]);
