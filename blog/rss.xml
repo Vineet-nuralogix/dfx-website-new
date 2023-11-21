@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
     <channel>
         <title>DeepAffex™ Blog</title>
-        <link>https://deepaffex.ai/blog</link>
+        <link>https://deepaffex.ai/dfx-website-new/blog</link>
         <description>DeepAffex™ Blog</description>
         <lastBuildDate>Fri, 01 Dec 2023 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
@@ -10,8 +10,8 @@
         <language>en</language>
         <item>
             <title><![CDATA[Welcome]]></title>
-            <link>https://deepaffex.ai/blog/first-blog-post</link>
-            <guid>https://deepaffex.ai/blog/first-blog-post</guid>
+            <link>https://deepaffex.ai/dfx-website-new/blog/first-blog-post</link>
+            <guid>https://deepaffex.ai/dfx-website-new/blog/first-blog-post</guid>
             <pubDate>Fri, 01 Dec 2023 00:00:00 GMT</pubDate>
             <description><![CDATA[Welcome to the DeepAffex’s official blog. We are thrilled to have you join us]]></description>
             <content:encoded><![CDATA[<main><div><div></div></div></main><br><p>Welcome to the <strong>DeepAffex’s</strong> official blog. We are thrilled to have you join us

@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-    <id>https://deepaffex.ai/blog</id>
+    <id>https://deepaffex.ai/dfx-website-new/blog</id>
     <title>DeepAffex™ Blog</title>
     <updated>2023-12-01T00:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
-    <link rel="alternate" href="https://deepaffex.ai/blog"/>
+    <link rel="alternate" href="https://deepaffex.ai/dfx-website-new/blog"/>
     <subtitle>DeepAffex™ Blog</subtitle>
-    <icon>https://deepaffex.ai/img/favicon.ico</icon>
+    <icon>https://deepaffex.ai/dfx-website-new/img/favicon.ico</icon>
     <entry>
         <title type="html"><![CDATA[Welcome]]></title>
-        <id>https://deepaffex.ai/blog/first-blog-post</id>
-        <link href="https://deepaffex.ai/blog/first-blog-post"/>
+        <id>https://deepaffex.ai/dfx-website-new/blog/first-blog-post</id>
+        <link href="https://deepaffex.ai/dfx-website-new/blog/first-blog-post"/>
         <updated>2023-12-01T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[Welcome to the DeepAffex’s official blog. We are thrilled to have you join us]]></summary>
         <content type="html"><![CDATA[<main><div><div></div></div></main><br><p>Welcome to the <strong>DeepAffex’s</strong> official blog. We are thrilled to have you join us
