@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdfx_website=self.webpackChunkdfx_website||[]).push([[844],{1208:e=>{e.exports=JSON.parse('{"label":"introduction","permalink":"/dfx-website-new/blog/tags/introduction","allTagsPath":"/dfx-website-new/blog/tags","count":1}')}}]);

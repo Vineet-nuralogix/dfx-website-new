@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://deepaffex.ai/dfx-website-new/blog</id>
+    <title>DeepAffex® Blog</title>
+    <updated>2023-12-01T00:00:00.000Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://deepaffex.ai/dfx-website-new/blog"/>
+    <subtitle>DeepAffex® Blog</subtitle>
+    <icon>https://deepaffex.ai/dfx-website-new/img/favicon.ico</icon>
+    <entry>
+        <title type="html"><![CDATA[Welcome]]></title>
+        <id>https://deepaffex.ai/dfx-website-new/blog/first-blog-post</id>
+        <link href="https://deepaffex.ai/dfx-website-new/blog/first-blog-post"/>
+        <updated>2023-12-01T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[Welcome to the DeepAffex’s official blog. We are thrilled to have you join us]]></summary>
+        <content type="html"><![CDATA[<main><div><div></div></div></main><br><p>Welcome to the <strong>DeepAffex’s</strong> official blog. We are thrilled to have you join us
+on this journey as we explore the fascinating intersection of technology and
+healthcare, and how it is transforming the way we monitor and understand our
+well-being.</p><p>In today's rapidly evolving world, technology plays an increasingly vital role in
+our lives, and healthcare is no exception. The convergence of artificial intelligence,
+computer vision, and healthcare has given rise to revolutionary solutions that
+were once the stuff of science fiction. At <strong>NuraLogix®</strong>, we are at the forefront
+of this revolution, and we are excited to share our insights, discoveries, and
+innovations with you through this blog.</p><h2 class="anchor anchorWithStickyNavbar_LWe7" id="what-well-talk-about">What We'll Talk About:<a href="#what-well-talk-about" class="hash-link" aria-label="Direct link to What We'll Talk About:" title="Direct link to What We'll Talk About:">​</a></h2><p>Our blog will be a hub of knowledge and exploration, where we'll delve into various
+facets of our groundbreaking technology, including:</p><ul><li><p><strong>Important updates:</strong> We will discuss any important upcoming updates that we
+plan to release or any information that we feel can be helpful to our users.</p></li><li><p><strong>Video-Based Health Assessment:</strong> We will explain the core principles and
+intricacies of our technology, how it works, and its immense potential to predict
+human health parameters using nothing but a video of your face.</p></li><li><p><strong>The Science Behind It:</strong> Dive into the science that power our system. We'll
+break down complex concepts into digestible insights, making it accessible to
+all.</p></li><li><p><strong>Real-World Applications:</strong> Discover how video-based health assessment is being
+applied across diverse sectors, from healthcare facilities to fitness centers
+and beyond. Explore the real-life impact and stories of individuals whose lives
+have been transformed.</p></li><li><p><strong>Privacy and Ethical Considerations:</strong> We take your privacy seriously. Learn
+about the measures we have in place to ensure data security and the ethical
+considerations that guide our technology development.</p></li><li><p><strong>Health &amp; Wellness Insights:</strong> Stay updated with the latest advancements in
+health monitoring and wellness tracking. We'll share expert advice and tips on
+how to use technology to live a healthier life.</p></li><li><p><strong>Industry Trends:</strong> Get a pulse on the ever-evolving landscape of healthcare
+technology. We'll keep you informed about the latest trends, breakthroughs,
+and innovations.</p></li></ul><h2 class="anchor anchorWithStickyNavbar_LWe7" id="why-subscribe">Why Subscribe:<a href="#why-subscribe" class="hash-link" aria-label="Direct link to Why Subscribe:" title="Direct link to Why Subscribe:">​</a></h2><p>By subscribing to our blog, you will be notified whenever we will publish a new
+blog post. Moreover, you'll become part of a thriving community passionate about
+health technology and innovation.</p><p>So, whether you're a healthcare professional, a tech enthusiast, or simply someone
+curious about the future of healthcare, we invite you to embark on this exciting
+journey with us. Together, we'll explore the limitless possibilities that video-based
+health assessment technology offers.</p><p>Stay tuned for our upcoming articles and be part of the conversation that is shaping
+the future of healthcare. Subscribe today, and let's take a step into the future
+of health and wellness, one blog post at a time.</p><p>Thank you for visiting us, and we can't wait to share this exciting journey with
+you!</p>]]></content>
+        <author>
+            <name>Vineet Puri</name>
+            <uri>https://github.com/Vineet-nuralogix</uri>
+        </author>
+        <category label="deepaffex" term="deepaffex"/>
+        <category label="introduction" term="introduction"/>
+    </entry>
+</feed>

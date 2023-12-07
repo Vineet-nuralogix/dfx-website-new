@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://deepaffex.ai/dfx-website-new/blog</id>
-    <title>DeepAffex™ Blog</title>
+    <title>DeepAffex® Blog</title>
     <updated>2023-12-01T00:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://deepaffex.ai/dfx-website-new/blog"/>
-    <subtitle>DeepAffex™ Blog</subtitle>
+    <subtitle>DeepAffex® Blog</subtitle>
     <icon>https://deepaffex.ai/dfx-website-new/img/favicon.ico</icon>
     <entry>
         <title type="html"><![CDATA[Welcome]]></title>
@@ -19,7 +19,7 @@ healthcare, and how it is transforming the way we monitor and understand our
 well-being.</p><p>In today's rapidly evolving world, technology plays an increasingly vital role in
 our lives, and healthcare is no exception. The convergence of artificial intelligence,
 computer vision, and healthcare has given rise to revolutionary solutions that
-were once the stuff of science fiction. At <strong>NuraLogix</strong>, we are at the forefront
+were once the stuff of science fiction. At <strong>NuraLogix®</strong>, we are at the forefront
 of this revolution, and we are excited to share our insights, discoveries, and
 innovations with you through this blog.</p><h2 class="anchor anchorWithStickyNavbar_LWe7" id="what-well-talk-about">What We'll Talk About:<a href="#what-well-talk-about" class="hash-link" aria-label="Direct link to What We'll Talk About:" title="Direct link to What We'll Talk About:">​</a></h2><p>Our blog will be a hub of knowledge and exploration, where we'll delve into various
 facets of our groundbreaking technology, including:</p><ul><li><p><strong>Important updates:</strong> We will discuss any important upcoming updates that we
@@ -50,6 +50,6 @@ you!</p>]]></content>
             <uri>https://github.com/Vineet-nuralogix</uri>
         </author>
         <category label="deepaffex" term="deepaffex"/>
-        <category label="blog" term="blog"/>
+        <category label="introduction" term="introduction"/>
     </entry>
 </feed>
