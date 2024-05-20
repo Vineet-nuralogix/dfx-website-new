@@ -1,0 +1,39 @@
+const settings = {
+  measurementGraphicsStyles: {
+    circle: {
+      radiusToframeHeight: 0.5,
+      offset: 10
+    },
+    colors: {
+      polygon: "#FF0000",
+      curves: "#00FF00",
+      histogram: {
+        mesurementStoped: "#0000FF",
+        mesurementStarted: "#FFFF00",
+        invalidSNR: "#FF00FF"
+      },
+      circle: {
+        mesurementStoped: "#00FFFF",
+        mesurementStarted: "#000000"
+      },
+      annotations: {
+        warn: "#FFA500",
+        normal: "#008000"
+      },
+      heart: "#FF69B4",
+      filledStar: "#FFD700",
+      outlineStar: "#C0C0C0"
+    },
+    secondsRemainingCircle: {
+      size: 30,
+      color: "#FFFFFF",
+      font: "Arial"
+    }
+  },
+  settings: {
+    security: {
+      publicKey: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1u3AN85ds2W+gJ64kNnyftFEvCc+BoHvqb67/cNliOC55p9VXaAe79KJ1YnvF8hdIWPXxpGbRpHEf4GBcm+VClg2d2r6GRE+OG0N1OSWeLdWy7do8jfv2rP6CbGCnyT21tBpw+shx5o6BOyZHl9hI11CLHC2pki+cXkT+KcbbkYeHg2Eh+UyjODvyRe0KB/hmxOcs2qZx8p5ACHY6k9FigaEvFoMd1YflgHKQRq70S6kXR0lZlE1H0mZTP7wNo7mIspYRLj+8jXIqXCreJHeNOFVDpQrEhVL0ymU6koLyGts0eLweS/Mn7QKGSbbYTMHD/48ZaqAr5lEwLS+33ZP9QIDAQAB",
+      encryptResults: true
+    }
+  }
+};
