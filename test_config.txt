@@ -32,7 +32,7 @@ const settings = {
   },
   settings: {
     security: {
-      publicKey: "VUXY51DshvnowWXMuUGdbk6cDp2Krz5A-dJbmUNO6ms",
+      publicKey: "zbcjhN34Iqjfn2OnksXHkUwjM3Xxa6lKmNJionwPWGk",
       encryptResults: true
     }
   }
