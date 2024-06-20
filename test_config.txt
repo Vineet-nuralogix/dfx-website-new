@@ -1,39 +1,8 @@
-const settings = {
-  measurementGraphicsStyles: {
-    circle: {
-      radiusToframeHeight: 0.5,
-      offset: 10
-    },
-    colors: {
-      polygon: "#FF0000",
-      curves: "#00FF00",
-      histogram: {
-        mesurementStoped: "#0000FF",
-        mesurementStarted: "#FFFF00",
-        invalidSNR: "#FF00FF"
-      },
-      circle: {
-        mesurementStoped: "#00FFFF",
-        mesurementStarted: "#000000"
-      },
-      annotations: {
-        warn: "#FFA500",
-        normal: "#008000"
-      },
-      heart: "#FF69B4",
-      filledStar: "#FFD700",
-      outlineStar: "#C0C0C0"
-    },
-    secondsRemainingCircle: {
-      size: 30,
-      color: "#FFFFFF",
-      font: "Arial"
+{
+    "settings": {
+        "security": {
+            "publicKey": "zbcjhN34Iqjfn2OnksXHkUwjM3Xxa6lKmNJionwPWGk",
+            "encryptResults": true
+        }
     }
-  },
-  settings: {
-    security: {
-      publicKey: "zbcjhN34Iqjfn2OnksXHkUwjM3Xxa6lKmNJionwPWGk",
-      encryptResults: true
-    }
-  }
-};
+}
