@@ -2,7 +2,7 @@
     "settings": {
         "security": {
             "publicKey": "yk_tyNx27bjoiZ3x_VofWWzCimCpiEVNITpD24IyniY",
-            "encryptResults": true
+            "encryptResults": "True"
         }
     }
 }
