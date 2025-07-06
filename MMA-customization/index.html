@@ -1,3 +1,4 @@
+<!-- filepath: c:\Users\VineetPuri\Documents\MMA customization project\index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,7 +14,6 @@
       padding: 0;
     }
 
-    /* Modern header styles */
     .main-header {
       width: 100%;
       display: flex;
@@ -33,7 +33,6 @@
       letter-spacing: 0.5px;
     }
 
-    /* Intro paragraph */
     .intro-section {
       max-width: 1200px;
       margin: 1rem auto 2rem;
@@ -46,27 +45,40 @@
       margin: 0.75rem 0 1rem;
     }
 
-    .column-container {
+    .screens-container {
       display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+
+    /* By default, columns are hidden (display: none) unless toggled on */
+    .column-container {
+      display: none;
       flex-direction: column;
       align-items: center;
       width: 33.3%;
       padding: 1rem;
       box-sizing: border-box;
       overflow-y: auto;
+      transform: scale(0);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      transform-origin: center center;
+    }
+    /* Add the .show class to animate them open */
+    .column-container.show {
+      transform: scale(1);
+      opacity: 1;
+      pointer-events: auto;
     }
 
-    /* 
-      Fixed-size MMA wrapper, scaled down at smaller breakpoints.
-    */
     .mma-wrapper {
       position: relative;
       width: 544px;
       height: 750px;
       margin-bottom: 2rem;
     }
-
-    /* Screen container offset inside the MMA frame */
     .screen-container {
       position: absolute;
       top: 120px;
@@ -78,7 +90,6 @@
       border: 1px solid #ccc;
       z-index: 1;
     }
-
     .mma-frame {
       position: absolute;
       top: 0;
@@ -89,7 +100,6 @@
       pointer-events: none;
       object-fit: contain;
     }
-
     .bottom-button {
       position: absolute;
       bottom: 23px;
@@ -98,12 +108,11 @@
       color: #fff;
       border: none;
       padding: 0.5rem 1rem;
-      /* Remove cursor pointer and disable clicks */
       border-radius: 15px;
       pointer-events: none;
     }
 
-    /* Results screen layering */
+    /* Results Screen items... */
     .result-heading {
       position: absolute;
       width: 200px;
@@ -146,17 +155,10 @@
       min-width: 90px;
       font-size: 0.85rem;
       border-radius: 15px;
-      /* Remove cursor pointer and disable clicks */
       pointer-events: none;
     }
 
-    /* New container for the columns */
-    .screens-container {
-      display: flex;
-      flex-direction: row;
-    }
-
-    /* Stack columns vertically, scale MMA down on smaller screens */
+    /* Responsive scaling */
     @media (max-width: 900px) {
       .screens-container {
         flex-direction: column;
@@ -169,22 +171,21 @@
         transform-origin: top center;
       }
     }
-
-    /* Even smaller screens: reduce scale further if desired */
     @media (max-width: 600px) {
       .mma-wrapper {
         transform: scale(0.65);
       }
     }
 
-    /* Contact Sales button styling */
+    /* Contact Sales */
     .contact-sales-container {
       text-align: center;
       margin: 2rem 0;
+      width: 100%;
     }
     .contact-sales-btn {
       display: inline-block;
-      background-color: #3B5AFF; /* Customize as you like */
+      background-color: #3B5AFF;
       color: #fff;
       padding: 0.8rem 1.6rem;
       text-decoration: none;
@@ -195,25 +196,25 @@
   </style>
 </head>
 <body>
-  <!-- Header and intro stay in normal (vertical) flow -->
   <header class="main-header">
     <img src="mma-logo.png" alt="MMA Logo" class="header-logo" />
     <h1>Anura® Magic Mirror Appliance</h1>
   </header>
 
   <section class="intro-section">
-    <p>Anura® Magic Mirror Appliance (MMA) is a first-of-its-kind mmaop smart mirror that analyzes facial blood flow information to accurately calculate a host of vital signs and disease risk assessments. It is powered by our cloud-based Affective Ai™ platform, DeepAffex®.</p>
-    <p>Discover the customization options available with MMA on this page. Experiment with different settings and personalize the look and feel of MMA by uploading your own wallpapers and applying your brand’s colors and assets. See firsthand how MMA can be tailored to reflect your unique branding and specific needs.</p>
+    <p>Anura® Magic Mirror Appliance (MMA) is a first-of-its-kind smart mirror that analyzes facial blood flow information...</p>
+    <p>Discover the customization options available with MMA on this page. Experiment with settings and personalization...</p>
   </section>
 
-  <!-- Now wrap the three columns in .screens-container -->
   <div class="screens-container">
-    <!-- Column 1: Home Screen + Controls -->
-    <div class="column-container">
+    <!-- Home Screen -->
+    <div class="column-container" id="homeScreenContainer">
       <h2>Home Screen</h2>
       <div class="mma-wrapper">
         <div id="homeScreen" class="screen-container" style="background-image: url('NuraLogix-home.png');">
-          <button id="homeButton" class="bottom-button" style="background-color: #3B5AFF;">Continue</button>
+          <button id="homeButton" class="bottom-button" style="background-color: #3B5AFF;">
+            Continue
+          </button>
         </div>
         <img class="mma-frame" src="MMA.png" alt="MMA Frame" />
       </div>
@@ -226,15 +227,49 @@
         <label>Button Color:
           <input type="color" id="homeBtnColor" value="#3B5AFF"/>
         </label>
+        <br/><br/>
+        <label>
+          <input type="checkbox" id="showLegalScreenToggle" />
+          Show Legal Screen
+        </label>
+        <br/><br/>
+        <label>
+          <input type="checkbox" id="showPartnerIDScreenToggle" />
+          Show ID Entry Screen
+        </label>
       </div>
     </div>
 
-    <!-- Column 2: Measurement Screen + Controls -->
-    <div class="column-container">
+    <!-- Legal Screen -->
+    <div class="column-container" id="legalScreenContainer">
+      <h2>Legal Screen</h2>
+      <div class="mma-wrapper">
+        <div id="legalScreen" class="screen-container" style="background-image: url('legal.png');">
+        </div>
+        <img class="mma-frame" src="MMA.png" alt="MMA Frame" />
+      </div>
+    </div>
+
+    <!-- Partner ID Screen -->
+    <div class="column-container" id="partnerIDScreenContainer">
+      <h2>ID Entry Screen</h2>
+      <div class="mma-wrapper">
+        <div id="partnerIDScreen" class="screen-container" style="background-image: url('NuraLogix-Default.png');">
+            <!-- This overlay sits on top of the shared background -->
+            <img src="partner_ID.png" style="position: absolute; top: 0; left: 0;" />
+        </div>
+        <img class="mma-frame" src="MMA.png" alt="MMA Frame" />
+      </div>  
+    </div>
+
+    <!-- Measurement Screen -->
+    <div class="column-container" id="measurementScreenContainer">
       <h2>Measurement Screen</h2>
       <div class="mma-wrapper">
         <div id="measurementScreen" class="screen-container" style="background-image: url('Measurement-screen.png');">
-          <button id="measureButton" class="bottom-button" style="background-color: #FE054F;">Cancel</button>
+          <button id="measureButton" class="bottom-button" style="background-color: #FE054F;">
+            Cancel
+          </button>
         </div>
         <img class="mma-frame" src="MMA.png" alt="MMA Frame" />
       </div>
@@ -246,8 +281,8 @@
       </div>
     </div>
 
-    <!-- Column 3: Results Screen + Controls -->
-    <div class="column-container">
+    <!-- Results Screen -->
+    <div class="column-container" id="resultsScreenContainer">
       <h2>Results Screen</h2>
       <div class="mma-wrapper">
         <div id="resultsScreen" class="screen-container" style="background-image: url('NuraLogix-Default.png');">
@@ -287,7 +322,6 @@
     </div>
   </div> <!-- end of .screens-container -->
 
-  <!-- New Contact Sales button at the bottom -->
   <div class="contact-sales-container">
     <a class="contact-sales-btn" href="https://nuralogix.ai/get-in-touch/" target="_blank">
       Contact Sales
@@ -295,18 +329,64 @@
   </div>
 
   <script>
-    // Helper to set background image from file input
-    function setBackgroundImage(input, screenElement) {
-      if (input.files && input.files[0]) {
-        const reader = new FileReader();
-        reader.addEventListener("load", () => {
-          screenElement.style.backgroundImage = `url('${reader.result}')`;
-        });
-        reader.readAsDataURL(input.files[0]);
-      }
+    // Utility to show (flex) or hide (none) a column container while using the .show class for animations
+    function showColumn(col) {
+      col.style.display = "flex"; // Put it in the layout
+      requestAnimationFrame(() => {
+        col.classList.add("show"); // Trigger scale/opacity transition
+      });
+    }
+    function hideColumn(col) {
+      col.classList.remove("show"); // Scale/opacity transition to 0
     }
 
-    // HOME
+    // When the transition ends, if .show is not there, set display to none
+    const allColumns = document.querySelectorAll(".column-container");
+    allColumns.forEach(col => {
+      col.addEventListener("transitionend", () => {
+        if (!col.classList.contains("show")) {
+          col.style.display = "none";
+        }
+      });
+    });
+
+    // Pre-select columns we always want to show
+    const homeScreenContainer = document.getElementById("homeScreenContainer");
+    const measurementScreenContainer = document.getElementById("measurementScreenContainer");
+    const resultsScreenContainer = document.getElementById("resultsScreenContainer");
+
+    // Extra optional screens
+    const legalScreenContainer = document.getElementById("legalScreenContainer");
+    const partnerIDScreenContainer = document.getElementById("partnerIDScreenContainer");
+
+    // Show them by default
+    showColumn(homeScreenContainer);
+    showColumn(measurementScreenContainer);
+    showColumn(resultsScreenContainer);
+    // Hide these two by default
+    hideColumn(legalScreenContainer);
+    hideColumn(partnerIDScreenContainer);
+
+    // Toggle checkboxes
+    const showLegalScreenToggle = document.getElementById("showLegalScreenToggle");
+    showLegalScreenToggle.addEventListener("change", () => {
+      if (showLegalScreenToggle.checked) {
+        showColumn(legalScreenContainer);
+      } else {
+        hideColumn(legalScreenContainer);
+      }
+    });
+
+    const showPartnerIDScreenToggle = document.getElementById("showPartnerIDScreenToggle");
+    showPartnerIDScreenToggle.addEventListener("change", () => {
+      if (showPartnerIDScreenToggle.checked) {
+        showColumn(partnerIDScreenContainer);
+      } else {
+        hideColumn(partnerIDScreenContainer);
+      }
+    });
+
+    // Home Screen
     const homeScreen = document.getElementById("homeScreen");
     const homeBgInput = document.getElementById("homeBgInput");
     homeBgInput.addEventListener("change", () => {
@@ -318,14 +398,14 @@
       homeButton.style.backgroundColor = homeBtnColor.value;
     });
 
-    // MEASUREMENT
+    // Measurement
     const measurementScreen = document.getElementById("measurementScreen");
     const measureBtnColor = document.getElementById("measureBtnColor");
     measureBtnColor.addEventListener("input", () => {
       document.getElementById("measureButton").style.backgroundColor = measureBtnColor.value;
     });
 
-    // RESULTS
+    // Results
     const resultsScreen = document.getElementById("resultsScreen");
     const resultsBgInput = document.getElementById("resultsBgInput");
     resultsBgInput.addEventListener("change", () => {
@@ -337,7 +417,6 @@
     const resultsButtons = document.getElementById("resultsButtons");
     const resultViewMode = document.getElementById("resultViewMode");
 
-    // Dropdown logic for result view
     resultViewMode.addEventListener("change", () => {
       const mode = resultViewMode.value;
       if (mode === "list") {
@@ -351,16 +430,15 @@
         resultsButtons.style.display = "none";
         resultWebViewImg.style.display = "block";
       } else {
-        // Don't show results
+        // 'None' means hide major elements
         resultListViewImg.style.display = "none";
         resultWebViewImg.style.display = "none";
-        // Show heading & buttons
         resultHeadingImg.style.display = "block";
         resultsButtons.style.display = "flex";
       }
     });
 
-    // Hide share button toggle
+    // Hide share button
     const shareBtn = document.getElementById("shareBtn");
     const hideShareToggle = document.getElementById("hideShareToggle");
     hideShareToggle.addEventListener("change", () => {
@@ -372,6 +450,26 @@
     const resultsBtns = document.querySelectorAll("#resultsButtons button");
     resultsBtnColor.addEventListener("input", () => {
       resultsBtns.forEach(btn => btn.style.backgroundColor = resultsBtnColor.value);
+    });
+
+    // Helper to set background from file input
+    function setBackgroundImage(input, screenElement) {
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.addEventListener("load", () => {
+          screenElement.style.backgroundImage = `url('${reader.result}')`;
+        });
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    // Hook into the same resultsBgInput change event
+    const partnerIDScreen = document.getElementById("partnerIDScreen");
+
+    resultsBgInput.addEventListener("change", () => {
+      // Update both the Results Screen and the Partner ID Screen at once
+      setBackgroundImage(resultsBgInput, resultsScreen);
+      setBackgroundImage(resultsBgInput, partnerIDScreen);
     });
 
     // Initialize default states on page load
