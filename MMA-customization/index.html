@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>MMA Screen Customizer</title>
+  <title>MMA Preview Tool</title>
   <style>
     * {
       box-sizing: border-box;
@@ -198,12 +198,12 @@
 <body>
   <header class="main-header">
     <img src="mma-logo.png" alt="MMA Logo" class="header-logo" />
-    <h1>Anura® Magic Mirror Appliance</h1>
+    <h1>Anura® MagicMirror - Preview Tool</h1>
   </header>
 
   <section class="intro-section">
-    <p>Anura® Magic Mirror Appliance (MMA) is a first-of-its-kind smart mirror that analyzes facial blood flow information...</p>
-    <p>Discover the customization options available with MMA on this page. Experiment with settings and personalization...</p>
+    <p>Anura® MagicMirror Appliance (MMA) is a first-of-its-kind smart mirror that analyzes facial blood flow information.</p>
+    <p>Discover the customization options available with MMA on this page. Experiment with settings and personalization.</p>
   </section>
 
   <div class="screens-container">
@@ -219,7 +219,7 @@
         <img class="mma-frame" src="MMA.png" alt="MMA Frame" />
       </div>
       <div>
-        <h3>Home Screen Customization</h3>
+        <h3>Home Screen Preview</h3>
         <label>Background Image:
           <input type="file" id="homeBgInput" accept="image/*"/>
         </label>
@@ -230,37 +230,17 @@
         <br/><br/>
         <label>
           <input type="checkbox" id="showLegalScreenToggle" />
-          Show Legal Screen
+          Add Legal Screen
         </label>
         <br/><br/>
         <label>
           <input type="checkbox" id="showPartnerIDScreenToggle" />
-          Show ID Entry Screen
+          Add ID Entry Screen
         </label>
       </div>
     </div>
 
-    <!-- Legal Screen -->
-    <div class="column-container" id="legalScreenContainer">
-      <h2>Legal Screen</h2>
-      <div class="mma-wrapper">
-        <div id="legalScreen" class="screen-container" style="background-image: url('legal.png');">
-        </div>
-        <img class="mma-frame" src="MMA.png" alt="MMA Frame" />
-      </div>
-    </div>
 
-    <!-- Partner ID Screen -->
-    <div class="column-container" id="partnerIDScreenContainer">
-      <h2>ID Entry Screen</h2>
-      <div class="mma-wrapper">
-        <div id="partnerIDScreen" class="screen-container" style="background-image: url('NuraLogix-Default.png');">
-            <!-- This overlay sits on top of the shared background -->
-            <img src="partner_ID.png" style="position: absolute; top: 0; left: 0;" />
-        </div>
-        <img class="mma-frame" src="MMA.png" alt="MMA Frame" />
-      </div>  
-    </div>
 
     <!-- Measurement Screen -->
     <div class="column-container" id="measurementScreenContainer">
@@ -274,7 +254,7 @@
         <img class="mma-frame" src="MMA.png" alt="MMA Frame" />
       </div>
       <div>
-        <h3>Measurement Screen Customization</h3>
+        <h3>Measurement Screen Preview</h3>
         <label>Button Color:
           <input type="color" id="measureBtnColor" value="#FE054F"/>
         </label>
@@ -298,7 +278,7 @@
         <img class="mma-frame" src="MMA.png" alt="MMA Frame" />
       </div>
       <div>
-        <h3>Results Screen Customization</h3>
+        <h3>Results Screen Preview</h3>
         <label>Background Image:
           <input type="file" id="resultsBgInput" accept="image/*"/>
         </label>
@@ -319,6 +299,28 @@
           <input type="color" id="resultsBtnColor" value="#3B5AFF"/>
         </label>
       </div>
+    </div>
+
+        <!-- Legal Screen -->
+    <div class="column-container" id="legalScreenContainer">
+      <h2>Legal Screen</h2>
+      <div class="mma-wrapper">
+        <div id="legalScreen" class="screen-container" style="background-image: url('legal.png');">
+        </div>
+        <img class="mma-frame" src="MMA.png" alt="MMA Frame" />
+      </div>
+    </div>
+
+    <!-- Partner ID Screen -->
+    <div class="column-container" id="partnerIDScreenContainer">
+      <h2>ID Entry Screen</h2>
+      <div class="mma-wrapper">
+        <div id="partnerIDScreen" class="screen-container" style="background-image: url('NuraLogix-Default.png');">
+            <!-- This overlay sits on top of the shared background -->
+            <img src="partner_ID.png" style="position: absolute; top: 0; left: 0;" />
+        </div>
+        <img class="mma-frame" src="MMA.png" alt="MMA Frame" />
+      </div>  
     </div>
   </div> <!-- end of .screens-container -->
 
