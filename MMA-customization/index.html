@@ -1,4 +1,3 @@
-<!-- filepath: c:\Users\VineetPuri\Documents\MMA customization project\index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,7 +22,7 @@
       color: #fff;
     }
     .header-logo {
-      width: 60px;
+      width: auto;
       height: auto;
       margin-right: 1rem;
     }
@@ -51,7 +50,7 @@
       flex-wrap: wrap;
     }
 
-    /* By default, columns are hidden (display: none) unless toggled on */
+    /* By default hidden columns */
     .column-container {
       display: none;
       flex-direction: column;
@@ -66,7 +65,7 @@
       transition: transform 0.3s ease, opacity 0.3s ease;
       transform-origin: center center;
     }
-    /* Add the .show class to animate them open */
+
     .column-container.show {
       transform: scale(1);
       opacity: 1;
@@ -112,7 +111,21 @@
       pointer-events: none;
     }
 
-    /* Results Screen items... */
+    /* Wider Continue buttons */
+    .wide-button {
+      position: absolute;
+      bottom: 23px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #fff;
+      border: none;
+      padding: 0.5rem 2rem; 
+      border-radius: 15px;
+      pointer-events: none;
+      min-width: 120px; 
+    }
+
+
     .result-heading {
       position: absolute;
       width: 200px;
@@ -177,7 +190,6 @@
       }
     }
 
-    /* Contact Sales */
     .contact-sales-container {
       text-align: center;
       margin: 2rem 0;
@@ -198,7 +210,7 @@
 <body>
   <header class="main-header">
     <img src="mma-logo.png" alt="MMA Logo" class="header-logo" />
-    <h1>Anura® MagicMirror - Preview Tool</h1>
+    <h1>Preview Tool</h1>
   </header>
 
   <section class="intro-section">
@@ -229,6 +241,11 @@
         </label>
         <br/><br/>
         <label>
+          <input type="checkbox" id="useSameButtonColorToggle" />
+          Use same color for all buttons (except Cancel button)
+        </label>
+        <br/><br/>
+        <label>
           <input type="checkbox" id="showLegalScreenToggle" />
           Add Legal Screen
         </label>
@@ -255,7 +272,7 @@
       </div>
       <div>
         <h3>Measurement Screen Preview</h3>
-        <label>Button Color:
+        <label class="other-screen-button-color">Cancel Button Color:
           <input type="color" id="measureBtnColor" value="#FE054F"/>
         </label>
       </div>
@@ -295,7 +312,7 @@
           <input type="checkbox" id="hideShareToggle"/>
         </label>
         <br/><br/>
-        <label>All Buttons Color:
+        <label class="other-screen-button-color">All Buttons Color:
           <input type="color" id="resultsBtnColor" value="#3B5AFF"/>
         </label>
       </div>
@@ -306,8 +323,17 @@
       <h2>Legal Screen</h2>
       <div class="mma-wrapper">
         <div id="legalScreen" class="screen-container" style="background-image: url('legal.png');">
+          <button id="legalButton" class="wide-button" style="background-color: #3B5AFF; z-index: 3;">
+            Continue
+          </button>
         </div>
         <img class="mma-frame" src="MMA.png" alt="MMA Frame" />
+      </div>
+      <div>
+        <h3>Legal Screen Preview</h3>
+        <label class="other-screen-button-color">Continue Button Color:
+          <input type="color" id="legalBtnColor" value="#3B5AFF"/>
+        </label>
       </div>
     </div>
 
@@ -316,13 +342,21 @@
       <h2>ID Entry Screen</h2>
       <div class="mma-wrapper">
         <div id="partnerIDScreen" class="screen-container" style="background-image: url('NuraLogix-Default.png');">
-            <!-- This overlay sits on top of the shared background -->
             <img src="partner_ID.png" style="position: absolute; top: 0; left: 0;" />
         </div>
+        <button id="partnerIDButton" class="wide-button" style="background-color: #3B5AFF; bottom: 315px; z-index: 3;">
+          Continue
+        </button>
         <img class="mma-frame" src="MMA.png" alt="MMA Frame" />
       </div>  
+      <div>
+        <h3>ID Entry Screen Preview</h3>
+        <label class="other-screen-button-color">Continue Button Color:
+          <input type="color" id="partnerIDBtnColor" value="#3B5AFF"/>
+        </label>
+      </div>
     </div>
-  </div> <!-- end of .screens-container -->
+  </div> 
 
   <div class="contact-sales-container">
     <a class="contact-sales-btn" href="https://nuralogix.ai/get-in-touch/" target="_blank">
@@ -331,7 +365,7 @@
   </div>
 
   <script>
-    // Utility to show (flex) or hide (none) a column container while using the .show class for animations
+  
     function showColumn(col) {
       col.style.display = "flex"; // Put it in the layout
       requestAnimationFrame(() => {
@@ -361,13 +395,66 @@
     const legalScreenContainer = document.getElementById("legalScreenContainer");
     const partnerIDScreenContainer = document.getElementById("partnerIDScreenContainer");
 
-    // Show them by default
+    // All button references
+    const homeButton = document.getElementById("homeButton");
+    const homeBtnColor = document.getElementById("homeBtnColor");
+    const useSameButtonColorToggle = document.getElementById("useSameButtonColorToggle");
+    const measureButton = document.getElementById("measureButton");
+    const measureBtnColor = document.getElementById("measureBtnColor");
+    const exitBtn = document.getElementById("exitBtn");
+    const retryBtn = document.getElementById("retryBtn");
+    const shareBtn = document.getElementById("shareBtn");
+    const resultsBtnColor = document.getElementById("resultsBtnColor");
+    const legalButton = document.getElementById("legalButton");
+    const legalBtnColor = document.getElementById("legalBtnColor");
+    const partnerIDButton = document.getElementById("partnerIDButton");
+    const partnerIDBtnColor = document.getElementById("partnerIDBtnColor");
+
+    // Screen references
+    const homeScreen = document.getElementById("homeScreen");
+    const measurementScreen = document.getElementById("measurementScreen");
+    const resultsScreen = document.getElementById("resultsScreen");
+    const partnerIDScreen = document.getElementById("partnerIDScreen");
+
+    // File inputs
+    const homeBgInput = document.getElementById("homeBgInput");
+    const resultsBgInput = document.getElementById("resultsBgInput");
+
+    // Results screen elements
+    const resultHeadingImg = document.getElementById("resultHeadingImg");
+    const resultListViewImg = document.getElementById("resultListViewImg");
+    const resultWebViewImg = document.getElementById("resultWebViewImg");
+    const resultsButtons = document.getElementById("resultsButtons");
+    const resultViewMode = document.getElementById("resultViewMode");
+    const hideShareToggle = document.getElementById("hideShareToggle");
+
+    // Show default columns
     showColumn(homeScreenContainer);
     showColumn(measurementScreenContainer);
     showColumn(resultsScreenContainer);
-    // Hide these two by default
     hideColumn(legalScreenContainer);
     hideColumn(partnerIDScreenContainer);
+
+    // Function to apply the same button color to all other screens (EXCLUDING measurement screen)
+    function applySameButtonColorToAll(color) {
+      exitBtn.style.backgroundColor = color;
+      retryBtn.style.backgroundColor = color;
+      shareBtn.style.backgroundColor = color;
+      // Add new buttons
+      if (legalButton) legalButton.style.backgroundColor = color;
+      if (partnerIDButton) partnerIDButton.style.backgroundColor = color;
+    }
+
+    // Helper to set background from file input
+    function setBackgroundImage(input, screenElement) {
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.addEventListener("load", () => {
+          screenElement.style.backgroundImage = `url('${reader.result}')`;
+        });
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
 
     // Toggle checkboxes
     const showLegalScreenToggle = document.getElementById("showLegalScreenToggle");
@@ -388,37 +475,49 @@
       }
     });
 
-    // Home Screen
-    const homeScreen = document.getElementById("homeScreen");
-    const homeBgInput = document.getElementById("homeBgInput");
+    // Home Screen background
     homeBgInput.addEventListener("change", () => {
       setBackgroundImage(homeBgInput, homeScreen);
     });
-    const homeButton = document.getElementById("homeButton");
-    const homeBtnColor = document.getElementById("homeBtnColor");
+
+    // Home Screen button color
     homeBtnColor.addEventListener("input", () => {
       homeButton.style.backgroundColor = homeBtnColor.value;
+      if (useSameButtonColorToggle.checked) {
+        applySameButtonColorToAll(homeBtnColor.value);
+      }
     });
 
-    // Measurement
-    const measurementScreen = document.getElementById("measurementScreen");
-    const measureBtnColor = document.getElementById("measureBtnColor");
+    // Universal button color toggle
+    useSameButtonColorToggle.addEventListener("change", () => {
+      if (useSameButtonColorToggle.checked) {
+        // Apply the current Home Screen button color to all other buttons (excluding measurement)
+        applySameButtonColorToAll(homeBtnColor.value);
+        // Hide button color options for other screens (excluding measurement)
+        document.querySelectorAll(".other-screen-button-color").forEach(el => {
+          if (el.querySelector('#measureBtnColor')) {
+            return;
+          }
+          el.style.display = "none";
+        });
+      } else {
+        // Show button color options for other screens
+        document.querySelectorAll(".other-screen-button-color").forEach(el => el.style.display = "block");
+      }
+    });
+
+
     measureBtnColor.addEventListener("input", () => {
-      document.getElementById("measureButton").style.backgroundColor = measureBtnColor.value;
+      measureButton.style.backgroundColor = measureBtnColor.value;
     });
 
-    // Results
-    const resultsScreen = document.getElementById("resultsScreen");
-    const resultsBgInput = document.getElementById("resultsBgInput");
+
     resultsBgInput.addEventListener("change", () => {
       setBackgroundImage(resultsBgInput, resultsScreen);
+      setBackgroundImage(resultsBgInput, partnerIDScreen);
     });
-    const resultHeadingImg = document.getElementById("resultHeadingImg");
-    const resultListViewImg = document.getElementById("resultListViewImg");
-    const resultWebViewImg = document.getElementById("resultWebViewImg");
-    const resultsButtons = document.getElementById("resultsButtons");
-    const resultViewMode = document.getElementById("resultViewMode");
 
+    // Results view mode
     resultViewMode.addEventListener("change", () => {
       const mode = resultViewMode.value;
       if (mode === "list") {
@@ -432,7 +531,6 @@
         resultsButtons.style.display = "none";
         resultWebViewImg.style.display = "block";
       } else {
-        // 'None' means hide major elements
         resultListViewImg.style.display = "none";
         resultWebViewImg.style.display = "none";
         resultHeadingImg.style.display = "block";
@@ -441,37 +539,30 @@
     });
 
     // Hide share button
-    const shareBtn = document.getElementById("shareBtn");
-    const hideShareToggle = document.getElementById("hideShareToggle");
     hideShareToggle.addEventListener("change", () => {
       shareBtn.style.display = hideShareToggle.checked ? "none" : "inline-block";
     });
 
     // Results buttons color
-    const resultsBtnColor = document.getElementById("resultsBtnColor");
     const resultsBtns = document.querySelectorAll("#resultsButtons button");
     resultsBtnColor.addEventListener("input", () => {
-      resultsBtns.forEach(btn => btn.style.backgroundColor = resultsBtnColor.value);
+      if (!useSameButtonColorToggle.checked) {
+        resultsBtns.forEach(btn => btn.style.backgroundColor = resultsBtnColor.value);
+      }
     });
 
-    // Helper to set background from file input
-    function setBackgroundImage(input, screenElement) {
-      if (input.files && input.files[0]) {
-        const reader = new FileReader();
-        reader.addEventListener("load", () => {
-          screenElement.style.backgroundImage = `url('${reader.result}')`;
-        });
-        reader.readAsDataURL(input.files[0]);
+
+    legalBtnColor.addEventListener("input", () => {
+      if (!useSameButtonColorToggle.checked) {
+        legalButton.style.backgroundColor = legalBtnColor.value;
       }
-    }
+    });
 
-    // Hook into the same resultsBgInput change event
-    const partnerIDScreen = document.getElementById("partnerIDScreen");
 
-    resultsBgInput.addEventListener("change", () => {
-      // Update both the Results Screen and the Partner ID Screen at once
-      setBackgroundImage(resultsBgInput, resultsScreen);
-      setBackgroundImage(resultsBgInput, partnerIDScreen);
+    partnerIDBtnColor.addEventListener("input", () => {
+      if (!useSameButtonColorToggle.checked) {
+        partnerIDButton.style.backgroundColor = partnerIDBtnColor.value;
+      }
     });
 
     // Initialize default states on page load
@@ -481,6 +572,9 @@
       resultListViewImg.style.display = "block";
       resultsButtons.style.display = "flex";
       resultWebViewImg.style.display = "none";
+      if (!useSameButtonColorToggle.checked) {
+        document.querySelectorAll(".other-screen-button-color").forEach(el => el.style.display = "block");
+      }
     });
   </script>
 </body>
