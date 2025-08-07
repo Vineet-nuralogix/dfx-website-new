@@ -50,9 +50,9 @@
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;
-      justify-content: center; /* Center align the screens */
+      justify-content: center;
       align-items: flex-start;
-      gap: 2rem; /* Add gap between screens */
+      gap: 2rem; 
       padding: 0 1rem;
     }
 
@@ -180,10 +180,9 @@
     @media (max-width: 1200px) {
       .screens-container {
         flex-direction: column;
-        align-items: center; /* Center align when stacked */
+        align-items: center;
       }
       .column-container {
-        /* width: 100%; - removed fixed width */
         transform: scale(0.8);
       }
       .mma-wrapper {
@@ -246,13 +245,8 @@
           <input type="file" id="homeBgInput" accept="image/*"/>
         </label>
         <br/><br/>
-        <label>Button Color:
-          <input type="color" id="homeBtnColor" value="#3B5AFF"/>
-        </label>
-        <br/><br/>
-        <label>
-          <input type="checkbox" id="useSameButtonColorToggle" />
-          Use same color for all buttons (except Cancel button)
+        <label>Primary Button Color:
+          <input type="color" id="primaryBtnColor" value="#3B5AFF"/>
         </label>
         <br/><br/>
         <label>
@@ -282,7 +276,7 @@
       </div>
       <div>
         <h3>Measurement Screen Preview</h3>
-        <label class="other-screen-button-color">Cancel Button Color:
+        <label>Cancel Button Color:
           <input type="color" id="measureBtnColor" value="#FE054F"/>
         </label>
       </div>
@@ -321,10 +315,6 @@
         <label>Hide Share Button:
           <input type="checkbox" id="hideShareToggle"/>
         </label>
-        <br/><br/>
-        <label class="other-screen-button-color">Button Color:
-          <input type="color" id="resultsBtnColor" value="#3B5AFF"/>
-        </label>
       </div>
     </div>
 
@@ -341,9 +331,6 @@
       </div>
       <div>
         <h3>Legal Screen Preview</h3>
-        <label class="other-screen-button-color">Continue Button Color:
-          <input type="color" id="legalBtnColor" value="#3B5AFF"/>
-        </label>
       </div>
     </div>
 
@@ -361,9 +348,6 @@
       </div>  
       <div>
         <h3>ID Entry Screen Preview</h3>
-        <label class="other-screen-button-color">Continue Button Color:
-          <input type="color" id="partnerIDBtnColor" value="#3B5AFF"/>
-        </label>
       </div>
     </div>
   </div> 
@@ -377,13 +361,13 @@
   <script>
   
     function showColumn(col) {
-      col.style.display = "flex"; // Put it in the layout
+      col.style.display = "flex"; 
       requestAnimationFrame(() => {
-        col.classList.add("show"); // Trigger scale/opacity transition
+        col.classList.add("show"); 
       });
     }
     function hideColumn(col) {
-      col.classList.remove("show"); // Scale/opacity transition to 0
+      col.classList.remove("show"); 
     }
 
     // When the transition ends, if .show is not there, set display to none
@@ -407,18 +391,14 @@
 
     // All button references
     const homeButton = document.getElementById("homeButton");
-    const homeBtnColor = document.getElementById("homeBtnColor");
-    const useSameButtonColorToggle = document.getElementById("useSameButtonColorToggle");
+    const primaryBtnColor = document.getElementById("primaryBtnColor"); 
     const measureButton = document.getElementById("measureButton");
     const measureBtnColor = document.getElementById("measureBtnColor");
     const exitBtn = document.getElementById("exitBtn");
     const retryBtn = document.getElementById("retryBtn");
     const shareBtn = document.getElementById("shareBtn");
-    const resultsBtnColor = document.getElementById("resultsBtnColor");
     const legalButton = document.getElementById("legalButton");
-    const legalBtnColor = document.getElementById("legalBtnColor");
     const partnerIDButton = document.getElementById("partnerIDButton");
-    const partnerIDBtnColor = document.getElementById("partnerIDBtnColor");
 
     // Screen references
     const homeScreen = document.getElementById("homeScreen");
@@ -445,12 +425,12 @@
     hideColumn(legalScreenContainer);
     hideColumn(partnerIDScreenContainer);
 
-    // Function to apply the same button color to all other screens (EXCLUDING measurement screen)
-    function applySameButtonColorToAll(color) {
+    // Function to apply primary button color to all buttons except Cancel
+    function applyPrimaryButtonColor(color) {
+      homeButton.style.backgroundColor = color;
       exitBtn.style.backgroundColor = color;
       retryBtn.style.backgroundColor = color;
       shareBtn.style.backgroundColor = color;
-      // Add new buttons
       if (legalButton) legalButton.style.backgroundColor = color;
       if (partnerIDButton) partnerIDButton.style.backgroundColor = color;
     }
@@ -490,38 +470,17 @@
       setBackgroundImage(homeBgInput, homeScreen);
     });
 
-    // Home Screen button color
-    homeBtnColor.addEventListener("input", () => {
-      homeButton.style.backgroundColor = homeBtnColor.value;
-      if (useSameButtonColorToggle.checked) {
-        applySameButtonColorToAll(homeBtnColor.value);
-      }
+    // Primary Button Color - applies to all buttons except Cancel
+    primaryBtnColor.addEventListener("input", () => {
+      applyPrimaryButtonColor(primaryBtnColor.value);
     });
 
-    // Universal button color toggle
-    useSameButtonColorToggle.addEventListener("change", () => {
-      if (useSameButtonColorToggle.checked) {
-        // Apply the current Home Screen button color to all other buttons (excluding measurement)
-        applySameButtonColorToAll(homeBtnColor.value);
-        // Hide button color options for other screens (excluding measurement)
-        document.querySelectorAll(".other-screen-button-color").forEach(el => {
-          if (el.querySelector('#measureBtnColor')) {
-            return;
-          }
-          el.style.display = "none";
-        });
-      } else {
-        // Show button color options for other screens
-        document.querySelectorAll(".other-screen-button-color").forEach(el => el.style.display = "block");
-      }
-    });
-
-
+    // Cancel Button Color
     measureBtnColor.addEventListener("input", () => {
       measureButton.style.backgroundColor = measureBtnColor.value;
     });
 
-
+    // Results background
     resultsBgInput.addEventListener("change", () => {
       setBackgroundImage(resultsBgInput, resultsScreen);
       setBackgroundImage(resultsBgInput, partnerIDScreen);
@@ -553,39 +512,13 @@
       shareBtn.style.display = hideShareToggle.checked ? "none" : "inline-block";
     });
 
-    // Results buttons color
-    const resultsBtns = document.querySelectorAll("#resultsButtons button");
-    resultsBtnColor.addEventListener("input", () => {
-      if (!useSameButtonColorToggle.checked) {
-        resultsBtns.forEach(btn => btn.style.backgroundColor = resultsBtnColor.value);
-      }
-    });
-
-
-    legalBtnColor.addEventListener("input", () => {
-      if (!useSameButtonColorToggle.checked) {
-        legalButton.style.backgroundColor = legalBtnColor.value;
-      }
-    });
-
-
-    partnerIDBtnColor.addEventListener("input", () => {
-      if (!useSameButtonColorToggle.checked) {
-        partnerIDButton.style.backgroundColor = partnerIDBtnColor.value;
-      }
-    });
-
     // Initialize default states on page load
     window.addEventListener("DOMContentLoaded", () => {
-      // Start with 'List View' selected
       resultHeadingImg.style.display = "block";
       resultListViewImg.style.display = "block";
       resultsButtons.style.display = "flex";
       resultWebViewImg.style.display = "none";
-      if (!useSameButtonColorToggle.checked) {
-        document.querySelectorAll(".other-screen-button-color").forEach(el => el.style.display = "block");
-      }
     });
-  </script>
+</script>
 </body>
 </html>
