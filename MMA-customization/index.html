@@ -258,10 +258,13 @@
           <input type="checkbox" id="showPartnerIDScreenToggle" />
           Add ID Entry Screen
         </label>
+        <br/><br/>
+        <label>
+          <input type="checkbox" id="showProfileInfoScreenToggle" />
+          Add Profile Info Screen
+        </label>
       </div>
     </div>
-
-
 
     <!-- Measurement Screen -->
     <div class="column-container" id="measurementScreenContainer">
@@ -318,7 +321,7 @@
       </div>
     </div>
 
-        <!-- Legal Screen -->
+    <!-- Legal Screen -->
     <div class="column-container" id="legalScreenContainer">
       <h2>Legal Screen</h2>
       <div class="mma-wrapper">
@@ -339,7 +342,7 @@
       <h2>ID Entry Screen</h2>
       <div class="mma-wrapper">
         <div id="partnerIDScreen" class="screen-container" style="background-image: url('NuraLogix-Default.png');">
-            <img src="partner_ID.png" style="position: absolute; top: 0; left: 0;" />
+            <img src="partner-ID.png" style="position: absolute; top: 0; left: 0;" />
         </div>
         <button id="partnerIDButton" class="wide-button" style="background-color: #3B5AFF; bottom: 315px; z-index: 3;">
           Continue
@@ -348,6 +351,23 @@
       </div>  
       <div>
         <h3>ID Entry Screen Preview</h3>
+      </div>
+    </div>
+
+    <!-- Profile Info Screen -->
+    <div class="column-container" id="profileInfoScreenContainer">
+      <h2>Profile Info Screen</h2>
+      <div class="mma-wrapper">
+        <div id="profileInfoScreen" class="screen-container" style="background-image: url('NuraLogix-Default.png');">
+            <img src="profile-info.png" style="position: absolute; top: 0; left: 0;" />
+        </div>
+        <button id="profileInfoButton" class="wide-button" style="background-color: #3B5AFF; bottom: 283px; z-index: 3;">
+          Continue
+        </button>
+        <img class="mma-frame" src="MMA.png" alt="MMA Frame" />
+      </div>  
+      <div>
+        <h3>Profile Info Screen Preview</h3>
       </div>
     </div>
   </div> 
@@ -388,6 +408,7 @@
     // Extra optional screens
     const legalScreenContainer = document.getElementById("legalScreenContainer");
     const partnerIDScreenContainer = document.getElementById("partnerIDScreenContainer");
+    const profileInfoScreenContainer = document.getElementById("profileInfoScreenContainer");
 
     // All button references
     const homeButton = document.getElementById("homeButton");
@@ -399,12 +420,14 @@
     const shareBtn = document.getElementById("shareBtn");
     const legalButton = document.getElementById("legalButton");
     const partnerIDButton = document.getElementById("partnerIDButton");
+    const profileInfoButton = document.getElementById("profileInfoButton");
 
     // Screen references
     const homeScreen = document.getElementById("homeScreen");
     const measurementScreen = document.getElementById("measurementScreen");
     const resultsScreen = document.getElementById("resultsScreen");
     const partnerIDScreen = document.getElementById("partnerIDScreen");
+    const profileInfoScreen = document.getElementById("profileInfoScreen");
 
     // File inputs
     const homeBgInput = document.getElementById("homeBgInput");
@@ -424,6 +447,7 @@
     showColumn(resultsScreenContainer);
     hideColumn(legalScreenContainer);
     hideColumn(partnerIDScreenContainer);
+    hideColumn(profileInfoScreenContainer);
 
     // Function to apply primary button color to all buttons except Cancel
     function applyPrimaryButtonColor(color) {
@@ -433,6 +457,7 @@
       shareBtn.style.backgroundColor = color;
       if (legalButton) legalButton.style.backgroundColor = color;
       if (partnerIDButton) partnerIDButton.style.backgroundColor = color;
+      if (profileInfoButton) profileInfoButton.style.backgroundColor = color;
     }
 
     // Helper to set background from file input
@@ -465,6 +490,15 @@
       }
     });
 
+    const showProfileInfoScreenToggle = document.getElementById("showProfileInfoScreenToggle");
+    showProfileInfoScreenToggle.addEventListener("change", () => {
+      if (showProfileInfoScreenToggle.checked) {
+        showColumn(profileInfoScreenContainer);
+      } else {
+        hideColumn(profileInfoScreenContainer);
+      }
+    });
+
     // Home Screen background
     homeBgInput.addEventListener("change", () => {
       setBackgroundImage(homeBgInput, homeScreen);
@@ -484,6 +518,7 @@
     resultsBgInput.addEventListener("change", () => {
       setBackgroundImage(resultsBgInput, resultsScreen);
       setBackgroundImage(resultsBgInput, partnerIDScreen);
+      setBackgroundImage(resultsBgInput, profileInfoScreen);
     });
 
     // Results view mode
