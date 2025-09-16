@@ -402,7 +402,6 @@ function roundToDecimalPlaces(value, decimalPlaces) {
 
 /**
  * Loads SVG content using fetch for webview compatibility.
- * Replaces CSS mask approach with direct SVG insertion.
  * @param {HTMLElement} iconElement - The icon element to populate with SVG content.
  * @param {string} iconName - The name of the SVG icon to load.
  */
@@ -419,24 +418,15 @@ function loadSVGIcon(iconElement, iconName) {
             svgContent = svgContent.replace(/stroke="black"/g, 'stroke="currentColor"');
             svgContent = svgContent.replace(/fill="%23cccccc"/g, 'fill="currentColor"');
             svgContent = svgContent.replace(/fill="#cccccc"/g, 'fill="currentColor"');
+            svgContent = svgContent.replace(/fill="#1D1D1B"/g, 'fill="currentColor"');
             
             // Insert the SVG content directly
             iconElement.innerHTML = svgContent;
-            
-            // Apply sizing and styling to match the original mask approach
-            const svgElement = iconElement.querySelector('svg');
-            if (svgElement) {
-                svgElement.style.width = '100%';
-                svgElement.style.height = '100%';
-                svgElement.style.display = 'block';
-            }
-        })        .catch(error => {
+        })
+        .catch(error => {
             console.warn(`Could not load icon: ${iconName}`, error);
-            // Fallback: use a generic icon character
+            // Fallback: use a generic icon character with CSS styling
             iconElement.innerHTML = '●';
-            iconElement.style.fontSize = '20px';
-            iconElement.style.textAlign = 'center';
-            iconElement.style.lineHeight = '30px';
-            iconElement.style.color = 'currentColor';
+            iconElement.classList.add('fallback');
         });
 }
