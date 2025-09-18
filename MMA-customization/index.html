@@ -141,10 +141,19 @@
     }
     .result-list-view {
       position: absolute;
-      top: 30px;
+      top: 70px;
       left: 50%;
       transform: translateX(-50%);
-      width: 220px;
+      width: 300px;
+      display: none;
+      z-index: 2;
+    }
+    .result-summary-view {
+      position: absolute;
+      top: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 300px;
       display: none;
       z-index: 2;
     }
@@ -232,12 +241,12 @@
     <div class="column-container" id="homeScreenContainer">
       <h2>Home Screen</h2>
       <div class="mma-wrapper">
-        <div id="homeScreen" class="screen-container" style="background-image: url('NuraLogix-home.png');">
+        <div id="homeScreen" class="screen-container" style="background-image: url('nuralogix-home.png');">
           <button id="homeButton" class="bottom-button" style="background-color: #3B5AFF;">
             Continue
           </button>
         </div>
-        <img class="mma-frame" src="MMA.png" alt="MMA Frame" />
+        <img class="mma-frame" src="mma.png" alt="MMA Frame" />
       </div>
       <div>
         <h3>Home Screen Preview</h3>
@@ -270,12 +279,12 @@
     <div class="column-container" id="measurementScreenContainer">
       <h2>Measurement Screen</h2>
       <div class="mma-wrapper">
-        <div id="measurementScreen" class="screen-container" style="background-image: url('Measurement-screen.png');">
+        <div id="measurementScreen" class="screen-container" style="background-image: url('measurement-screen.png');">
           <button id="measureButton" class="bottom-button" style="background-color: #FE054F;">
             Cancel
           </button>
         </div>
-        <img class="mma-frame" src="MMA.png" alt="MMA Frame" />
+        <img class="mma-frame" src="mma.png" alt="MMA Frame" />
       </div>
       <div>
         <h3>Measurement Screen Preview</h3>
@@ -289,27 +298,27 @@
     <div class="column-container" id="resultsScreenContainer">
       <h2>Results Screen</h2>
       <div class="mma-wrapper">
-        <div id="resultsScreen" class="screen-container" style="background-image: url('NuraLogix-Default.png');">
-          <img class="result-heading" id="resultHeadingImg" src="result-heading.png" />
+        <div id="resultsScreen" class="screen-container" style="background-image: url('nuralogix-default.png');">          <img class="result-heading" id="resultHeadingImg" src="result-heading.png" />
           <img class="result-list-view" id="resultListViewImg" src="result-list-view.png" />
-          <img class="result-web-view" id="resultWebViewImg" src="Webview.png" />
+          <img class="result-summary-view" id="resultSummaryViewImg" src="result-summary-view.png" />
+          <img class="result-web-view" id="resultWebViewImg" src="result-webview.png" />
           <div class="results-buttons" id="resultsButtons">
             <button id="exitBtn" style="background-color: #3B5AFF;">Exit</button>
             <button id="retryBtn" style="background-color: #3B5AFF;">Try again</button>
             <button id="shareBtn" style="background-color: #3B5AFF;">Share</button>
           </div>
         </div>
-        <img class="mma-frame" src="MMA.png" alt="MMA Frame" />
+        <img class="mma-frame" src="mma.png" alt="MMA Frame" />
       </div>
       <div>
         <h3>Results Screen Preview</h3>
         <label>Background Image:
           <input type="file" id="resultsBgInput" accept="image/*"/>
         </label>
-        <br/><br/>
-        <label>Result View Options:
+        <br/><br/>        <label>Result View Options:
           <select id="resultViewMode">
             <option value="list" selected>List View</option>
+            <option value="summary">Summary View</option>
             <option value="web">Web View</option>
             <option value="none">Don't show results</option>
           </select>
@@ -330,7 +339,7 @@
             Continue
           </button>
         </div>
-        <img class="mma-frame" src="MMA.png" alt="MMA Frame" />
+        <img class="mma-frame" src="mma.png" alt="MMA Frame" />
       </div>
       <div>
         <h3>Legal Screen Preview</h3>
@@ -341,13 +350,13 @@
     <div class="column-container" id="partnerIDScreenContainer">
       <h2>ID Entry Screen</h2>
       <div class="mma-wrapper">
-        <div id="partnerIDScreen" class="screen-container" style="background-image: url('NuraLogix-Default.png');">
+        <div id="partnerIDScreen" class="screen-container" style="background-image: url('nuralogix-default.png');">
             <img src="partner-ID.png" style="position: absolute; top: 0; left: 0;" />
         </div>
         <button id="partnerIDButton" class="wide-button" style="background-color: #3B5AFF; bottom: 315px; z-index: 3;">
           Continue
         </button>
-        <img class="mma-frame" src="MMA.png" alt="MMA Frame" />
+        <img class="mma-frame" src="mma.png" alt="MMA Frame" />
       </div>  
       <div>
         <h3>ID Entry Screen Preview</h3>
@@ -358,13 +367,13 @@
     <div class="column-container" id="profileInfoScreenContainer">
       <h2>Profile Info Screen</h2>
       <div class="mma-wrapper">
-        <div id="profileInfoScreen" class="screen-container" style="background-image: url('NuraLogix-Default.png');">
+        <div id="profileInfoScreen" class="screen-container" style="background-image: url('nuralogix-default.png');">
             <img src="profile-info.png" style="position: absolute; top: 0; left: 0;" />
         </div>
         <button id="profileInfoButton" class="wide-button" style="background-color: #3B5AFF; bottom: 283px; z-index: 3;">
           Continue
         </button>
-        <img class="mma-frame" src="MMA.png" alt="MMA Frame" />
+        <img class="mma-frame" src="mma.png" alt="MMA Frame" />
       </div>  
       <div>
         <h3>Profile Info Screen Preview</h3>
@@ -431,11 +440,10 @@
 
     // File inputs
     const homeBgInput = document.getElementById("homeBgInput");
-    const resultsBgInput = document.getElementById("resultsBgInput");
-
-    // Results screen elements
+    const resultsBgInput = document.getElementById("resultsBgInput");    // Results screen elements
     const resultHeadingImg = document.getElementById("resultHeadingImg");
     const resultListViewImg = document.getElementById("resultListViewImg");
+    const resultSummaryViewImg = document.getElementById("resultSummaryViewImg");
     const resultWebViewImg = document.getElementById("resultWebViewImg");
     const resultsButtons = document.getElementById("resultsButtons");
     const resultViewMode = document.getElementById("resultViewMode");
@@ -519,23 +527,30 @@
       setBackgroundImage(resultsBgInput, resultsScreen);
       setBackgroundImage(resultsBgInput, partnerIDScreen);
       setBackgroundImage(resultsBgInput, profileInfoScreen);
-    });
-
-    // Results view mode
+    });    // Results view mode
     resultViewMode.addEventListener("change", () => {
       const mode = resultViewMode.value;
       if (mode === "list") {
         resultHeadingImg.style.display = "block";
         resultListViewImg.style.display = "block";
+        resultSummaryViewImg.style.display = "none";
+        resultsButtons.style.display = "flex";
+        resultWebViewImg.style.display = "none";
+      } else if (mode === "summary") {
+        resultHeadingImg.style.display = "block";
+        resultListViewImg.style.display = "none";
+        resultSummaryViewImg.style.display = "block";
         resultsButtons.style.display = "flex";
         resultWebViewImg.style.display = "none";
       } else if (mode === "web") {
         resultHeadingImg.style.display = "none";
         resultListViewImg.style.display = "none";
+        resultSummaryViewImg.style.display = "none";
         resultsButtons.style.display = "none";
         resultWebViewImg.style.display = "block";
       } else {
         resultListViewImg.style.display = "none";
+        resultSummaryViewImg.style.display = "none";
         resultWebViewImg.style.display = "none";
         resultHeadingImg.style.display = "block";
         resultsButtons.style.display = "flex";
@@ -545,12 +560,11 @@
     // Hide share button
     hideShareToggle.addEventListener("change", () => {
       shareBtn.style.display = hideShareToggle.checked ? "none" : "inline-block";
-    });
-
-    // Initialize default states on page load
+    });    // Initialize default states on page load
     window.addEventListener("DOMContentLoaded", () => {
       resultHeadingImg.style.display = "block";
       resultListViewImg.style.display = "block";
+      resultSummaryViewImg.style.display = "none";
       resultsButtons.style.display = "flex";
       resultWebViewImg.style.display = "none";
     });
