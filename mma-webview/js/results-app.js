@@ -6,6 +6,7 @@
  * @param {string} pageLocale - The locale of the page that will display the results.
  */
 function renderResults(results, definitions, sections, pageLocale) {
+   /*
     results = {
     "2023": 3.5,
     "2914": 4.25,
@@ -45,6 +46,7 @@ function renderResults(results, definitions, sections, pageLocale) {
     "211215": 40,
     "timestamp": "2025-07-16T22:24:00.000Z"
 }
+*/
     let container = document.getElementById('results-container')
     let timestamp = document.getElementById("timestamp")
     let measurementInfo = document.getElementById("measurementInfo")
