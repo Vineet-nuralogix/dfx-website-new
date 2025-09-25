@@ -6,6 +6,7 @@
  * @param {string} pageLocale - The locale of the page that will display the results.
  */
 function renderResults(results, definitions, sections, pageLocale) {
+   console.log(results)
    /*
     results = {
     "2023": 3.5,
