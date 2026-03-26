@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Information - NuraLogix MMA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: #333;
+        }
+
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .back-button {
+            background: none;
+            color: #023676;
+            border: none;
+            padding: 10px 0;
+            font-size: 1rem;
+            cursor: pointer;
+            align-self: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .back-button:hover {
+            opacity: 0.7;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #023676;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 0.95rem;
+            color: #666;
+        }
+
+        .form-container {
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #333;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            color: #333;
+            font-size: 1rem;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #023676;
+        }
+
+        /* Radio button groups (gender, yes/no, diabetes) */
+        .radio-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 6px;
+            flex-wrap: wrap;
+        }
+
+        .radio-option {
+            flex: 1;
+            min-width: 80px;
+            position: relative;
+        }
+
+        .radio-input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .radio-label {
+            display: block;
+            padding: 11px 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            text-align: center;
+            cursor: pointer;
+            color: #333;
+            font-size: 0.95rem;
+            white-space: nowrap;
+        }
+
+        .radio-input:checked + .radio-label {
+            background: #023676;
+            border-color: #023676;
+            color: white;
+        }
+
+        .next-button {
+            background: #023676;
+            color: white;
+            border: none;
+            padding: 14px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+
+        .next-button:hover {
+            opacity: 0.85;
+        }
+
+        .next-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .error-message {
+            color: #e53935;
+            font-size: 0.85rem;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .required {
+            color: #e53935;
+        }
+
+        .optional-hint {
+            font-weight: 400;
+            font-size: 0.85rem;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button class="back-button" onclick="goBack()">← Back</button>
+
+        <div class="header">
+            <h1 class="title">User Profile</h1>
+            <p class="subtitle">Please fill in your information to start measurement</p>
+        </div>
+
+        <div class="form-container">
+            <form id="profileForm">
+
+                <!-- Partner ID (optional) -->
+                <div class="form-group">
+                    <label class="form-label" for="partnerID">
+                        Partner ID <span class="optional-hint">(optional)</span>
+                    </label>
+                    <input type="text" id="partnerID" name="partnerID" class="form-input"
+                        placeholder="Enter partner ID">
+                    <div class="error-message" id="partnerIDError">Partner ID must be between 2 and 148 characters</div>
+                </div>
+
+                <!-- Age -->
+                <div class="form-group">
+                    <label class="form-label" for="age">Age <span class="required">*</span></label>
+                    <input type="number" id="age" name="age" class="form-input"
+                        placeholder="Enter your age" min="1" max="120" required>
+                    <div class="error-message" id="ageError">Please enter a valid age (1–120 years)</div>
+                </div>
+
+                <!-- Weight -->
+                <div class="form-group">
+                    <label class="form-label" for="weight">Weight (kg) <span class="required">*</span></label>
+                    <input type="number" id="weight" name="weight" class="form-input"
+                        placeholder="Enter your weight" min="1" max="300" step="0.1" required>
+                    <div class="error-message" id="weightError">Please enter a valid weight (1–300 kg)</div>
+                </div>
+
+                <!-- Height -->
+                <div class="form-group">
+                    <label class="form-label" for="height">Height (cm) <span class="required">*</span></label>
+                    <input type="number" id="height" name="height" class="form-input"
+                        placeholder="Enter your height" min="50" max="250" required>
+                    <div class="error-message" id="heightError">Please enter a valid height (50–250 cm)</div>
+                </div>
+
+                <!-- Gender -->
+                <div class="form-group">
+                    <label class="form-label">Gender <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="male" name="gender" value="male" class="radio-input" required>
+                            <label for="male" class="radio-label">Male</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="female" name="gender" value="female" class="radio-input" required>
+                            <label for="female" class="radio-label">Female</label>
+                        </div>
+                    </div>
+                    <div class="error-message" id="genderError">Please select your gender</div>
+                </div>
+
+                <!-- Do you smoke? -->
+                <div class="form-group">
+                    <label class="form-label">Do you smoke? <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="smokingYes" name="smoking" value="true" class="radio-input" required>
+                            <label for="smokingYes" class="radio-label">Yes</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="smokingNo" name="smoking" value="false" class="radio-input" required>
+                            <label for="smokingNo" class="radio-label">No</label>
+                        </div>
+                    </div>
+                    <div class="error-message" id="smokingError">Please answer this question</div>
+                </div>
+
+                <!-- Are you diabetic? -->
+                <div class="form-group">
+                    <label class="form-label">Are you diabetic? <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="diabetesType1" name="diabetes" value="type1" class="radio-input" required>
+                            <label for="diabetesType1" class="radio-label">Type 1</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="diabetesType2" name="diabetes" value="type2" class="radio-input" required>
+                            <label for="diabetesType2" class="radio-label">Type 2</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="diabetesNone" name="diabetes" value="none" class="radio-input" required>
+                            <label for="diabetesNone" class="radio-label">No</label>
+                        </div>
+                    </div>
+                    <div class="error-message" id="diabetesError">Please answer this question</div>
+                </div>
+
+                <!-- Are you taking blood pressure medication? -->
+                <div class="form-group">
+                    <label class="form-label">Are you taking blood pressure medication? <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="bpMedYes" name="bloodpressuremedication" value="true" class="radio-input" required>
+                            <label for="bpMedYes" class="radio-label">Yes</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="bpMedNo" name="bloodpressuremedication" value="false" class="radio-input" required>
+                            <label for="bpMedNo" class="radio-label">No</label>
+                        </div>
+                    </div>
+                    <div class="error-message" id="bloodpressuremedicationError">Please answer this question</div>
+                </div>
+
+            </form>
+        </div>
+
+        <button class="next-button" id="nextButton" onclick="submitProfile()">Next</button>
+        <button class="next-button" style="margin-top:10px; background:transparent; color:#023676; border:1px solid #023676;" onclick="skipProfile()">Skip Profile</button>
+    </div>
+
+    <script src="js/common.js"></script>
+    <script>
+        function isAndroidBridgeAvailable() {
+            return typeof AndroidBridge !== 'undefined';
+        }
+
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+
+        function skipProfile() {
+            if (isAndroidBridgeAvailable()) {
+                const request = {
+                    type: "navigate",
+                    data: JSON.stringify({ destination: "measurement", params: {} })
+                };
+                try {
+                    AndroidBridge.onJSRequest(JSON.stringify(request));
+                } catch (error) {
+                    console.error('Failed to communicate with Android:', error);
+                    alert('Navigation feature is temporarily unavailable, please try again later');
+                }
+            } else {
+                alert('Will navigate to measurement screen');
+            }
+        }
+
+        function validateForm() {
+            let isValid = true;
+            document.querySelectorAll('.error-message').forEach(e => e.classList.remove('show'));
+
+            // Partner ID (optional, but if filled must be 2–148 chars)
+            const partnerID = document.getElementById('partnerID').value.trim();
+            if (partnerID.length > 0 && (partnerID.length < 2 || partnerID.length > 148)) {
+                document.getElementById('partnerIDError').classList.add('show');
+                isValid = false;
+            }
+
+            const age = parseInt(document.getElementById('age').value);
+            if (!age || age < 1 || age > 120) {
+                document.getElementById('ageError').classList.add('show');
+                isValid = false;
+            }
+
+            const weight = parseFloat(document.getElementById('weight').value);
+            if (!weight || weight < 1 || weight > 300) {
+                document.getElementById('weightError').classList.add('show');
+                isValid = false;
+            }
+
+            const height = parseInt(document.getElementById('height').value);
+            if (!height || height < 50 || height > 250) {
+                document.getElementById('heightError').classList.add('show');
+                isValid = false;
+            }
+
+            if (!document.querySelector('input[name="gender"]:checked')) {
+                document.getElementById('genderError').classList.add('show');
+                isValid = false;
+            }
+
+            if (!document.querySelector('input[name="smoking"]:checked')) {
+                document.getElementById('smokingError').classList.add('show');
+                isValid = false;
+            }
+
+            if (!document.querySelector('input[name="diabetes"]:checked')) {
+                document.getElementById('diabetesError').classList.add('show');
+                isValid = false;
+            }
+
+            if (!document.querySelector('input[name="bloodpressuremedication"]:checked')) {
+                document.getElementById('bloodpressuremedicationError').classList.add('show');
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        function submitProfile() {
+            if (!validateForm()) return;
+
+            const partnerID = document.getElementById('partnerID').value.trim();
+            const smokingValue = document.querySelector('input[name="smoking"]:checked').value === 'true';
+            const bpMedValue = document.querySelector('input[name="bloodpressuremedication"]:checked').value === 'true';
+
+            const formData = {
+                age: document.getElementById('age').value.toString(),
+                weight: document.getElementById('weight').value.toString(),
+                height: document.getElementById('height').value.toString(),
+                gender: document.querySelector('input[name="gender"]:checked').value,
+                smoking: smokingValue,
+                diabetes: document.querySelector('input[name="diabetes"]:checked').value,
+                bloodpressuremedication: bpMedValue
+            };
+
+            if (partnerID.length > 0) {
+                formData.partnerID = partnerID;
+            }
+
+            const nextButton = document.getElementById('nextButton');
+            nextButton.disabled = true;
+            nextButton.textContent = 'Processing...';
+
+            if (isAndroidBridgeAvailable()) {
+                try {
+                    const request = {
+                        type: "navigate",
+                        data: JSON.stringify({ destination: "measurement", params: formData })
+                    };
+                    AndroidBridge.onJSRequest(JSON.stringify(request));
+                } catch (error) {
+                    console.error('Failed to send profile data to Android:', error);
+                    alert('Submission failed, please try again');
+                }
+            } else {
+                console.error('AndroidBridge not available');
+                console.log('Profile data:', formData);
+            }
+
+            nextButton.disabled = false;
+            nextButton.textContent = 'Next';
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('age').addEventListener('input', function() {
+                const v = parseInt(this.value);
+                if (v >= 1 && v <= 120) document.getElementById('ageError').classList.remove('show');
+            });
+            document.getElementById('weight').addEventListener('input', function() {
+                const v = parseFloat(this.value);
+                if (v >= 1 && v <= 300) document.getElementById('weightError').classList.remove('show');
+            });
+            document.getElementById('height').addEventListener('input', function() {
+                const v = parseInt(this.value);
+                if (v >= 50 && v <= 250) document.getElementById('heightError').classList.remove('show');
+            });
+            document.getElementById('partnerID').addEventListener('input', function() {
+                const v = this.value.trim();
+                if (v.length === 0 || (v.length >= 2 && v.length <= 148)) {
+                    document.getElementById('partnerIDError').classList.remove('show');
+                }
+            });
+            ['gender', 'smoking', 'diabetes', 'bloodpressuremedication'].forEach(name => {
+                document.querySelectorAll(`input[name="${name}"]`).forEach(radio => {
+                    radio.addEventListener('change', () => {
+                        document.getElementById(name + 'Error').classList.remove('show');
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
