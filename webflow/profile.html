@@ -243,11 +243,11 @@
                     <label class="form-label">Do you smoke? <span class="required">*</span></label>
                     <div class="radio-group">
                         <div class="radio-option">
-                            <input type="radio" id="smokingYes" name="smoking" value="true" class="radio-input" required>
+                            <input type="radio" id="smokingYes" name="smoking" value="1" class="radio-input" required>
                             <label for="smokingYes" class="radio-label">Yes</label>
                         </div>
                         <div class="radio-option">
-                            <input type="radio" id="smokingNo" name="smoking" value="false" class="radio-input" required>
+                            <input type="radio" id="smokingNo" name="smoking" value="0" class="radio-input" required>
                             <label for="smokingNo" class="radio-label">No</label>
                         </div>
                     </div>
@@ -279,11 +279,11 @@
                     <label class="form-label">Are you taking blood pressure medication? <span class="required">*</span></label>
                     <div class="radio-group">
                         <div class="radio-option">
-                            <input type="radio" id="bpMedYes" name="bloodpressuremedication" value="true" class="radio-input" required>
+                            <input type="radio" id="bpMedYes" name="bloodpressuremedication" value="1" class="radio-input" required>
                             <label for="bpMedYes" class="radio-label">Yes</label>
                         </div>
                         <div class="radio-option">
-                            <input type="radio" id="bpMedNo" name="bloodpressuremedication" value="false" class="radio-input" required>
+                            <input type="radio" id="bpMedNo" name="bloodpressuremedication" value="0" class="radio-input" required>
                             <label for="bpMedNo" class="radio-label">No</label>
                         </div>
                     </div>
@@ -380,17 +380,15 @@
             if (!validateForm()) return;
 
             const partnerID = document.getElementById('partnerID').value.trim();
-            const smokingValue = document.querySelector('input[name="smoking"]:checked').value === 'true';
-            const bpMedValue = document.querySelector('input[name="bloodpressuremedication"]:checked').value === 'true';
 
             const formData = {
                 age: document.getElementById('age').value.toString(),
                 weight: document.getElementById('weight').value.toString(),
                 height: document.getElementById('height').value.toString(),
                 gender: document.querySelector('input[name="gender"]:checked').value,
-                smoking: smokingValue,
+                smoking: parseInt(document.querySelector('input[name="smoking"]:checked').value),
                 diabetes: document.querySelector('input[name="diabetes"]:checked').value,
-                bloodpressuremedication: bpMedValue
+                bloodpressuremedication: parseInt(document.querySelector('input[name="bloodpressuremedication"]:checked').value)
             };
 
             if (partnerID.length > 0) {
