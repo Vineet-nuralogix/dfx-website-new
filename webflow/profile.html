@@ -386,9 +386,9 @@
                 weight: document.getElementById('weight').value.toString(),
                 height: document.getElementById('height').value.toString(),
                 sex: document.querySelector('input[name="sex"]:checked').value,
-                smoking: parseInt(document.querySelector('input[name="smoking"]:checked').value),
+                smoking: document.querySelector('input[name="smoking"]:checked').value,
                 diabetes: document.querySelector('input[name="diabetes"]:checked').value,
-                bloodpressuremedication: parseInt(document.querySelector('input[name="bloodpressuremedication"]:checked').value)
+                bloodpressuremedication: document.querySelector('input[name="bloodpressuremedication"]:checked').value
             };
 
             if (partnerID.length > 0) {
