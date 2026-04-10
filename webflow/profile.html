@@ -227,11 +227,11 @@
                     <label class="form-label">Gender <span class="required">*</span></label>
                     <div class="radio-group">
                         <div class="radio-option">
-                            <input type="radio" id="male" name="gender" value="male" class="radio-input" required>
+                            <input type="radio" id="male" name="sex" value="male" class="radio-input" required>
                             <label for="male" class="radio-label">Male</label>
                         </div>
                         <div class="radio-option">
-                            <input type="radio" id="female" name="gender" value="female" class="radio-input" required>
+                            <input type="radio" id="female" name="sex" value="female" class="radio-input" required>
                             <label for="female" class="radio-label">Female</label>
                         </div>
                     </div>
@@ -259,15 +259,15 @@
                     <label class="form-label">Are you diabetic? <span class="required">*</span></label>
                     <div class="radio-group">
                         <div class="radio-option">
-                            <input type="radio" id="diabetesType1" name="diabetes" value="type1" class="radio-input" required>
+                            <input type="radio" id="diabetesType1" name="diabetes" value="1" class="radio-input" required>
                             <label for="diabetesType1" class="radio-label">Type 1</label>
                         </div>
                         <div class="radio-option">
-                            <input type="radio" id="diabetesType2" name="diabetes" value="type2" class="radio-input" required>
+                            <input type="radio" id="diabetesType2" name="diabetes" value="2" class="radio-input" required>
                             <label for="diabetesType2" class="radio-label">Type 2</label>
                         </div>
                         <div class="radio-option">
-                            <input type="radio" id="diabetesNone" name="diabetes" value="none" class="radio-input" required>
+                            <input type="radio" id="diabetesNone" name="diabetes" value="0" class="radio-input" required>
                             <label for="diabetesNone" class="radio-label">No</label>
                         </div>
                     </div>
@@ -353,7 +353,7 @@
                 isValid = false;
             }
 
-            if (!document.querySelector('input[name="gender"]:checked')) {
+            if (!document.querySelector('input[name="sex"]:checked')) {
                 document.getElementById('genderError').classList.add('show');
                 isValid = false;
             }
@@ -385,7 +385,7 @@
                 age: document.getElementById('age').value.toString(),
                 weight: document.getElementById('weight').value.toString(),
                 height: document.getElementById('height').value.toString(),
-                gender: document.querySelector('input[name="gender"]:checked').value,
+                sex: document.querySelector('input[name="sex"]:checked').value,
                 smoking: parseInt(document.querySelector('input[name="smoking"]:checked').value),
                 diabetes: document.querySelector('input[name="diabetes"]:checked').value,
                 bloodpressuremedication: parseInt(document.querySelector('input[name="bloodpressuremedication"]:checked').value)
@@ -438,10 +438,10 @@
                     document.getElementById('partnerIDError').classList.remove('show');
                 }
             });
-            ['gender', 'smoking', 'diabetes', 'bloodpressuremedication'].forEach(name => {
+            [['sex', 'genderError'], ['smoking', 'smokingError'], ['diabetes', 'diabetesError'], ['bloodpressuremedication', 'bloodpressuremedicationError']].forEach(([name, errorId]) => {
                 document.querySelectorAll(`input[name="${name}"]`).forEach(radio => {
                     radio.addEventListener('change', () => {
-                        document.getElementById(name + 'Error').classList.remove('show');
+                        document.getElementById(errorId).classList.remove('show');
                     });
                 });
             });
