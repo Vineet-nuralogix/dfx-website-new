@@ -654,9 +654,11 @@
         function startNewMeasurement() {
             if (isAndroidBridgeAvailable()) {
                 try {
+                    const savedProfile = sessionStorage.getItem('lastProfileData');
+                    const params = savedProfile ? JSON.parse(savedProfile) : {};
                     AndroidBridge.onJSRequest(JSON.stringify({
                         type: "navigate",
-                        data: JSON.stringify({ destination: "measurement", params: {} })
+                        data: JSON.stringify({ destination: "measurement", params: params })
                     }));
                 } catch (error) {
                     console.error('Failed to navigate to measurement:', error);
