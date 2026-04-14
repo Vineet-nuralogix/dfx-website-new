@@ -323,7 +323,8 @@ function getLocalizedValue(key, locale) {
  * @returns {string} The current browser locale.
  */
 function getLocale() {
-    return (navigator.languages && navigator.languages.length) ? navigator.languages[0] : navigator.language;
+    return localStorage.getItem('selectedLanguage')
+        || ((navigator.languages && navigator.languages.length) ? navigator.languages[0] : navigator.language);
 }
 
 /**
