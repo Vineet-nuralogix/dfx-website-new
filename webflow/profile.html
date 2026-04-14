@@ -189,11 +189,11 @@
 </head>
 <body>
     <div class="container">
-        <button class="back-button" onclick="goBack()">← Back</button>
+        <button class="back-button" onclick="goBack()" data-i18n="btn_back">← Back</button>
 
         <div class="header">
-            <h1 class="title">User Profile</h1>
-            <p class="subtitle">Please fill in your information to start measurement</p>
+            <h1 class="title" data-i18n="title">User Profile</h1>
+            <p class="subtitle" data-i18n="subtitle">Please fill in your information to start measurement</p>
         </div>
 
         <div class="form-container">
@@ -202,114 +202,166 @@
                 <!-- Partner ID (optional) -->
                 <div class="form-group">
                     <label class="form-label" for="partnerID">
-                        Partner ID <span class="optional-hint">(optional)</span>
+                        <span data-i18n="lbl_partner_id">Partner ID</span> <span class="optional-hint" data-i18n="lbl_optional">(optional)</span>
                     </label>
                     <input type="text" id="partnerID" name="partnerID" class="form-input"
-                        placeholder="Enter partner ID">
-                    <div class="error-message" id="partnerIDError">Partner ID must be between 2 and 148 characters</div>
+                        placeholder="Enter partner ID" data-i18n-placeholder="ph_partner_id">
+                    <div class="error-message" id="partnerIDError" data-i18n="err_partner_id">Partner ID must be between 2 and 148 characters</div>
                 </div>
 
                 <!-- Age -->
                 <div class="form-group">
-                    <label class="form-label" for="age">Age <span class="required">*</span></label>
+                    <label class="form-label" for="age"><span data-i18n="lbl_age">Age</span> <span class="required">*</span></label>
                     <input type="number" id="age" name="age" class="form-input"
-                        placeholder="Enter your age" min="1" max="120" required>
-                    <div class="error-message" id="ageError">Please enter a valid age (1–120 years)</div>
+                        placeholder="Enter your age" min="18" max="120" required data-i18n-placeholder="ph_age">
+                    <div class="error-message" id="ageError" data-i18n="err_age">Please enter a valid age (18–120 years)</div>
                 </div>
 
                 <!-- Weight -->
                 <div class="form-group">
-                    <label class="form-label" for="weight">Weight (kg) <span class="required">*</span></label>
+                    <label class="form-label" for="weight"><span data-i18n="lbl_weight">Weight (kg)</span> <span class="required">*</span></label>
                     <input type="number" id="weight" name="weight" class="form-input"
-                        placeholder="Enter your weight" min="1" max="300" step="0.1" required>
-                    <div class="error-message" id="weightError">Please enter a valid weight (1–300 kg)</div>
+                        placeholder="Enter your weight" min="30" max="300" step="0.1" required data-i18n-placeholder="ph_weight">
+                    <div class="error-message" id="weightError" data-i18n="err_weight">Please enter a valid weight (30–300 kg)</div>
                 </div>
 
                 <!-- Height -->
                 <div class="form-group">
-                    <label class="form-label" for="height">Height (cm) <span class="required">*</span></label>
+                    <label class="form-label" for="height"><span data-i18n="lbl_height">Height (cm)</span> <span class="required">*</span></label>
                     <input type="number" id="height" name="height" class="form-input"
-                        placeholder="Enter your height" min="50" max="250" required>
-                    <div class="error-message" id="heightError">Please enter a valid height (50–250 cm)</div>
+                        placeholder="Enter your height" min="120" max="220" required data-i18n-placeholder="ph_height">
+                    <div class="error-message" id="heightError" data-i18n="err_height">Please enter a valid height (120–220 cm)</div>
+                    <div class="error-message" id="bmiError" data-i18n="err_bmi">The entered combination of height and weight results in an invalid BMI (must be 10–65)</div>
                 </div>
 
                 <!-- Gender -->
                 <div class="form-group">
-                    <label class="form-label">Gender <span class="required">*</span></label>
+                    <label class="form-label"><span data-i18n="lbl_gender">Gender</span> <span class="required">*</span></label>
                     <div class="radio-group">
                         <div class="radio-option">
                             <input type="radio" id="male" name="sex" value="male" class="radio-input" required>
-                            <label for="male" class="radio-label">Male</label>
+                            <label for="male" class="radio-label" data-i18n="opt_male">Male</label>
                         </div>
                         <div class="radio-option">
                             <input type="radio" id="female" name="sex" value="female" class="radio-input" required>
-                            <label for="female" class="radio-label">Female</label>
+                            <label for="female" class="radio-label" data-i18n="opt_female">Female</label>
                         </div>
                     </div>
-                    <div class="error-message" id="genderError">Please select your gender</div>
+                    <div class="error-message" id="genderError" data-i18n="err_gender">Please select your gender</div>
                 </div>
 
                 <!-- Do you smoke? -->
                 <div class="form-group">
-                    <label class="form-label">Do you smoke? <span class="required">*</span></label>
+                    <label class="form-label"><span data-i18n="lbl_smoking">Do you smoke?</span> <span class="required">*</span></label>
                     <div class="radio-group">
                         <div class="radio-option">
                             <input type="radio" id="smokingYes" name="smoking" value="1" class="radio-input" required>
-                            <label for="smokingYes" class="radio-label">Yes</label>
+                            <label for="smokingYes" class="radio-label" data-i18n="opt_yes">Yes</label>
                         </div>
                         <div class="radio-option">
                             <input type="radio" id="smokingNo" name="smoking" value="0" class="radio-input" required>
-                            <label for="smokingNo" class="radio-label">No</label>
+                            <label for="smokingNo" class="radio-label" data-i18n="opt_no">No</label>
                         </div>
                     </div>
-                    <div class="error-message" id="smokingError">Please answer this question</div>
+                    <div class="error-message" id="smokingError" data-i18n="err_question">Please answer this question</div>
                 </div>
 
                 <!-- Are you diabetic? -->
                 <div class="form-group">
-                    <label class="form-label">Are you diabetic? <span class="required">*</span></label>
+                    <label class="form-label"><span data-i18n="lbl_diabetes">Are you diabetic?</span> <span class="required">*</span></label>
                     <div class="radio-group">
                         <div class="radio-option">
                             <input type="radio" id="diabetesType1" name="diabetes" value="type1" class="radio-input" required>
-                            <label for="diabetesType1" class="radio-label">Type 1</label>
+                            <label for="diabetesType1" class="radio-label" data-i18n="opt_type1">Type 1</label>
                         </div>
                         <div class="radio-option">
                             <input type="radio" id="diabetesType2" name="diabetes" value="type2" class="radio-input" required>
-                            <label for="diabetesType2" class="radio-label">Type 2</label>
+                            <label for="diabetesType2" class="radio-label" data-i18n="opt_type2">Type 2</label>
                         </div>
                         <div class="radio-option">
                             <input type="radio" id="diabetesNone" name="diabetes" value="0" class="radio-input" required>
-                            <label for="diabetesNone" class="radio-label">No</label>
+                            <label for="diabetesNone" class="radio-label" data-i18n="opt_no">No</label>
                         </div>
                     </div>
-                    <div class="error-message" id="diabetesError">Please answer this question</div>
+                    <div class="error-message" id="diabetesError" data-i18n="err_question">Please answer this question</div>
                 </div>
 
                 <!-- Are you taking blood pressure medication? -->
                 <div class="form-group">
-                    <label class="form-label">Are you taking blood pressure medication? <span class="required">*</span></label>
+                    <label class="form-label"><span data-i18n="lbl_bp_med">Are you taking blood pressure medication?</span> <span class="required">*</span></label>
                     <div class="radio-group">
                         <div class="radio-option">
                             <input type="radio" id="bpMedYes" name="bloodpressuremedication" value="1" class="radio-input" required>
-                            <label for="bpMedYes" class="radio-label">Yes</label>
+                            <label for="bpMedYes" class="radio-label" data-i18n="opt_yes">Yes</label>
                         </div>
                         <div class="radio-option">
                             <input type="radio" id="bpMedNo" name="bloodpressuremedication" value="0" class="radio-input" required>
-                            <label for="bpMedNo" class="radio-label">No</label>
+                            <label for="bpMedNo" class="radio-label" data-i18n="opt_no">No</label>
                         </div>
                     </div>
-                    <div class="error-message" id="bloodpressuremedicationError">Please answer this question</div>
+                    <div class="error-message" id="bloodpressuremedicationError" data-i18n="err_question">Please answer this question</div>
                 </div>
 
             </form>
         </div>
 
-        <button class="next-button" id="nextButton" onclick="submitProfile()">Next</button>
-        <button class="next-button" style="margin-top:10px; background:transparent; color:#023676; border:1px solid #023676;" onclick="skipProfile()">Skip Profile</button>
+        <button class="next-button" id="nextButton" onclick="submitProfile()" data-i18n="btn_next">Next</button>
+        <button class="next-button" style="margin-top:10px; background:transparent; color:#023676; border:1px solid #023676;" onclick="skipProfile()" data-i18n="btn_skip">Skip Profile</button>
     </div>
 
     <script src="js/common.js"></script>
     <script>
+        const profileTranslations = {
+            en: {
+                title: 'User Profile', subtitle: 'Please fill in your information to start measurement',
+                btn_back: '← Back', btn_next: 'Next', btn_skip: 'Skip Profile', btn_processing: 'Processing...',
+                lbl_partner_id: 'Partner ID', lbl_optional: '(optional)',
+                lbl_age: 'Age', lbl_weight: 'Weight (kg)', lbl_height: 'Height (cm)',
+                lbl_gender: 'Gender', lbl_smoking: 'Do you smoke?',
+                lbl_diabetes: 'Are you diabetic?', lbl_bp_med: 'Are you taking blood pressure medication?',
+                opt_male: 'Male', opt_female: 'Female', opt_yes: 'Yes', opt_no: 'No',
+                opt_type1: 'Type 1', opt_type2: 'Type 2',
+                err_partner_id: 'Partner ID must be between 2 and 148 characters',
+                err_age: 'Please enter a valid age (18–120 years)',
+                err_weight: 'Please enter a valid weight (30–300 kg)',
+                err_height: 'Please enter a valid height (120–220 cm)',
+                err_bmi: 'The entered combination of height and weight results in an invalid BMI (must be 10–65)',
+                err_gender: 'Please select your gender', err_question: 'Please answer this question',
+                ph_partner_id: 'Enter partner ID', ph_age: 'Enter your age',
+                ph_weight: 'Enter your weight', ph_height: 'Enter your height'
+            },
+            zh: {
+                title: '用户信息', subtitle: '请填写信息以开始测量',
+                btn_back: '← 返回', btn_next: '下一步', btn_skip: '跳过', btn_processing: '处理中...',
+                lbl_partner_id: '合作伙伴ID', lbl_optional: '(可选)',
+                lbl_age: '年龄', lbl_weight: '体重 (kg)', lbl_height: '身高 (cm)',
+                lbl_gender: '性别', lbl_smoking: '您吸烟吗？',
+                lbl_diabetes: '您有糖尿病吗？', lbl_bp_med: '您正在服用血压药物吗？',
+                opt_male: '男', opt_female: '女', opt_yes: '是', opt_no: '否',
+                opt_type1: '1型', opt_type2: '2型',
+                err_partner_id: '合作伙伴ID必须在2到148个字符之间',
+                err_age: '请输入有效年龄（18-120岁）',
+                err_weight: '请输入有效体重（30-300 kg）',
+                err_height: '请输入有效身高（120-220 cm）',
+                err_bmi: '身高和体重的组合导致BMI无效（必须为10-65）',
+                err_gender: '请选择性别', err_question: '请回答此问题',
+                ph_partner_id: '输入合作伙伴ID', ph_age: '输入年龄',
+                ph_weight: '输入体重', ph_height: '输入身高'
+            }
+        };
+
+        function applyTranslations(lang) {
+            const t = profileTranslations[lang] || profileTranslations['en'];
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (t[key] !== undefined) el.textContent = t[key];
+            });
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if (t[key] !== undefined) el.placeholder = t[key];
+            });
+        }
+
         function isAndroidBridgeAvailable() {
             return typeof AndroidBridge !== 'undefined';
         }
@@ -347,21 +399,29 @@
             }
 
             const age = parseInt(document.getElementById('age').value);
-            if (!age || age < 1 || age > 120) {
+            if (!age || age < 18 || age > 120) {
                 document.getElementById('ageError').classList.add('show');
                 isValid = false;
             }
 
             const weight = parseFloat(document.getElementById('weight').value);
-            if (!weight || weight < 1 || weight > 300) {
+            if (!weight || weight < 30 || weight > 300) {
                 document.getElementById('weightError').classList.add('show');
                 isValid = false;
             }
 
             const height = parseInt(document.getElementById('height').value);
-            if (!height || height < 50 || height > 250) {
+            if (!height || height < 120 || height > 220) {
                 document.getElementById('heightError').classList.add('show');
                 isValid = false;
+            }
+
+            if (weight && height) {
+                const bmi = weight / Math.pow(height / 100, 2);
+                if (bmi < 10 || bmi > 65) {
+                    document.getElementById('bmiError').classList.add('show');
+                    isValid = false;
+                }
             }
 
             if (!document.querySelector('input[name="sex"]:checked')) {
@@ -407,8 +467,10 @@
             }
 
             const nextButton = document.getElementById('nextButton');
+            const lang = localStorage.getItem('selectedLanguage') || 'en';
+            const t = profileTranslations[lang] || profileTranslations['en'];
             nextButton.disabled = true;
-            nextButton.textContent = 'Processing...';
+            nextButton.textContent = t.btn_processing;
 
             if (isAndroidBridgeAvailable()) {
                 try {
@@ -427,10 +489,12 @@
             }
 
             nextButton.disabled = false;
-            nextButton.textContent = 'Next';
+            nextButton.textContent = t.btn_next;
         }
 
         document.addEventListener('DOMContentLoaded', function() {
+            applyTranslations(localStorage.getItem('selectedLanguage') || 'en');
+
             // Start hidden (opacity:0). After 100ms, add .visible to fade in.
             // If the WebView resumes this page after a native scan, Android calls
             // onNativeRequest and navigates away before the 100ms fires — so the
@@ -441,15 +505,17 @@
 
             document.getElementById('age').addEventListener('input', function() {
                 const v = parseInt(this.value);
-                if (v >= 1 && v <= 120) document.getElementById('ageError').classList.remove('show');
+                if (v >= 18 && v <= 120) document.getElementById('ageError').classList.remove('show');
             });
             document.getElementById('weight').addEventListener('input', function() {
                 const v = parseFloat(this.value);
-                if (v >= 1 && v <= 300) document.getElementById('weightError').classList.remove('show');
+                if (v >= 30 && v <= 300) document.getElementById('weightError').classList.remove('show');
+                document.getElementById('bmiError').classList.remove('show');
             });
             document.getElementById('height').addEventListener('input', function() {
                 const v = parseInt(this.value);
-                if (v >= 50 && v <= 250) document.getElementById('heightError').classList.remove('show');
+                if (v >= 120 && v <= 220) document.getElementById('heightError').classList.remove('show');
+                document.getElementById('bmiError').classList.remove('show');
             });
             document.getElementById('partnerID').addEventListener('input', function() {
                 const v = this.value.trim();

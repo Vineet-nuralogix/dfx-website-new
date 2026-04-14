@@ -256,6 +256,20 @@
             max-width: 55em;
         }
 
+        .back-button {
+            background: none;
+            color: #023676;
+            border: none;
+            padding: 10px 1em;
+            font-size: 1rem;
+            cursor: pointer;
+            display: block;
+        }
+
+        .back-button:hover {
+            opacity: 0.7;
+        }
+
         /* Navigation buttons footer */
         footer {
             background-color: #e3e3e3;
@@ -513,13 +527,14 @@
 </head>
 <body>
     <div id="main-container">
-        <div id="main-header"><h1>Measurement Results</h1></div>
+        <button class="back-button" onclick="backToHome()" data-i18n="btn_back">← Back</button>
+        <div id="main-header"><h1 data-i18n="title">Measurement Results</h1></div>
         <div id="measurementInfo"></div>
         <div id="timestamp"></div>
 
         <div id="loadingMessage" class="loading">
             <div class="loading-spinner"></div>
-            Loading measurement results...
+            <span data-i18n="loading">Loading measurement results...</span>
         </div>
 
         <div id="errorMessage" class="error-message" style="display: none;">
@@ -532,10 +547,7 @@
     </div>
     <footer>
         <div class="button-container">
-            <button class="button button-primary" onclick="startNewMeasurement()">
-                New Measurement
-            </button>
-            <button class="button button-secondary" onclick="backToHome()">
+            <button class="button button-secondary" onclick="backToHome()" data-i18n="btn_home">
                 Back to Home
             </button>
         </div>
@@ -606,6 +618,19 @@
         })();
     </script>
     <script>
+        const resultTranslations = {
+            en: { title: 'Measurement Results', btn_back: '← Back', btn_home: 'Back to Home', loading: 'Loading measurement results...' },
+            zh: { title: '测量结果', btn_back: '← 返回', btn_home: '返回主页', loading: '正在加载测量结果...' }
+        };
+
+        function applyResultTranslations(lang) {
+            const t = resultTranslations[lang] || resultTranslations['en'];
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (t[key] !== undefined) el.textContent = t[key];
+            });
+        }
+
         let measurementData = null;
 
         function isAndroidBridgeAvailable() {
@@ -634,7 +659,7 @@
 
             results["timestamp"] = results.timestamp ? new Date(results.timestamp) : new Date();
 
-            const locale = getLocale();
+            const locale = localStorage.getItem('selectedLanguage') || getLocale();
             renderResults(
                 results,
                 DeepAffexWebResultsData.definitions.pointDefinitions,
@@ -682,6 +707,16 @@
         }
 
         document.addEventListener('DOMContentLoaded', function () {
+            const savedLanguage = localStorage.getItem('selectedLanguage');
+            applyResultTranslations(savedLanguage || 'en');
+            if (savedLanguage && isAndroidBridgeAvailable()) {
+                try {
+                    AndroidBridge.onJSRequest(JSON.stringify({ type: "switchLanguage", data: savedLanguage }));
+                } catch (error) {
+                    console.error('Failed to sync language with Android:', error);
+                }
+            }
+
             const storedData = sessionStorage.getItem('measurementData');
             if (storedData) {
                 sessionStorage.removeItem('measurementData');
