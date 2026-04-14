@@ -175,8 +175,15 @@
             color: #999;
         }
 
-        body {
-            visibility: hidden;
+        .container {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .container.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
@@ -263,11 +270,11 @@
                     <label class="form-label">Are you diabetic? <span class="required">*</span></label>
                     <div class="radio-group">
                         <div class="radio-option">
-                            <input type="radio" id="diabetesType1" name="diabetes" value="1" class="radio-input" required>
+                            <input type="radio" id="diabetesType1" name="diabetes" value="type1" class="radio-input" required>
                             <label for="diabetesType1" class="radio-label">Type 1</label>
                         </div>
                         <div class="radio-option">
-                            <input type="radio" id="diabetesType2" name="diabetes" value="2" class="radio-input" required>
+                            <input type="radio" id="diabetesType2" name="diabetes" value="type2" class="radio-input" required>
                             <label for="diabetesType2" class="radio-label">Type 2</label>
                         </div>
                         <div class="radio-option">
@@ -319,9 +326,6 @@
                 };
                 try {
                     AndroidBridge.onJSRequest(JSON.stringify(request));
-                    // Clear any saved profile — skipping means no profile data should
-                    // be reused on a future "New Measurement" from the results page.
-                    sessionStorage.removeItem('lastProfileData');
                 } catch (error) {
                     console.error('Failed to communicate with Android:', error);
                     alert('Navigation feature is temporarily unavailable, please try again later');
@@ -413,8 +417,6 @@
                         data: JSON.stringify({ destination: "measurement", params: formData })
                     };
                     AndroidBridge.onJSRequest(JSON.stringify(request));
-                    // Persist profile for re-use on "New Measurement" from the results page
-                    sessionStorage.setItem('lastProfileData', JSON.stringify(formData));
                 } catch (error) {
                     console.error('Failed to send profile data to Android:', error);
                     alert('Submission failed, please try again');
@@ -429,17 +431,13 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            // The WebView briefly restores this page whenever it resumes from a native screen
-            // (scan). Keep the body hidden; if Android navigates away (via onNativeRequest)
-            // the user never sees it. If Android does NOT navigate away (normal entry from
-            // index.html), reveal the form after a short delay.
-            if (isAndroidBridgeAvailable()) {
-                setTimeout(function() {
-                    document.body.style.visibility = 'visible';
-                }, 300);
-            } else {
-                document.body.style.visibility = 'visible';
-            }
+            // Start hidden (opacity:0). After 100ms, add .visible to fade in.
+            // If the WebView resumes this page after a native scan, Android calls
+            // onNativeRequest and navigates away before the 100ms fires — so the
+            // flash never shows. On a normal visit the content fades in smoothly.
+            setTimeout(function() {
+                document.querySelector('.container').classList.add('visible');
+            }, 100);
 
             document.getElementById('age').addEventListener('input', function() {
                 const v = parseInt(this.value);
