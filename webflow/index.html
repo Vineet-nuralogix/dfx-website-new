@@ -358,18 +358,6 @@
             const savedLang = localStorage.getItem('selectedLanguage');
             const currentLang = savedLang || getCurrentLanguageCode();
             handleLanguageSelection(currentLang);
-
-            // --- TEMP TEST: getDeviceID & getCurrentLanguageCode ---
-            const deviceID = getDeviceID();
-            const langCode = getCurrentLanguageCode();
-            console.log('[TEST] getDeviceID():', deviceID);
-            console.log('[TEST] getCurrentLanguageCode():', langCode);
-
-            const testEl = document.createElement('div');
-            testEl.style.cssText = 'position:fixed;bottom:10px;left:10px;right:10px;background:#f0f4ff;border:1px solid #023676;border-radius:8px;padding:10px 14px;font-size:0.8rem;font-family:monospace;z-index:9999;color:#023676;';
-            testEl.innerHTML = `<strong>[TEST]</strong><br>Device ID: <code>${deviceID}</code><br>Language Code: <code>${langCode}</code>`;
-            document.body.appendChild(testEl);
-            // --- END TEMP TEST ---
         });
     </script>
 </body>
