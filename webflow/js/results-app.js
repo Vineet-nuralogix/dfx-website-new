@@ -6,74 +6,74 @@
  * @param {string} pageLocale - The locale of the page that will display the results.
  */
 function renderResults(results, definitions, sections, pageLocale) {
-    let container = document.getElementById('results-container')
-    let timestamp = document.getElementById("timestamp")
-    let measurementInfo = document.getElementById("measurementInfo")
+    const container = document.getElementById('results-container');
+    const timestamp = document.getElementById("timestamp");
+    const measurementInfo = document.getElementById("measurementInfo");
 
     timestamp.innerHTML = Intl.DateTimeFormat(pageLocale, {
         dateStyle: 'medium',
         timeStyle: 'short'
-    }).format(results["timestamp"])
+    }).format(results["timestamp"]);
 
-    let snr = results["SNR"]
+    const snr = results["SNR"];
     if (snr && !isNaN(snr)) {
-        let snrInfo = document.createElement('span')
-        let snrPointDefinition = definitions["SNR"] || { key: "SNR" }
-        let snrDisplayValue = formatResultValue(
+        const snrInfo = document.createElement('span')
+        const snrPointDefinition = definitions["SNR"] || { key: "SNR" };
+        const snrDisplayValue = formatResultValue(
             snr,
             snrPointDefinition.decimalPlaces,
             snrPointDefinition.units,
             pageLocale
-        )
-        snrInfo.id = "snrContainer"
-        snrInfo.textContent = `SNR: ${snrDisplayValue} dB`
+        );
+        snrInfo.id = "snrContainer";
+        snrInfo.textContent = `SNR: ${snrDisplayValue} dB`;
 
         if (typeof PointInfoDialog !== 'undefined') {
-            let snrOpenDialog = () => {
-                let dialogOptions = PointInfoDialog.buildPointInfoDialogOptions(snrPointDefinition, snr, pageLocale)
-                PointInfoDialog.showPointInfoDialog(dialogOptions.title, dialogOptions.content, pageLocale)
-            }
-            snrInfo.appendChild(PointInfoDialog.createResultInfoIcon(pageLocale, snrOpenDialog))
+            const snrOpenDialog = () => {
+                const dialogOptions = PointInfoDialog.buildPointInfoDialogOptions(snrPointDefinition, snr, pageLocale);
+                PointInfoDialog.showPointInfoDialog(dialogOptions.title, dialogOptions.content, pageLocale);
+            };
+            snrInfo.appendChild(PointInfoDialog.createResultInfoIcon(pageLocale, snrOpenDialog));
         }
 
-        measurementInfo.append(snrInfo)
+        measurementInfo.append(snrInfo);
     }
 
-    let starRating = results["STAR_RATING"]
+    const starRating = results["STAR_RATING"];
     if (starRating && !isNaN(starRating)) {
-        let stars = document.createElement('span')
-        stars.id = "starsContainer"
+        const stars = document.createElement('span')
+        stars.id = "starsContainer";
         for (let i = 1; i <= 5; i++) {
-            let star = document.createElement('div')
+            const star = document.createElement('div');
             if (i <= starRating) {
-                star.className = "star greenBackground"
+                star.className = "star greenBackground";
             } else {
-                star.className = "star greyBackground"
+                star.className = "star greyBackground";
             }
-            stars.append(star)
+            stars.append(star);
         }
 
         if (typeof PointInfoDialog !== 'undefined') {
-            let starPointDefinition = definitions["STAR_RATING"] || { key: "STAR_RATING" }
-            let starOpenDialog = () => {
-                let dialogOptions = PointInfoDialog.buildPointInfoDialogOptions(starPointDefinition, starRating, pageLocale)
-                PointInfoDialog.showPointInfoDialog(dialogOptions.title, dialogOptions.content, pageLocale)
-            }
-            stars.appendChild(PointInfoDialog.createResultInfoIcon(pageLocale, starOpenDialog))
+            const starPointDefinition = definitions["STAR_RATING"] || { key: "STAR_RATING" };
+            const starOpenDialog = () => {
+                const dialogOptions = PointInfoDialog.buildPointInfoDialogOptions(starPointDefinition, starRating, pageLocale);
+                PointInfoDialog.showPointInfoDialog(dialogOptions.title, dialogOptions.content, pageLocale);
+            };
+            stars.appendChild(PointInfoDialog.createResultInfoIcon(pageLocale, starOpenDialog));
         }
 
-        measurementInfo.appendChild(stars)
+        measurementInfo.appendChild(stars);
     }
 
     sections.forEach(section => {
-        let titleEl = document.createElement('h2');
+        const titleEl = document.createElement('h2');
         titleEl.textContent = localize(section.titleLocalizationKey, pageLocale);
         container.appendChild(titleEl);
-        var numberOfChildren = 0
+        let numberOfChildren = 0;
 
         for (let i = 0; i < section.pointsIDs.length; i++) {
-            let pointID = section.pointsIDs[i];
-            let nextPointID = section.pointsIDs[i + 1];
+            const pointID = section.pointsIDs[i];
+            const nextPointID = section.pointsIDs[i + 1];
             // Special handling for BP_SYSTOLIC and BP_DIASTOLIC combination
             if (pointID === "BP_SYSTOLIC" && nextPointID === "BP_DIASTOLIC") {
                 renderBloodPressureRow(results, definitions, container, pageLocale);
@@ -90,7 +90,7 @@ function renderResults(results, definitions, sections, pageLocale) {
                 result = results["BODY_TEMPERATURE"];
             }
 
-            let pointDefinition = definitions[pointID]
+            const pointDefinition = definitions[pointID];
             if (!pointDefinition) continue;
 
             // Skip rendering if result is not available and point is configured to hide when missing
@@ -103,10 +103,10 @@ function renderResults(results, definitions, sections, pageLocale) {
             numberOfChildren += 1;
         }
 
-        if (numberOfChildren == 0) {
-            container.removeChild(titleEl)
+        if (numberOfChildren === 0) {
+            container.removeChild(titleEl);
         }
-    })
+    });
 }
 
 /**
@@ -116,43 +116,43 @@ function renderResults(results, definitions, sections, pageLocale) {
  * @returns {HTMLElement} The constructed result element.
  */
 function renderResultRow(result, pointDefinition, container, locale) {
-    let colorClass = getColorClass(result, pointDefinition);
-    let formattedValue = formatResultValue(result, pointDefinition.decimalPlaces, pointDefinition.units, locale);
+    const colorClass = getColorClass(result, pointDefinition);
+    const formattedValue = formatResultValue(result, pointDefinition.decimalPlaces, pointDefinition.units, locale);
 
-    let resultEl = document.createElement('div');
-    resultEl.className = `result`;
+    const resultEl = document.createElement('div');
+    resultEl.className = 'result';
     resultEl.dataset.pointKey = pointDefinition.key;
 
-    let iconEl = document.createElement('div');
+    const iconEl = document.createElement('div');
     iconEl.className = 'result-icon';
     loadSVGIcon(iconEl, pointDefinition.key);
 
-    let nameLabel = document.createElement('span');
+    const nameLabel = document.createElement('span');
     nameLabel.className = "result-name";
     nameLabel.textContent = localize(`DFXPOINT_TITLE:${pointDefinition.key}`, locale);
 
-    let valueEl = document.createElement('span');
+    const valueEl = document.createElement('span');
     valueEl.className = `result-value ${colorClass}`;
-    valueEl.textContent = `${formattedValue}`;
+    valueEl.textContent = formattedValue;
 
-    let unitEl = document.createElement('span');
+    const unitEl = document.createElement('span');
     if (pointDefinition.units !== "" && pointDefinition.units !== "PERCENT") {
-        unitEl.className = `result-unit`;
-        unitEl.textContent = `${localize(`DFXPOINT_UNIT:${pointDefinition.units}`, locale)}`;
+        unitEl.className = 'result-unit';
+        unitEl.textContent = localize(`DFXPOINT_UNIT:${pointDefinition.units}`, locale);
     }
 
     resultEl.appendChild(iconEl);
 
-    let nameWrapper = document.createElement('div');
+    const nameWrapper = document.createElement('div');
     nameWrapper.className = 'result-name-wrapper';
     nameWrapper.appendChild(nameLabel);
 
     if (typeof PointInfoDialog !== 'undefined' && shouldShowInfoIcon(pointDefinition.key)) {
-        let openDialog = () => {
-            let dialogOptions = PointInfoDialog.buildPointInfoDialogOptions(pointDefinition, result, locale)
-            PointInfoDialog.showPointInfoDialog(dialogOptions.title, dialogOptions.content, locale)
-        }
-        nameWrapper.appendChild(PointInfoDialog.createResultInfoIcon(locale, openDialog))
+        const openDialog = () => {
+            const dialogOptions = PointInfoDialog.buildPointInfoDialogOptions(pointDefinition, result, locale);
+            PointInfoDialog.showPointInfoDialog(dialogOptions.title, dialogOptions.content, locale);
+        };
+        nameWrapper.appendChild(PointInfoDialog.createResultInfoIcon(locale, openDialog));
     }
     resultEl.appendChild(nameWrapper);
 
@@ -183,62 +183,62 @@ function shouldShowInfoIcon(pointKey) {
  * @param {HTMLElement} container - The container to append the blood pressure row to.
  */
 function renderBloodPressureRow(results, definitions, container, locale) {
-    let systolicResult = results["BP_SYSTOLIC"];
-    let diastolicResult = results["BP_DIASTOLIC"];
-    let systolicDefinition = definitions["BP_SYSTOLIC"];
-    let diastolicDefinition = definitions["BP_DIASTOLIC"];
+    const systolicResult = results["BP_SYSTOLIC"];
+    const diastolicResult = results["BP_DIASTOLIC"];
+    const systolicDefinition = definitions["BP_SYSTOLIC"];
+    const diastolicDefinition = definitions["BP_DIASTOLIC"];
 
-    let resultEl = document.createElement('div');
-    resultEl.className = `result`;
+    const resultEl = document.createElement('div');
+    resultEl.className = 'result';
     resultEl.dataset.pointKey = 'BP';
 
-    let iconEl = document.createElement('div');
+    const iconEl = document.createElement('div');
     iconEl.className = 'result-icon';
     loadSVGIcon(iconEl, 'BP');
 
-    let nameLabel = document.createElement('span');
+    const nameLabel = document.createElement('span');
     nameLabel.className = "result-name";
-    nameLabel.textContent = `${localize("DFXPOINT_TITLE:BP", locale)}`;
+    nameLabel.textContent = localize("DFXPOINT_TITLE:BP", locale);
 
-    let bloodPressureValueEl = document.createElement('span');
-    bloodPressureValueEl.className = `result-value`;
+    const bloodPressureValueEl = document.createElement('span');
+    bloodPressureValueEl.className = 'result-value';
 
-    let systolicValueEl = document.createElement('span');
-    systolicValueEl.className = `${getColorClass(systolicResult, systolicDefinition)}`;
-    systolicValueEl.textContent = `${formatResultValue(systolicResult, systolicDefinition.decimalPlaces, systolicDefinition.units, locale)}`;
+    const systolicValueEl = document.createElement('span');
+    systolicValueEl.className = getColorClass(systolicResult, systolicDefinition);
+    systolicValueEl.textContent = formatResultValue(systolicResult, systolicDefinition.decimalPlaces, systolicDefinition.units, locale);
 
-    let separatorValueEl = document.createElement('span');
-    separatorValueEl.className = `grey`;
+    const separatorValueEl = document.createElement('span');
+    separatorValueEl.className = 'grey';
     separatorValueEl.textContent = "\xa0/\xa0";
 
-    let diastolicValueEl = document.createElement('span');
-    diastolicValueEl.className = `${getColorClass(diastolicResult, diastolicDefinition)}`;
-    diastolicValueEl.textContent = `${formatResultValue(diastolicResult, diastolicDefinition.decimalPlaces, diastolicDefinition.units, locale)}`;
+    const diastolicValueEl = document.createElement('span');
+    diastolicValueEl.className = getColorClass(diastolicResult, diastolicDefinition);
+    diastolicValueEl.textContent = formatResultValue(diastolicResult, diastolicDefinition.decimalPlaces, diastolicDefinition.units, locale);
 
     bloodPressureValueEl.appendChild(systolicValueEl);
     bloodPressureValueEl.appendChild(separatorValueEl);
     bloodPressureValueEl.appendChild(diastolicValueEl);
 
-    let unitEl = document.createElement('span');
-    unitEl.className = `result-unit`;
+    const unitEl = document.createElement('span');
+    unitEl.className = 'result-unit';
     unitEl.textContent = localize("DFXPOINT_UNIT:MMHG", locale);
 
     resultEl.appendChild(iconEl);
 
-    let nameWrapper = document.createElement('div');
+    const nameWrapper = document.createElement('div');
     nameWrapper.className = 'result-name-wrapper';
     nameWrapper.appendChild(nameLabel);
 
     if (typeof PointInfoDialog !== 'undefined') {
-        let openDialog = () => {
-            let dialogOptions = PointInfoDialog.buildBloodPressureInfoDialogOptions(
+        const openDialog = () => {
+            const dialogOptions = PointInfoDialog.buildBloodPressureInfoDialogOptions(
                 systolicDefinition, systolicResult,
                 diastolicDefinition, diastolicResult,
                 locale
-            )
-            PointInfoDialog.showPointInfoDialog(dialogOptions.title, dialogOptions.content, locale)
-        }
-        nameWrapper.appendChild(PointInfoDialog.createResultInfoIcon(locale, openDialog))
+            );
+            PointInfoDialog.showPointInfoDialog(dialogOptions.title, dialogOptions.content, locale);
+        };
+        nameWrapper.appendChild(PointInfoDialog.createResultInfoIcon(locale, openDialog));
     }
     resultEl.appendChild(nameWrapper);
 
@@ -256,12 +256,12 @@ function renderBloodPressureRow(results, definitions, container, locale) {
  */
 function getColorClass(value, pointDefinition) {
     let colorClass = 'grey';
-    let decimalPlaces = pointDefinition.decimalPlaces;
-    let roundedValue = roundToDecimalPlaces(value, decimalPlaces);
-    let segments = pointDefinition.scales?.default?.segments;
+    const decimalPlaces = pointDefinition.decimalPlaces;
+    const roundedValue = roundToDecimalPlaces(value, decimalPlaces);
+    const segments = pointDefinition.scales?.default?.segments;
     if (segments) {
         for (let i = 0; i < segments.length; i++) {
-            let segment = segments[i];
+            const segment = segments[i];
             if (roundedValue >= segment.min && roundedValue < segment.max) {
                 colorClass = segment.color;
                 break;
@@ -287,18 +287,18 @@ function getColorClass(value, pointDefinition) {
  * @returns {string} The formatted value as a string.
  */
 function formatResultValue(value, decimalPlaces, units, locale) {
-    let isPercentageUnit = units == "PERCENT"
-    let roundedValue = roundToDecimalPlaces(value, decimalPlaces);
-    let convertedValue = isPercentageUnit ? roundedValue / 100 : roundedValue
-    let options = { 
+    const isPercentageUnit = units === "PERCENT";
+    const roundedValue = roundToDecimalPlaces(value, decimalPlaces);
+    const convertedValue = isPercentageUnit ? roundedValue / 100 : roundedValue;
+    const options = { 
         maximumFractionDigits: decimalPlaces, 
         minimumFractionDigits: decimalPlaces, 
         style: (isPercentageUnit ? "percent" : "decimal") 
-    }
+    };
     if (isNaN(convertedValue)) {
-        return "?"
+        return "?";
     } else {
-        return new Intl.NumberFormat(locale, options).format(convertedValue)
+        return new Intl.NumberFormat(locale, options).format(convertedValue);
     }
 }
 
@@ -313,9 +313,9 @@ function localize(key, locale) {
 }
 
 function getLocalizedValue(key, locale) {
-    let entry = DeepAffexWebResultsData.translations[key]
-    if (!entry) return null
-    return entry[locale] ?? entry.default ?? null
+    const entry = DeepAffexWebResultsData.translations[key];
+    if (!entry) return null;
+    return entry[locale] ?? entry.default ?? null;
 }
 
 /**
@@ -404,17 +404,17 @@ function loadSVGIcon(iconElement, iconName) {
  * @param {string} lang - The language code.
  */
 function renderDisclaimer(lang) {
-    let container = document.getElementById('disclaimer-container');
+    const container = document.getElementById('disclaimer-container');
     if (!container) return;
-    let p = document.createElement('p');
+    const p = document.createElement('p');
     p.className = 'footer-disclaimer';
 
-    let icon = document.createElement('img');
+    const icon = document.createElement('img');
     icon.src = 'assets/imgs/warning32.png';
     icon.alt = 'Warning';
     icon.style.cssText = 'width:18px;height:18px;margin-right:5px;vertical-align:middle;display:inline-block;';
 
-    let text = document.createTextNode(localize('RESULTS_DISCLAIMER', lang));
+    const text = document.createTextNode(localize('RESULTS_DISCLAIMER', lang));
     p.appendChild(icon);
     p.appendChild(text);
     container.appendChild(p);

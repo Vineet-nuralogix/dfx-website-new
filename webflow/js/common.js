@@ -1,45 +1,34 @@
-//
-
- /**
-   This function handle requests from native code.
-  * It will dispatch the request to the appropriate handler based on the request type.
-  * @param {string} requestJson - The JSON string from native code, which is a NativeRequest object.
+/**
+ * Handles requests from native code.
+ * Dispatches the request to the appropriate handler based on the request type.
+ * @param {string} requestJson - The JSON string from native code, which is a NativeRequest object.
  */
 function onNativeRequest(requestJson) {
     try {
         const request = JSON.parse(requestJson);
-        const type = request.type;
-        const data = request.data;
+        const { type, data } = request;
 
         console.log('onNativeRequest received:', type, data);
-        
+
         if (type === 'navigate') {
-            // Parse the navigation data
             const navData = JSON.parse(data);
-            const destination = navData.destination;
-            const paramsJson = navData.paramsJson;
-            
-            let targetUrl;
-            if (destination === 'index') {
-                targetUrl = 'index.html';
-            } 
-            else if (destination === 'profile') {
-                targetUrl = 'profile.html';
-            }
-            else if (destination === 'results') {
-                targetUrl = 'result.html';
-            }
-            
+            const { destination, paramsJson } = navData;
+
+            const destinationUrls = {
+                index: 'index.html',
+                profile: 'profile.html',
+                results: 'result.html'
+            };
+
+            const targetUrl = destinationUrls[destination];
             if (targetUrl) {
                 console.log('Navigating to:', targetUrl);
                 if (paramsJson) {
-                    // Store paramsJson in sessionStorage to pass to the next page
                     sessionStorage.setItem('measurementData', paramsJson);
                 }
                 window.location.href = targetUrl;
             }
         }
-        // More request types can be handled here
     } catch (error) {
         console.error('Error in onNativeRequest:', error);
     }

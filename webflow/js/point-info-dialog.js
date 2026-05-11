@@ -25,11 +25,11 @@ const PointInfoDialog = (() => {
         CARDIACWORKLOAD: 'CARDIACWORKLOAD',
         VASCULARAGE: 'VASCULARAGE',
         VASCULARCAPACITY: 'VASCULARCAPACITY'
-    }
+    };
 
-    const POINTS_WITHOUT_INDICATOR = new Set(['AGE', 'SNR'])
+    const POINTS_WITHOUT_INDICATOR = new Set(['AGE', 'SNR']);
 
-    const STAR_POINT_IDS = new Set(['SIGNAL_STAR_INFO', 'STAR_RATING'])
+    const STAR_POINT_IDS = new Set(['SIGNAL_STAR_INFO', 'STAR_RATING']);
 
     const SEGMENT_COLOR_MAP = {
         green: '#4CAF50',
@@ -38,23 +38,23 @@ const PointInfoDialog = (() => {
         lightRed: '#FD929D',
         red: '#F44336',
         grey: '#9E9E9E'
-    }
+    };
 
-    const POINT_INFO_DEBUG_LOGS = true
+    const POINT_INFO_DEBUG_LOGS = true;
 
-    let pointInfoDialogOverlay = null
+    let pointInfoDialogOverlay = null;
 
     function logPointInfoDebug(message, payload = {}) {
         if (!POINT_INFO_DEBUG_LOGS) {
-            return
+            return;
         }
-        console.info('[PointInfoDialog]', message, payload)
+        console.info('[PointInfoDialog]', message, payload);
     }
 
     function buildPointInfoDialogOptions(pointDefinition, pointValue, locale) {
         let title = null;
         if (pointDefinition && pointDefinition.key) {
-            let localizedTitle = getLocalizedValue(`DFXPOINT_TITLE:${pointDefinition.key}`, locale);
+            const localizedTitle = getLocalizedValue(`DFXPOINT_TITLE:${pointDefinition.key}`, locale);
             if (localizedTitle) {
                 title = localizedTitle;
             }
@@ -66,11 +66,11 @@ const PointInfoDialog = (() => {
     }
 
     function buildBloodPressureInfoDialogOptions(systolicDefinition, systolicValue, diastolicDefinition, diastolicValue, locale) {
-        let fragment = document.createDocumentFragment()
-        let strings = getInfoDialogStrings(locale)
-        let intro = document.createElement('p')
-        intro.textContent = strings.bloodPressureIntro
-        fragment.appendChild(intro)
+        const fragment = document.createDocumentFragment();
+        const strings = getInfoDialogStrings(locale);
+        const intro = document.createElement('p');
+        intro.textContent = strings.bloodPressureIntro;
+        fragment.appendChild(intro);
 
         fragment.appendChild(
             createPointInfoSubSection(
@@ -79,7 +79,7 @@ const PointInfoDialog = (() => {
                 systolicValue,
                 locale
             )
-        )
+        );
         fragment.appendChild(
             createPointInfoSubSection(
                 localize('DFXPOINT_TITLE:BP_DIASTOLIC', locale),
@@ -87,7 +87,7 @@ const PointInfoDialog = (() => {
                 diastolicValue,
                 locale
             )
-        )
+        );
 
         return {
             title: localize('DFXPOINT_TITLE:BP', locale),
@@ -96,306 +96,227 @@ const PointInfoDialog = (() => {
     }
 
     function createResultInfoIcon(locale, onActivate) {
-        let indicator = document.createElement('span')
-        indicator.className = 'result-info-icon'
-        let strings = getInfoDialogStrings(locale)
-        indicator.title = strings.moreInfoLabel
-        indicator.setAttribute('aria-hidden', 'true')
-        indicator.textContent = 'i'
+        const indicator = document.createElement('span');
+        indicator.className = 'result-info-icon';
+        const strings = getInfoDialogStrings(locale);
+        indicator.title = strings.moreInfoLabel;
+        indicator.setAttribute('aria-hidden', 'true');
+        indicator.textContent = 'i';
         indicator.addEventListener('click', event => {
-            event.stopPropagation()
-            onActivate()
-        })
-        return indicator
+            event.stopPropagation();
+            onActivate();
+        });
+        return indicator;
     }
 
     function showPointInfoDialog(title, content, locale) {
-        let overlay = ensurePointInfoDialog()
-        let titleEl = overlay.querySelector('.point-info-title')
-        let contentEl = overlay.querySelector('.point-info-content')
-        let closeBtn = overlay.querySelector('.point-info-close')
-        let strings = getInfoDialogStrings(locale)
+        const overlay = ensurePointInfoDialog();
+        const titleEl = overlay.querySelector('.point-info-title');
+        const contentEl = overlay.querySelector('.point-info-content');
+        const closeBtn = overlay.querySelector('.point-info-close');
+        const strings = getInfoDialogStrings(locale);
 
         if (title) {
-            titleEl.textContent = title
-            titleEl.style.display = 'block'
+            titleEl.textContent = title;
+            titleEl.style.display = 'block';
         } else {
-            titleEl.style.display = 'none'
+            titleEl.style.display = 'none';
         }
-        contentEl.innerHTML = ''
-        contentEl.appendChild(content)
-        closeBtn.setAttribute('aria-label', strings.closeLabel)
+        contentEl.innerHTML = '';
+        contentEl.appendChild(content);
+        closeBtn.setAttribute('aria-label', strings.closeLabel);
 
-        overlay.classList.add('visible')
-        document.body.classList.add('info-dialog-open')
-        closeBtn.focus()
+        overlay.classList.add('visible');
+        document.body.classList.add('info-dialog-open');
+        closeBtn.focus();
     }
 
     function hidePointInfoDialog() {
         if (!pointInfoDialogOverlay) {
-            return
+            return;
         }
-        pointInfoDialogOverlay.classList.remove('visible')
-        document.body.classList.remove('info-dialog-open')
+        pointInfoDialogOverlay.classList.remove('visible');
+        document.body.classList.remove('info-dialog-open');
     }
 
     function createPointInfoSubSection(title, pointDefinition, pointValue, locale) {
-        let wrapper = document.createElement('div')
-        wrapper.className = 'point-info-subsection'
-        let heading = document.createElement('h3')
-        heading.textContent = title
-        wrapper.appendChild(heading)
-        wrapper.appendChild(createPointInfoBody(pointDefinition, locale, pointValue))
-        return wrapper
+        const wrapper = document.createElement('div');
+        wrapper.className = 'point-info-subsection';
+        const heading = document.createElement('h3');
+        heading.textContent = title;
+        wrapper.appendChild(heading);
+        wrapper.appendChild(createPointInfoBody(pointDefinition, locale, pointValue));
+        return wrapper;
     }
 
     function createPointInfoBody(pointDefinition, locale, pointValue) {
-        let enhancedSection = document.createElement('div')
-        enhancedSection.className = 'point-info-body'
+        const enhancedSection = document.createElement('div');
+        enhancedSection.className = 'point-info-body';
 
-        let indicator = createSegmentsIndicator(pointDefinition, pointValue, locale)
+        const indicator = createSegmentsIndicator(pointDefinition, pointValue, locale);
         if (indicator) {
-            enhancedSection.appendChild(indicator)
-            logPointInfoDebug('Added segments indicator to dialog body', { pointKey: pointDefinition.key })
+            enhancedSection.appendChild(indicator);
+            logPointInfoDebug('Added segments indicator to dialog body', { pointKey: pointDefinition.key });
         }
 
-        let descriptionBlock = createPointDescriptionBlock(pointDefinition, pointValue, locale)
+        const descriptionBlock = createPointDescriptionBlock(pointDefinition, pointValue, locale);
         if (descriptionBlock) {
-            enhancedSection.appendChild(descriptionBlock)
-            logPointInfoDebug('Added description block to dialog body', { pointKey: pointDefinition.key })
+            enhancedSection.appendChild(descriptionBlock);
+            logPointInfoDebug('Added description block to dialog body', { pointKey: pointDefinition.key });
         } else {
-            logPointInfoDebug('Description block missing', { pointKey: pointDefinition.key })
+            logPointInfoDebug('Description block missing', { pointKey: pointDefinition.key });
         }
 
-        let fragment = document.createDocumentFragment()
-            fragment.appendChild(enhancedSection)
-            
-        return fragment
-    }
+        const fragment = document.createDocumentFragment();
+        fragment.appendChild(enhancedSection);
 
-    function createLegacyPointInfoContent(pointDefinition, locale) {
-        let fragment = document.createDocumentFragment()
-        let strings = getInfoDialogStrings(locale)
-        let measurementName = localize(`DFXPOINT_TITLE:${pointDefinition.key}`, locale)
-        let unitLabel = getLocalizedUnit(pointDefinition.units, locale)
-
-        let summary = document.createElement('p')
-        if (unitLabel) {
-            summary.textContent = formatInfoTemplate(strings.summaryWithUnit, { title: measurementName, unit: unitLabel })
-        } else {
-            summary.textContent = formatInfoTemplate(strings.summaryWithoutUnit, { title: measurementName })
-        }
-        fragment.appendChild(summary)
-
-        if (typeof pointDefinition.lowerBound === 'number' && typeof pointDefinition.upperBound === 'number') {
-            let rangeParagraph = document.createElement('p')
-            let lowerText = formatValueWithUnit(pointDefinition.lowerBound, pointDefinition, locale)
-            let upperText = formatValueWithUnit(pointDefinition.upperBound, pointDefinition, locale)
-            rangeParagraph.textContent = `${strings.rangeLabel}: ${lowerText} - ${upperText}`
-            fragment.appendChild(rangeParagraph)
-        }
-
-        let segments = pointDefinition.scales?.default?.segments
-        if (segments && segments.length > 0) {
-            let legendTitle = document.createElement('p')
-            legendTitle.className = 'point-info-legend-title'
-            legendTitle.textContent = strings.legendLabel
-            fragment.appendChild(legendTitle)
-
-            let list = document.createElement('ul')
-            list.className = 'point-info-scale-list'
-            segments.forEach(segment => {
-                list.appendChild(createLegendListItem(segment, pointDefinition, locale))
-            })
-            fragment.appendChild(list)
-        }
-
-        return fragment
-    }
-
-    function createLegendListItem(segment, pointDefinition, locale) {
-        let listItem = document.createElement('li')
-        let color = segment.color || 'grey'
-        let swatch = document.createElement('span')
-        swatch.className = `point-info-color-swatch ${color}`
-        listItem.appendChild(swatch)
-
-        let strings = getInfoDialogStrings(locale)
-        let rangeText = formatSegmentRange(segment, pointDefinition, locale)
-        let colorLabel = getColorLabelLabel(color, locale)
-        let textSpan = document.createElement('span')
-        textSpan.textContent = `${rangeText} - ${colorLabel}`
-        listItem.appendChild(textSpan)
-
-        return listItem
-    }
-
-    function formatSegmentRange(segment, pointDefinition, locale) {
-        let strings = getInfoDialogStrings(locale)
-        let minText = typeof segment.min === 'number' ? formatValueWithUnit(segment.min, pointDefinition, locale) : null
-        let maxText = typeof segment.max === 'number' ? formatValueWithUnit(segment.max, pointDefinition, locale) : null
-
-        if (minText && maxText) {
-            return formatInfoTemplate(strings.rangeBetween, { min: minText, max: maxText })
-        }
-        if (minText) {
-            return formatInfoTemplate(strings.rangeAtLeast, { value: minText })
-        }
-        if (maxText) {
-            return formatInfoTemplate(strings.rangeAtMost, { value: maxText })
-        }
-        return strings.noRange
+        return fragment;
     }
 
     function formatValueWithUnit(value, pointDefinition, locale) {
         if (typeof value !== 'number') {
-            return '?'
+            return '?';
         }
-        let formatted = formatResultValue(value, pointDefinition.decimalPlaces ?? 0, pointDefinition.units ?? '', locale)
-        let unit = pointDefinition.units
+        const formatted = formatResultValue(value, pointDefinition.decimalPlaces ?? 0, pointDefinition.units ?? '', locale);
+        const unit = pointDefinition.units;
         if (!unit || unit === 'PERCENT') {
-            return formatted
+            return formatted;
         }
-        let unitLabel = getLocalizedUnit(unit, locale)
-        return unitLabel ? `${formatted} ${unitLabel}` : formatted
+        const unitLabel = getLocalizedUnit(unit, locale);
+        return unitLabel ? `${formatted} ${unitLabel}` : formatted;
     }
 
     function getLocalizedUnit(unitKey, locale) {
         if (!unitKey) {
-            return ''
+            return '';
         }
-        return localize(`DFXPOINT_UNIT:${unitKey}`, locale)
-    }
-
-    function getColorLabelLabel(colorKey, locale) {
-        let strings = getInfoDialogStrings(locale)
-        return strings.colorLabels[colorKey] || colorKey
+        return localize(`DFXPOINT_UNIT:${unitKey}`, locale);
     }
 
     function createPointDescriptionBlock(pointDefinition, pointValue, locale) {
         if (!pointDefinition) {
-            logPointInfoDebug('Missing point definition for description block', { locale })
-            return null
+            logPointInfoDebug('Missing point definition for description block', { locale });
+            return null;
         }
-        logPointInfoDebug('Resolving point description', { pointKey: pointDefinition.key, locale })
+        logPointInfoDebug('Resolving point description', { pointKey: pointDefinition.key, locale });
         if (STAR_POINT_IDS.has(pointDefinition.key)) {
-            logPointInfoDebug('Rendering star info content', { pointKey: pointDefinition.key })
-            return createStarInfoContent(pointValue, locale)
+            logPointInfoDebug('Rendering star info content', { pointKey: pointDefinition.key });
+            return createStarInfoContent(pointValue, locale);
         }
         if (pointDefinition.key === 'HR_BPM') {
-            logPointInfoDebug('Routing to heart rate info content', { pointValue, locale })
-            let heartRateBlock = createHeartRateInfoContent(pointValue, locale)
+            logPointInfoDebug('Routing to heart rate info content', { pointValue, locale });
+            const heartRateBlock = createHeartRateInfoContent(pointValue, locale);
             if (heartRateBlock) {
-                return heartRateBlock
+                return heartRateBlock;
             }
-            logPointInfoDebug('Heart rate block unavailable, falling back to markdown lookup', { pointValue, locale })
+            logPointInfoDebug('Heart rate block unavailable, falling back to markdown lookup', { pointValue, locale });
         }
         if (pointDefinition.key === 'MSI') {
-            logPointInfoDebug('Routing to MSI info content', { pointValue, locale })
-            let msiBlock = createMsiInfoContent(pointValue, locale)
+            logPointInfoDebug('Routing to MSI info content', { pointValue, locale });
+            const msiBlock = createMsiInfoContent(pointValue, locale);
             if (msiBlock) {
-                return msiBlock
+                return msiBlock;
             }
-            logPointInfoDebug('MSI block unavailable, falling back to markdown lookup', { pointValue, locale })
+            logPointInfoDebug('MSI block unavailable, falling back to markdown lookup', { pointValue, locale });
         }
-        let descriptionKey = getDescriptionLocalizationKey(pointDefinition.key)
+        const descriptionKey = getDescriptionLocalizationKey(pointDefinition.key);
         if (!descriptionKey) {
-            logPointInfoDebug('No description localization key found', { pointKey: pointDefinition.key })
-            return null
+            logPointInfoDebug('No description localization key found', { pointKey: pointDefinition.key });
+            return null;
         }
-        let localizationKey = `DFXPOINT_DESC:${descriptionKey}`
-        let localizationRecord = resolveDescriptionLocalization(localizationKey)
+        const localizationKey = `DFXPOINT_DESC:${descriptionKey}`;
+        const localizationRecord = resolveDescriptionLocalization(localizationKey);
         if (!localizationRecord) {
             logPointInfoDebug('No markdown found for localization key', {
                 pointKey: pointDefinition.key,
                 localizationKey,
                 locale,
                 hasTranslationEntry: false
-            })
-            return null
+            });
+            return null;
         }
-        let markdown = getMarkdownFromLocalizationEntry(localizationRecord, locale)
+        const markdown = getMarkdownFromLocalizationEntry(localizationRecord, locale);
         if (!markdown) {
             logPointInfoDebug('Description localization entry missing locale content', {
                 pointKey: pointDefinition.key,
                 localizationKey,
                 locale,
                 source: localizationRecord.source
-            })
-            return null
+            });
+            return null;
         }
         logPointInfoDebug('Rendering markdown description', {
             pointKey: pointDefinition.key,
             localizationKey,
             locale,
             source: localizationRecord.source
-        })
-        return createMarkdownElement(markdown, locale)
+        });
+        return createMarkdownElement(markdown, locale);
     }
 
     function getDescriptionLocalizationKey(pointKey) {
         if (!pointKey) {
-            return null
+            return null;
         }
-        return POINT_DESCRIPTION_KEYS[pointKey] || pointKey
+        return POINT_DESCRIPTION_KEYS[pointKey] || pointKey;
     }
 
     function createHeartRateInfoContent(pointValue, locale) {
         if (typeof pointValue !== 'number' || isNaN(pointValue)) {
-            logPointInfoDebug('Heart rate info missing point value', { pointValue })
-            return null
+            logPointInfoDebug('Heart rate info missing point value', { pointValue });
+            return null;
         }
-        let config = getHeartRateContentConfig(pointValue)
+        const config = getHeartRateContentConfig(pointValue);
         if (!config) {
-            logPointInfoDebug('Heart rate config not found for value', { pointValue })
-            return null
+            logPointInfoDebug('Heart rate config not found for value', { pointValue });
+            return null;
         }
-        logPointInfoDebug('Rendering heart rate markdown', { pointValue, config })
-        return buildStatefulMarkdownBlock(config.titleKey, config.descriptionKey, locale)
+        logPointInfoDebug('Rendering heart rate markdown', { pointValue, config });
+        return buildStatefulMarkdownBlock(config.titleKey, config.descriptionKey, locale);
     }
 
     function createMsiInfoContent(pointValue, locale) {
         if (typeof pointValue !== 'number' || isNaN(pointValue)) {
-            logPointInfoDebug('MSI info missing point value', { pointValue })
-            return null
+            logPointInfoDebug('MSI info missing point value', { pointValue });
+            return null;
         }
-        let config = getMsiContentConfig(pointValue)
+        const config = getMsiContentConfig(pointValue);
         if (!config) {
-            logPointInfoDebug('MSI config not found for value', { pointValue })
-            return null
+            logPointInfoDebug('MSI config not found for value', { pointValue });
+            return null;
         }
-        logPointInfoDebug('Rendering MSI markdown', { pointValue, config })
-        return buildStatefulMarkdownBlock(config.titleKey, config.descriptionKey, locale)
+        logPointInfoDebug('Rendering MSI markdown', { pointValue, config });
+        return buildStatefulMarkdownBlock(config.titleKey, config.descriptionKey, locale);
     }
 
     function buildStatefulMarkdownBlock(titleKey, descriptionKey, locale) {
-        let localizationRecord = resolveDescriptionLocalization(descriptionKey)
+        const localizationRecord = resolveDescriptionLocalization(descriptionKey);
         if (!localizationRecord) {
-            logPointInfoDebug('Missing translation entry for stateful markdown', { descriptionKey, locale })
-            return null
+            logPointInfoDebug('Missing translation entry for stateful markdown', { descriptionKey, locale });
+            return null;
         }
-        let markdown = getMarkdownFromLocalizationEntry(localizationRecord, locale)
+        const markdown = getMarkdownFromLocalizationEntry(localizationRecord, locale);
         if (!markdown) {
             logPointInfoDebug('Stateful markdown missing after fallback', {
                 descriptionKey,
                 locale,
                 source: localizationRecord.source
-            })
-            return null
+            });
+            return null;
         }
-        let container = document.createElement('div')
-        container.className = 'point-info-special-block'
-        let label = document.createElement('p')
-        label.className = 'point-info-state-label'
-        label.textContent = `${localize('DFXPOINT_DESC:STRESS_STATE', locale)}: ${localize(titleKey, locale)}`
-        container.appendChild(label)
-        let markdownElement = createMarkdownElement(markdown, locale)
+        const container = document.createElement('div');
+        container.className = 'point-info-special-block';
+        const label = document.createElement('p');
+        label.className = 'point-info-state-label';
+        label.textContent = `${localize('DFXPOINT_DESC:STRESS_STATE', locale)}: ${localize(titleKey, locale)}`;
+        container.appendChild(label);
+        const markdownElement = createMarkdownElement(markdown, locale);
         if (markdownElement) {
-            container.appendChild(markdownElement)
+            container.appendChild(markdownElement);
         } else {
-            logPointInfoDebug('Markdown renderer returned null', { descriptionKey })
+            logPointInfoDebug('Markdown renderer returned null', { descriptionKey });
         }
-        return container
+        return container;
     }
 
     function getHeartRateContentConfig(value) {
@@ -449,447 +370,447 @@ const PointInfoDialog = (() => {
     }
 
     function createStarInfoContent(pointValue, locale) {
-        let container = document.createElement('div')
-        container.className = 'point-info-star-content'
-        let starRow = document.createElement('div')
-        starRow.className = 'point-info-stars'
-        let rating = typeof pointValue === 'number' && !isNaN(pointValue) ? Math.ceil(pointValue) : 0
-        rating = clamp(rating, 0, 5)
+        const container = document.createElement('div');
+        container.className = 'point-info-star-content';
+        const starRow = document.createElement('div');
+        starRow.className = 'point-info-stars';
+        let rating = typeof pointValue === 'number' && !isNaN(pointValue) ? Math.ceil(pointValue) : 0;
+        rating = clamp(rating, 0, 5);
         for (let i = 1; i <= 5; i++) {
-            let star = document.createElement('div')
-            star.className = `star ${i <= rating ? 'greenBackground' : 'greyBackground'}`
-            starRow.appendChild(star)
+            const star = document.createElement('div');
+            star.className = `star ${i <= rating ? 'greenBackground' : 'greyBackground'}`;
+            starRow.appendChild(star);
         }
-        container.appendChild(starRow)
-        let markdown = getLocalizedValue('DFXPOINT_DESC:STAR_RATING', locale)
+        container.appendChild(starRow);
+        const markdown = getLocalizedValue('DFXPOINT_DESC:STAR_RATING', locale);
         if (markdown) {
-            let markdownElement = createMarkdownElement(markdown, locale)
+            const markdownElement = createMarkdownElement(markdown, locale);
             if (markdownElement) {
-                container.appendChild(markdownElement)
+                container.appendChild(markdownElement);
             }
         }
-        return container
+        return container;
     }
 
     function createSegmentsIndicator(pointDefinition, pointValue, locale) {
         if (!pointDefinition || typeof pointValue !== 'number' || isNaN(pointValue)) {
-            return null
+            return null;
         }
         if (POINTS_WITHOUT_INDICATOR.has(pointDefinition.key)) {
-            return null
+            return null;
         }
-        let segments = pointDefinition.scales?.default?.segments
+        const segments = pointDefinition.scales?.default?.segments;
         if (!segments || segments.length === 0) {
-            return null
+            return null;
         }
-        let boundaries = getSegmentBoundaries(segments)
+        const boundaries = getSegmentBoundaries(segments);
         if (boundaries.length < 2) {
-            return null
+            return null;
         }
-        let indicator = document.createElement('div')
-        indicator.className = 'point-info-segments'
+        const indicator = document.createElement('div');
+        indicator.className = 'point-info-segments';
 
-        let valueLabel = document.createElement('div')
-        valueLabel.className = `point-info-current-value ${getColorClass(pointValue, pointDefinition)}`
-        valueLabel.textContent = formatValueWithUnit(pointValue, pointDefinition, locale)
-        indicator.appendChild(valueLabel)
+        const valueLabel = document.createElement('div');
+        valueLabel.className = `point-info-current-value ${getColorClass(pointValue, pointDefinition)}`;
+        valueLabel.textContent = formatValueWithUnit(pointValue, pointDefinition, locale);
+        indicator.appendChild(valueLabel);
 
-        let labelsRow = document.createElement('div')
-        labelsRow.className = 'point-info-segment-labels'
+        const labelsRow = document.createElement('div');
+        labelsRow.className = 'point-info-segment-labels';
         boundaries.forEach(boundary => {
-            let label = document.createElement('span')
-            label.textContent = formatSegmentLabel(boundary, pointDefinition, locale)
-            labelsRow.appendChild(label)
-        })
-        indicator.appendChild(labelsRow)
+            const label = document.createElement('span');
+            label.textContent = formatSegmentLabel(boundary, pointDefinition, locale);
+            labelsRow.appendChild(label);
+        });
+        indicator.appendChild(labelsRow);
 
-        let trackWrapper = document.createElement('div')
-        trackWrapper.className = 'point-info-segments-track-wrapper'
+        const trackWrapper = document.createElement('div');
+        trackWrapper.className = 'point-info-segments-track-wrapper';
 
-        let track = document.createElement('div')
-        track.className = 'point-info-segments-track'
+        const track = document.createElement('div');
+        track.className = 'point-info-segments-track';
         segments.forEach(segment => {
-            let block = document.createElement('div')
-            block.className = 'point-info-segment-block'
-            block.style.backgroundColor = getSegmentColorValue(segment.color)
-            track.appendChild(block)
-        })
+            const block = document.createElement('div');
+            block.className = 'point-info-segment-block';
+            block.style.backgroundColor = getSegmentColorValue(segment.color);
+            track.appendChild(block);
+        });
 
-        let pointer = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
-        pointer.setAttribute('class', 'point-info-segment-pointer')
-        pointer.setAttribute('width', '15')
-        pointer.setAttribute('height', '15')
-        pointer.setAttribute('viewBox', '0 0 20 20')
-        pointer.style.left = `${calculatePointerPercent(pointValue, boundaries)}%`
+        const pointer = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        pointer.setAttribute('class', 'point-info-segment-pointer');
+        pointer.setAttribute('width', '15');
+        pointer.setAttribute('height', '15');
+        pointer.setAttribute('viewBox', '0 0 20 20');
+        pointer.style.left = `${calculatePointerPercent(pointValue, boundaries)}%`;
         // White fill triangle
-        let whitePath = document.createElementNS('http://www.w3.org/2000/svg', 'path')
-        whitePath.setAttribute('d', 'M 10 2 L 3 18 L 17 18 Z')
-        whitePath.setAttribute('fill', 'white')
-        pointer.appendChild(whitePath)
+        const whitePath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        whitePath.setAttribute('d', 'M 10 2 L 3 18 L 17 18 Z');
+        whitePath.setAttribute('fill', 'white');
+        pointer.appendChild(whitePath);
         // Black stroke triangle with rounded corners
-        let blackPath = document.createElementNS('http://www.w3.org/2000/svg', 'path')
-        blackPath.setAttribute('d', 'M 10 2 L 3 18 L 17 18 Z')
-        blackPath.setAttribute('fill', 'none')
-        blackPath.setAttribute('stroke', 'black')
-        blackPath.setAttribute('stroke-width', '5')
-        blackPath.setAttribute('stroke-linejoin', 'round')
-        pointer.appendChild(blackPath)
-        trackWrapper.appendChild(track)
-        trackWrapper.appendChild(pointer)
-        indicator.appendChild(trackWrapper)
-        return indicator
+        const blackPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        blackPath.setAttribute('d', 'M 10 2 L 3 18 L 17 18 Z');
+        blackPath.setAttribute('fill', 'none');
+        blackPath.setAttribute('stroke', 'black');
+        blackPath.setAttribute('stroke-width', '5');
+        blackPath.setAttribute('stroke-linejoin', 'round');
+        pointer.appendChild(blackPath);
+        trackWrapper.appendChild(track);
+        trackWrapper.appendChild(pointer);
+        indicator.appendChild(trackWrapper);
+        return indicator;
     }
 
     function formatSegmentLabel(value, pointDefinition, locale) {
         if (typeof value !== 'number') {
-            return ''
+            return '';
         }
-        let decimals = typeof pointDefinition.decimalPlaces === 'number' ? pointDefinition.decimalPlaces : 0
-        return formatResultValue(value, decimals, pointDefinition.units ?? '', locale)
+        const decimals = typeof pointDefinition.decimalPlaces === 'number' ? pointDefinition.decimalPlaces : 0;
+        return formatResultValue(value, decimals, pointDefinition.units ?? '', locale);
     }
 
     function getSegmentBoundaries(segments) {
-        let boundaries = new Set()
+        const boundaries = new Set();
         segments.forEach(segment => {
             if (typeof segment.min === 'number') {
-                boundaries.add(segment.min)
+                boundaries.add(segment.min);
             }
             if (typeof segment.max === 'number') {
-                boundaries.add(segment.max)
+                boundaries.add(segment.max);
             }
-        })
-        return Array.from(boundaries).sort((a, b) => a - b)
+        });
+        return Array.from(boundaries).sort((a, b) => a - b);
     }
 
     function calculatePointerPercent(pointValue, boundaries) {
         if (!boundaries || boundaries.length < 2) {
-            return 0
+            return 0;
         }
-        let min = boundaries[0]
-        let max = boundaries[boundaries.length - 1]
-        let clampedValue = clamp(pointValue, min, max)
-        let totalSegments = boundaries.length - 1
-        let ratio = 0
+        const min = boundaries[0];
+        const max = boundaries[boundaries.length - 1];
+        const clampedValue = clamp(pointValue, min, max);
+        const totalSegments = boundaries.length - 1;
+        let ratio = 0;
 
         for (let i = 0; i < totalSegments; i++) {
-            let start = boundaries[i]
-            let end = boundaries[i + 1]
+            const start = boundaries[i];
+            const end = boundaries[i + 1];
             if (clampedValue >= end) {
-                ratio = i + 1
-                continue
+                ratio = i + 1;
+                continue;
             }
             if (clampedValue >= start && clampedValue <= end) {
-                let span = end - start
-                let progress = span > 0 ? (clampedValue - start) / span : 0
-                ratio = i + progress
-                break
+                const span = end - start;
+                const progress = span > 0 ? (clampedValue - start) / span : 0;
+                ratio = i + progress;
+                break;
             }
         }
 
-        return clamp((ratio / totalSegments) * 100, 0, 100)
+        return clamp((ratio / totalSegments) * 100, 0, 100);
     }
 
     function clamp(value, min, max) {
         if (typeof value !== 'number' || isNaN(value)) {
-            return min
+            return min;
         }
-        return Math.min(Math.max(value, min), max)
+        return Math.min(Math.max(value, min), max);
     }
 
     function getSegmentColorValue(colorKey) {
         if (!colorKey) {
-            return SEGMENT_COLOR_MAP.grey
+            return SEGMENT_COLOR_MAP.grey;
         }
-        return SEGMENT_COLOR_MAP[colorKey] || colorKey
+        return SEGMENT_COLOR_MAP[colorKey] || colorKey;
     }
 
     function resolveDescriptionLocalization(localizationKey) {
         if (!localizationKey) {
-            return null
+            return null;
         }
-        logPointInfoDebug('Checking window.DeepAffexWebResultsData', { exists: !!window.DeepAffexWebResultsData, translations: !!window.DeepAffexWebResultsData?.translations })
-        let datasetEntry = DeepAffexWebResultsData?.translations?.[localizationKey]
-        logPointInfoDebug('Dataset entry for', { localizationKey, exists: !!datasetEntry })
+        logPointInfoDebug('Checking window.DeepAffexWebResultsData', { exists: !!window.DeepAffexWebResultsData, translations: !!window.DeepAffexWebResultsData?.translations });
+        const datasetEntry = DeepAffexWebResultsData?.translations?.[localizationKey];
+        logPointInfoDebug('Dataset entry for', { localizationKey, exists: !!datasetEntry });
         if (datasetEntry) {
-            return { entry: datasetEntry, source: 'dataset' }
+            return { entry: datasetEntry, source: 'dataset' };
         }
-        return null
+        return null;
     }
 
     function getMarkdownFromLocalizationEntry(localizationRecord, locale) {
         if (!localizationRecord || !localizationRecord.entry) {
-            return null
+            return null;
         }
-        return localizationRecord.entry[locale] ?? localizationRecord.entry.default ?? null
+        return localizationRecord.entry[locale] ?? localizationRecord.entry.default ?? null;
     }
 
     function createMarkdownElement(markdownText, locale) {
         if (!markdownText) {
-            logPointInfoDebug('createMarkdownElement received empty text')
-            return null
+            logPointInfoDebug('createMarkdownElement received empty text');
+            return null;
         }
-        let wrapper = document.createElement('div')
-        wrapper.className = 'point-info-markdown'
-        wrapper.appendChild(renderMarkdownToFragment(replaceAppNamePlaceholders(markdownText, locale)))
-        return wrapper
+        const wrapper = document.createElement('div');
+        wrapper.className = 'point-info-markdown';
+        wrapper.appendChild(renderMarkdownToFragment(replaceAppNamePlaceholders(markdownText, locale)));
+        return wrapper;
     }
 
     function renderMarkdownToFragment(markdownText) {
-        let fragment = document.createDocumentFragment()
+        const fragment = document.createDocumentFragment();
         if (!markdownText) {
-            return fragment
+            return fragment;
         }
-        let normalized = markdownText.replace(/\r\n/g, '\n')
-        let lines = normalized.split('\n')
-        let index = 0
-        let unorderedList = null
-        let orderedList = null
+        const normalized = markdownText.replace(/\r\n/g, '\n');
+        const lines = normalized.split('\n');
+        let index = 0;
+        let unorderedList = null;
+        let orderedList = null;
 
         function flushLists() {
             if (unorderedList) {
-                fragment.appendChild(unorderedList)
-                unorderedList = null
+                fragment.appendChild(unorderedList);
+                unorderedList = null;
             }
             if (orderedList) {
-                fragment.appendChild(orderedList)
-                orderedList = null
+                fragment.appendChild(orderedList);
+                orderedList = null;
             }
         }
 
         while (index < lines.length) {
-            let line = lines[index]
+            const line = lines[index];
             if (!line.trim()) {
-                flushLists()
-                index++
-                continue
+                flushLists();
+                index++;
+                continue;
             }
 
             if (isTableStart(lines, index)) {
-                flushLists()
-                let table = parseMarkdownTable(lines, index)
-                fragment.appendChild(table.element)
-                index = table.nextIndex
-                continue
+                flushLists();
+                const table = parseMarkdownTable(lines, index);
+                fragment.appendChild(table.element);
+                index = table.nextIndex;
+                continue;
             }
 
-            let headingMatch = line.match(/^(#{1,4})\s+(.*)$/)
+            const headingMatch = line.match(/^(#{1,4})\s+(.*)$/);
             if (headingMatch) {
-                flushLists()
-                let level = Math.min(headingMatch[1].length, 4)
-                let headingTag = level <= 2 ? 'h3' : 'h4'
-                let heading = document.createElement(headingTag)
-                heading.innerHTML = convertInlineMarkdown(headingMatch[2])
-                fragment.appendChild(heading)
-                index++
-                continue
+                flushLists();
+                const level = Math.min(headingMatch[1].length, 4);
+                const headingTag = level <= 2 ? 'h3' : 'h4';
+                const heading = document.createElement(headingTag);
+                heading.innerHTML = convertInlineMarkdown(headingMatch[2]);
+                fragment.appendChild(heading);
+                index++;
+                continue;
             }
 
-            let unorderedMatch = line.match(/^\s*[-*]\s+(.*)$/)
+            const unorderedMatch = line.match(/^\s*[-*]\s+(.*)$/);
             if (unorderedMatch) {
                 if (orderedList) {
-                    fragment.appendChild(orderedList)
-                    orderedList = null
+                    fragment.appendChild(orderedList);
+                    orderedList = null;
                 }
                 if (!unorderedList) {
-                    unorderedList = document.createElement('ul')
-                    unorderedList.className = 'point-info-markdown-list'
+                    unorderedList = document.createElement('ul');
+                    unorderedList.className = 'point-info-markdown-list';
                 }
-                let listItem = document.createElement('li')
-                listItem.innerHTML = convertInlineMarkdown(unorderedMatch[1])
-                unorderedList.appendChild(listItem)
-                index++
-                continue
+                const listItem = document.createElement('li');
+                listItem.innerHTML = convertInlineMarkdown(unorderedMatch[1]);
+                unorderedList.appendChild(listItem);
+                index++;
+                continue;
             }
 
-            let orderedMatch = line.match(/^\s*\d+\.\s+(.*)$/)
+            const orderedMatch = line.match(/^\s*\d+\.\s+(.*)$/);
             if (orderedMatch) {
                 if (unorderedList) {
-                    fragment.appendChild(unorderedList)
-                    unorderedList = null
+                    fragment.appendChild(unorderedList);
+                    unorderedList = null;
                 }
                 if (!orderedList) {
-                    orderedList = document.createElement('ol')
-                    orderedList.className = 'point-info-markdown-list'
+                    orderedList = document.createElement('ol');
+                    orderedList.className = 'point-info-markdown-list';
                 }
-                let listItem = document.createElement('li')
-                listItem.innerHTML = convertInlineMarkdown(orderedMatch[1])
-                orderedList.appendChild(listItem)
-                index++
-                continue
+                const listItem = document.createElement('li');
+                listItem.innerHTML = convertInlineMarkdown(orderedMatch[1]);
+                orderedList.appendChild(listItem);
+                index++;
+                continue;
             }
 
-            let paragraphLines = [line]
-            index++
+            const paragraphLines = [line];
+            index++;
             while (index < lines.length) {
-                let nextLine = lines[index]
+                const nextLine = lines[index];
                 if (!nextLine.trim() || /^(#{1,4})\s+/.test(nextLine) || /^\s*[-*]\s+/.test(nextLine) || /^\s*\d+\.\s+/.test(nextLine) || isTableStart(lines, index)) {
-                    break
+                    break;
                 }
-                paragraphLines.push(nextLine)
-                index++
+                paragraphLines.push(nextLine);
+                index++;
             }
-            flushLists()
-            let paragraph = document.createElement('p')
-            paragraph.innerHTML = paragraphLines.map(item => convertInlineMarkdown(item.trim())).join('<br>')
-            fragment.appendChild(paragraph)
+            flushLists();
+            const paragraph = document.createElement('p');
+            paragraph.innerHTML = paragraphLines.map(item => convertInlineMarkdown(item.trim())).join('<br>');
+            fragment.appendChild(paragraph);
         }
 
-        flushLists()
-        return fragment
+        flushLists();
+        return fragment;
     }
 
     function isTableStart(lines, index) {
         if (index + 1 >= lines.length) {
-            return false
+            return false;
         }
-        return /^\s*\|/.test(lines[index]) && isTableSeparator(lines[index + 1])
+        return /^\s*\|/.test(lines[index]) && isTableSeparator(lines[index + 1]);
     }
 
     function parseMarkdownTable(lines, startIndex) {
-        let headerCells = splitTableRow(lines[startIndex])
-        let nextIndex = startIndex + 2
-        let rows = []
+        const headerCells = splitTableRow(lines[startIndex]);
+        let nextIndex = startIndex + 2;
+        const rows = [];
         while (nextIndex < lines.length) {
-            let rowLine = lines[nextIndex]
+            const rowLine = lines[nextIndex];
             if (!rowLine.trim() || !/\|/.test(rowLine)) {
-                break
+                break;
             }
             if (!/^\s*\|/.test(rowLine)) {
-                break
+                break;
             }
-            rows.push(splitTableRow(rowLine))
-            nextIndex++
+            rows.push(splitTableRow(rowLine));
+            nextIndex++;
         }
 
-        let table = document.createElement('table')
-        let thead = document.createElement('thead')
-        let headerRow = document.createElement('tr')
+        const table = document.createElement('table');
+        const thead = document.createElement('thead');
+        const headerRow = document.createElement('tr');
         headerCells.forEach(cell => {
-            let th = document.createElement('th')
-            th.innerHTML = convertInlineMarkdown(cell)
-            headerRow.appendChild(th)
-        })
-        thead.appendChild(headerRow)
-        table.appendChild(thead)
+            const th = document.createElement('th');
+            th.innerHTML = convertInlineMarkdown(cell);
+            headerRow.appendChild(th);
+        });
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
 
         if (rows.length) {
-            let tbody = document.createElement('tbody')
+            const tbody = document.createElement('tbody');
             rows.forEach(row => {
-                let tr = document.createElement('tr')
+                const tr = document.createElement('tr');
                 row.forEach(cell => {
-                    let td = document.createElement('td')
-                    td.innerHTML = convertInlineMarkdown(cell)
-                    tr.appendChild(td)
-                })
-                tbody.appendChild(tr)
-            })
-            table.appendChild(tbody)
+                    const td = document.createElement('td');
+                    td.innerHTML = convertInlineMarkdown(cell);
+                    tr.appendChild(td);
+                });
+                tbody.appendChild(tr);
+            });
+            table.appendChild(tbody);
         }
 
-        return { element: table, nextIndex }
+        return { element: table, nextIndex };
     }
 
     function splitTableRow(line) {
-        return line.trim().replace(/^\|/, '').replace(/\|$/, '').split('|').map(cell => cell.trim())
+        return line.trim().replace(/^\|/, '').replace(/\|$/, '').split('|').map(cell => cell.trim());
     }
 
     function isTableSeparator(line) {
-        return /^\s*\|?[-:\s|]+\|?\s*$/.test(line)
+        return /^\s*\|?[-:\s|]+\|?\s*$/.test(line);
     }
 
     function convertInlineMarkdown(text) {
         if (!text) {
-            return ''
+            return '';
         }
-        let escaped = escapeHtml(text)
-        escaped = escaped.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noreferrer noopener">$1</a>')
-        escaped = escaped.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-        escaped = escaped.replace(/__(.+?)__/g, '<strong>$1</strong>')
-        escaped = escaped.replace(/(^|\s)_(.+?)_(?=$|\s|[.,;:!?\)])/g, (_, prefix, value) => `${prefix}<em>${value}</em>`)
-        escaped = escaped.replace(/(^|\s)\*(.+?)\*(?=$|\s|[.,;:!?\)])/g, (_, prefix, value) => `${prefix}<em>${value}</em>`)
-        return escaped
+        let escaped = escapeHtml(text);
+        escaped = escaped.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noreferrer noopener">$1</a>');
+        escaped = escaped.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+        escaped = escaped.replace(/__(.+?)__/g, '<strong>$1</strong>');
+        escaped = escaped.replace(/(^|\s)_(.+?)_(?=$|\s|[.,;:!?\)])/g, (_, prefix, value) => `${prefix}<em>${value}</em>`);
+        escaped = escaped.replace(/(^|\s)\*(.+?)\*(?=$|\s|[.,;:!?\)])/g, (_, prefix, value) => `${prefix}<em>${value}</em>`);
+        return escaped;
     }
 
     function escapeHtml(text) {
         return text.replace(/[&<>"]|'|/g, char => {
             switch (char) {
-                case '&': return '&amp;'
-                case '<': return '&lt;'
-                case '>': return '&gt;'
-                case '"': return '&quot;'
-                case "'": return '&#39;'
-                default: return char
+                case '&': return '&amp;';
+                case '<': return '&lt;';
+                case '>': return '&gt;';
+                case '"': return '&quot;';
+                case "'": return '&#39;';
+                default: return char;
             }
-        })
+        });
     }
 
     function replaceAppNamePlaceholders(text, locale) {
         if (!text) {
-            return ''
+            return '';
         }
-        return text.replace(/\{APP_NAME\}/g, getAppName(locale))
+        return text.replace(/\{APP_NAME\}/g, getAppName(locale));
     }
 
     function getAppName(locale) {
         if (typeof window !== 'undefined' && window.APP_NAME) {
-            return window.APP_NAME
+            return window.APP_NAME;
         }
-        return localize('APP_NAME', locale)
+        return localize('APP_NAME', locale);
     }
 
     function getInfoDialogStrings(locale) {
-        let normalized = (locale || 'en').split('-')[0].toLowerCase()
-        return INFO_DIALOG_STRINGS[normalized] || INFO_DIALOG_STRINGS.default
+        const normalized = (locale || 'en').split('-')[0].toLowerCase();
+        return INFO_DIALOG_STRINGS[normalized] || INFO_DIALOG_STRINGS.default;
     }
 
     function formatInfoTemplate(template, replacements) {
-        return template.replace(/\{(\w+)\}/g, (_, key) => replacements[key] ?? '')
+        return template.replace(/\{(\w+)\}/g, (_, key) => replacements[key] ?? '');
     }
 
     function ensurePointInfoDialog() {
         if (pointInfoDialogOverlay) {
-            return pointInfoDialogOverlay
+            return pointInfoDialogOverlay;
         }
-        let overlay = document.createElement('div')
-        overlay.className = 'point-info-overlay'
-        overlay.setAttribute('role', 'dialog')
-        overlay.setAttribute('aria-modal', 'true')
+        const overlay = document.createElement('div');
+        overlay.className = 'point-info-overlay';
+        overlay.setAttribute('role', 'dialog');
+        overlay.setAttribute('aria-modal', 'true');
 
-        let dialog = document.createElement('div')
-        dialog.className = 'point-info-dialog'
+        const dialog = document.createElement('div');
+        dialog.className = 'point-info-dialog';
 
-        let closeButton = document.createElement('button')
-        closeButton.type = 'button'
-        closeButton.className = 'point-info-close'
-        dialog.appendChild(closeButton)
+        const closeButton = document.createElement('button');
+        closeButton.type = 'button';
+        closeButton.className = 'point-info-close';
+        dialog.appendChild(closeButton);
 
-        let titleEl = document.createElement('h2')
-        titleEl.className = 'point-info-title'
-        dialog.appendChild(titleEl)
+        const titleEl = document.createElement('h2');
+        titleEl.className = 'point-info-title';
+        dialog.appendChild(titleEl);
 
-        let contentEl = document.createElement('div')
-        contentEl.className = 'point-info-content'
-        dialog.appendChild(contentEl)
+        const contentEl = document.createElement('div');
+        contentEl.className = 'point-info-content';
+        dialog.appendChild(contentEl);
 
-        overlay.appendChild(dialog)
-        document.body.appendChild(overlay)
+        overlay.appendChild(dialog);
+        document.body.appendChild(overlay);
 
         overlay.addEventListener('click', event => {
             if (event.target === overlay) {
-                hidePointInfoDialog()
+                hidePointInfoDialog();
             }
-        })
+        });
 
-        closeButton.addEventListener('click', hidePointInfoDialog)
+        closeButton.addEventListener('click', hidePointInfoDialog);
 
         document.addEventListener('keydown', event => {
             if (event.key === 'Escape' && overlay.classList.contains('visible')) {
-                hidePointInfoDialog()
+                hidePointInfoDialog();
             }
-        })
+        });
 
-        pointInfoDialogOverlay = overlay
-        return overlay
+        pointInfoDialogOverlay = overlay;
+        return overlay;
     }
 
     const INFO_DIALOG_STRINGS = {
@@ -965,8 +886,8 @@ const PointInfoDialog = (() => {
         hidePointInfoDialog,
         createResultInfoIcon
     }
-})()
+})();
 
 if (typeof window !== 'undefined') {
-    window.PointInfoDialog = PointInfoDialog
+    window.PointInfoDialog = PointInfoDialog;
 }
