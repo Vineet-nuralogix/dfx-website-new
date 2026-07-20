@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MagicMirror™</title>
+    <script src="js/vendor/float16.min.js"></script>
+    <script>
+        const {
+            Float16Array, isFloat16Array, isTypedArray,
+            getFloat16, setFloat16,
+            f16round,
+        } = float16;
+    </script>
+    <script src="js/data.js"></script>
+    <script src="js/point-info-dialog.js"></script>
+    <script src="js/results-app.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0e1621;
+            --bg-card: rgba(255,255,255,0.06);
+            --bg-card-border: rgba(255,255,255,0.12);
+            --text: #e8eaf0;
+            --text-muted: rgba(232,234,240,0.55);
+            --accent: #e8eaf0;
+            --accent-underline: rgba(232,234,240,0.35);
+            --header-pink: #F65F77;
+        }
+
+        body {
+            font-family: "Work Sans", sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: var(--bg);
+            color: var(--text);
+        }
+
+        a {
+            color: var(--accent);
+        }
+
+        .result {
+            display: grid;
+            grid-template-columns: 40px 1fr auto auto;
+            grid-template-rows: auto auto;
+            column-gap: 10px;
+            align-items: center;
+            padding: 12px 14px;
+            margin: 6px 0;
+            background: var(--bg-card);
+            border: 1px solid var(--bg-card-border);
+            border-radius: 14px;
+            font-size: 1.05em;
+        }
+
+        .result-clickable {
+            cursor: pointer;
+        }
+
+        .result-clickable:focus {
+            outline: 2px solid var(--accent);
+            outline-offset: 4px;
+        }
+
+        .result-icon {
+            grid-column: 1;
+            grid-row: 1;
+            width: 32px;
+            height: 32px;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .result-icon svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* bitmap-embedded SVG icons (e.g. VITALITY, SLEEP_QUALITY, ANXIETY_INDEX) */
+        .result-icon svg image {
+            filter: invert(1);
+        }
+
+        .result-icon.fallback {
+            font-size: 20px;
+            text-align: center;
+            line-height: 32px;
+            color: currentColor;
+        }
+
+        .result-name-wrapper {
+            grid-column: 2;
+            grid-row: 1;
+            min-width: 0;
+        }
+
+        .result-name {
+            color: var(--text);
+            font-size: 0.92em;
+        }
+
+        .result-info-icon {
+            border: 1px solid rgba(255,255,255,0.25);
+            background-color: rgba(255,255,255,0.08);
+            color: var(--text);
+            border-radius: 50%;
+            width: 14px;
+            height: 14px;
+            margin-right: 0;
+            margin-left: 5px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.45em;
+            cursor: pointer;
+            vertical-align: top;
+        }
+
+        #snrContainer .result-info-icon,
+        #starsContainer .result-info-icon {
+            margin-left: 5px;
+            margin-right: 0;
+        }
+
+        .wellness-dial-label .result-info-icon {
+            margin-left: 2px;
+            align-self: flex-start;
+            margin-top: 1px;
+            font-size: 0.38em;
+            width: 12px;
+            height: 12px;
+        }
+
+        .result-info-icon:hover,
+        .result-info-icon:active,
+        .result-info-icon:focus {
+            outline: none;
+            background-color: none;
+        }
+
+        .result-value {
+            grid-column: 3;
+            grid-row: 1;
+            margin-left: 8px;
+            font-size: 1.8em;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .result-unit {
+            grid-column: 4;
+            grid-row: 1;
+            margin-left: 0.3em;
+            font-size: 0.85em;
+            color: var(--text-muted);
+            align-self: flex-end;
+            padding-bottom: 0.15em;
+        }
+
+        /* Inline gauge bar — spans full width below icon+name+value row */
+        .result-gauge-wrapper {
+            grid-column: 1 / -1;
+            grid-row: 2;
+            padding-top: 8px;
+        }
+
+        .result-gauge-track {
+            display: flex;
+            height: 8px;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .result-gauge-segment {
+            flex: 1;
+        }
+
+        .result-gauge-pointer-wrapper {
+            position: relative;
+            height: 14px;
+            margin-top: -2px; /* tip just touches the bottom of the bar */
+        }
+
+        .result-gauge-pointer {
+            position: absolute;
+            transform: translateX(-50%);
+            top: 0;
+        }
+
+        /* General Wellness Score dial card */
+        .wellness-dial-card {
+            background: var(--bg-card);
+            border: 1px solid var(--bg-card-border);
+            border-radius: 20px;
+            padding: 20px 16px 12px;
+            margin-top: 16px;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .wellness-dial-card svg {
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .wellness-dial-label {
+            margin: 6px 0 0;
+            color: var(--text);
+            font-size: 1.05em;
+            letter-spacing: 0.04em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        h2 {
+            position: relative;
+            padding-bottom: 6px;
+            margin-top: 28px;
+            margin-bottom: 6px;
+            color: var(--accent);
+            font-size: 1em;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-bottom: 2px solid var(--accent-underline);
+        }
+
+        .star {
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            display: inline-block;
+            height: 100%;
+            aspect-ratio: 1;
+            align-items: center;
+        }
+
+        .greenBackground {
+            background-color: #4CAF50;
+        }
+
+        .greyBackground {
+            background-color: rgba(255,255,255,0.25);
+        }
+
+        .green {
+            color: #4CAF50;
+        }
+
+        .lightGreen {
+            color: #8BC34A;
+        }
+
+        .yellow {
+            color: #e8b428;
+        }
+
+        .lightRed {
+            color: #fd929d;
+        }
+
+        .red {
+            color: #F44336;
+        }
+
+        .grey {
+            color: var(--text-muted);
+        }
+
+        #timestamp {
+            color: var(--text-muted);
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        #main-container {
+            margin: 1em;
+        }
+
+        .info-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--bg-card);
+            border: 1px solid var(--bg-card-border);
+            border-radius: 12px;
+            padding: 10px 16px;
+            margin: 8px 0 16px;
+        }
+
+        #measurementInfo {
+            align-content: center;
+            color: var(--text-muted);
+            font-size: 1em;
+            display: flex;
+            align-items: center;
+        }
+
+        #measurementInfo span+span {
+            border-left: solid rgba(255,255,255,0.25) 1px;
+        }
+
+        #snrContainer {
+            font-weight: bold;
+            padding-left: 0.5em;
+            padding-right: 0.5em;
+        }
+
+        #starsContainer {
+            padding-left: 0.5em;
+            padding-right: 0.5em;
+            display: flex;
+            align-items: center;
+            height: 1.5em;
+            white-space: nowrap;
+        }
+
+        .multi-year-result {
+            display: block;
+            padding-bottom: 0.35rem;
+        }
+
+        .multi-year-main-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .multi-year-main-row .result-name-wrapper {
+            flex: 1;
+        }
+
+        .multi-year-selected-label {
+            color: var(--text-muted);
+            font-size: 0.85em;
+            line-height: 1.2;
+            margin: -0.15rem 0 0.25rem;
+            text-align: right;
+        }
+
+        .multi-year-slider-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-muted);
+            font-size: 0.75em;
+        }
+
+        .multi-year-slider {
+            flex: 1;
+            min-width: 0;
+            accent-color: var(--accent);
+            cursor: pointer;
+        }
+
+        .multi-year-slider:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 3px;
+        }
+
+        #results-container {
+            display: block;
+            max-width: 55em;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        footer {
+            background-color: rgba(255,255,255,0.04);
+            border-top: 1px solid var(--bg-card-border);
+            color: var(--text-muted);
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        footer p {
+            padding: 0.5em;
+        }
+
+        #disclaimer-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .point-info-overlay {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(0, 0, 0, 0.35);
+            padding: 1rem;
+            z-index: 1000;
+        }
+
+        .point-info-overlay.visible {
+            display: flex;
+        }
+
+        .point-info-dialog {
+            background: #1a2335;
+            border: 1px solid var(--bg-card-border);
+            border-radius: 16px;
+            max-width: 520px;
+            max-height: 80vh;
+            width: 100%;
+            padding: 1.5rem;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+            position: relative;
+            overflow-y: auto;
+        }
+
+        .point-info-title {
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+            color: var(--accent);
+        }
+
+        .point-info-close {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            border: none;
+            background: none;
+            color: var(--text);
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 24px;
+            line-height: 1;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .point-info-close::before {
+            content: '×';
+        }
+
+        .point-info-close:hover,
+        .point-info-close:active,
+        .point-info-close:focus {
+            background: none;
+            outline: none;
+        }
+
+        .point-info-content p {
+            margin: 0.5rem 0;
+        }
+
+        .point-info-body {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .point-info-segments {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--bg-card-border);
+            border-radius: 18px;
+            padding: 1rem 1.25rem 1.35rem;
+        }
+
+        .point-info-current-value {
+            font-size: 2.2rem;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .point-info-segment-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 0.75rem;
+        }
+
+        .point-info-segments-track-wrapper {
+            position: relative;
+            margin-top: 0.8rem;
+        }
+
+        .point-info-segments-track {
+            position: relative;
+            display: flex;
+            height: 12px;
+            border-radius: 999px;
+            overflow: hidden;
+            background-color: #dfe4f5;
+        }
+
+        .point-info-segment-block {
+            flex: 1;
+        }
+
+        .point-info-segment-pointer {
+            position: absolute;
+            top: 100%;
+            transform: translateX(-50%) translateY(-10px);
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+        }
+
+        .point-info-special-block {
+            padding: 0 0.25rem;
+        }
+
+        .point-info-state-label {
+            margin: 0 0 0.35rem;
+            font-size: 0.9rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .point-info-markdown {
+            color: var(--text);
+            font-size: 0.95rem;
+            line-height: 1.55;
+            word-break: break-word;
+        }
+
+        .point-info-markdown h3,
+        .point-info-markdown h4 {
+            margin: 1rem 0 0.35rem;
+            color: var(--accent);
+        }
+
+        .point-info-markdown p {
+            margin: 0.4rem 0;
+        }
+
+        .point-info-markdown-list {
+            padding-left: 1.25rem;
+            margin: 0.35rem 0;
+        }
+
+        .point-info-markdown table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0.85rem 0;
+            font-size: 0.9rem;
+        }
+
+        .point-info-markdown th,
+        .point-info-markdown td {
+            border: 1px solid #e0e2eb;
+            padding: 0.5rem;
+            text-align: left;
+        }
+
+        .point-info-markdown th {
+            background: rgba(255,255,255,0.08);
+            font-weight: 600;
+        }
+
+        .point-info-markdown a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .point-info-markdown a:hover {
+            text-decoration: underline;
+        }
+
+        .point-info-stars {
+            display: flex;
+            justify-content: center;
+            gap: 0.35rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .point-info-stars .star {
+            width: 1.4rem;
+            height: 1.4rem;
+        }
+
+        .point-info-star-content {
+            text-align: center;
+        }
+
+        .point-info-legend-title {
+            margin-top: 1rem;
+            margin-bottom: 0.25rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .point-info-scale-list {
+            list-style: none;
+            padding: 0;
+            margin: 0.5rem 0 0;
+        }
+
+        .point-info-scale-list li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.35rem;
+            font-size: 0.95rem;
+        }
+
+        .point-info-color-swatch {
+            width: 0.75rem;
+            height: 0.75rem;
+            border-radius: 999px;
+            margin-right: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .point-info-color-swatch.green { background-color: #4CAF50; }
+        .point-info-color-swatch.lightGreen { background-color: #8BC34A; }
+        .point-info-color-swatch.yellow { background-color: #e8b428; }
+        .point-info-color-swatch.lightRed { background-color: #fd929d; }
+        .point-info-color-swatch.red { background-color: #F44336; }
+        .point-info-color-swatch.grey { background-color: #909090; }
+
+        .point-info-subsection h3 {
+            margin-top: 1rem;
+            margin-bottom: 0.25rem;
+            color: var(--accent);
+            font-size: 1.05rem;
+        }
+
+        .point-info-markdown td,
+        .point-info-markdown th {
+            border-color: var(--bg-card-border);
+        }
+
+        body.info-dialog-open {
+            overflow: hidden;
+        }
+
+        .footer-disclaimer {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-align: center;
+            white-space: pre-line;
+            line-height: 1.4;
+            margin: 0 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="main-container">
+        <div id="measurementInfo"></div>
+        <div id="timestamp"></div>
+        <div id="results-container"></div>
+    </div>
+    <footer>
+        <div id="disclaimer-container"></div>
+    </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            let definitions = DeepAffexWebResultsData.definitions
+            let sections = DeepAffexWebResultsData.sections
+            let encodedResultsQueryString = getResultsFromQueryString()
+            let decodedResults = decodeNuraQRString(encodedResultsQueryString)
+
+            let lang = getLangFromBrowser();
+
+            renderHeader(lang);
+            renderResults(decodedResults, definitions.pointDefinitions, sections, lang);
+            renderDisclaimer(lang);
+
+            // Log profile input for debugging
+            let pointsIDs = [
+                'INPUT_AGE',
+                'INPUT_HEIGHT', 
+                'INPUT_WEIGHT', 
+                'INPUT_GENDER', // Male = 1, female = 2
+                'INPUT_DIABETES', // None = 3, Type1 = 4, Type2 = 5
+                'INPUT_SMOKING', // YES = 1, NO = 0
+                'INPUT_BP_MEDICATION' // YES = 1, NO = 0
+            ];
+            pointsIDs.forEach(id => {
+                let result = getPointResult(id, decodedResults);
+                console.log(`Profile input - ${id}: ${result}`);
+            });
+
+            let measurementID = getMeasurementIDFromQueryString();
+            console.log("measurementID from query string: " + measurementID);
+            let partnerID = getPartnerIDFromQueryString();
+            console.log("partnerID from query string: " + partnerID);
+
+        });
+
+
+        /**
+         * Retrieves query string results from the current URL.
+         * @returns {string|null} The result query string value if present.
+         */
+        function getResultsFromQueryString() {
+            const urlParams = new URLSearchParams(window.location.search)
+            const resultQuery = urlParams.get('r')
+            return resultQuery
+        }
+
+        /**
+         * Retrieves the measurement ID from the current URL query string.
+         * @returns {string|null} The measurement ID if present.
+         */
+        function getMeasurementIDFromQueryString() {
+            const urlParams = new URLSearchParams(window.location.search)
+            const measurementID = urlParams.get('mid')
+            return measurementID
+        }
+
+        /**
+         * Retrieves the partner ID from the current URL query string.
+         * @returns {string|null} The partner ID if present.
+         */
+        function getPartnerIDFromQueryString() {
+            const urlParams = new URLSearchParams(window.location.search)
+            const partnerID = urlParams.get('pid')
+            return partnerID
+        }
+
+        /**
+         * Gets the browser's preferred language.
+         * @returns {string} The language code (e.g., 'en', 'zh'), defaults to 'en' if not found.
+         */
+        function getLangFromBrowser() {
+            let lang = navigator.language
+            console.log("current browser language: " + lang);
+            if (lang) {
+                if (lang.includes('zh')) {
+                    return 'zh';
+                } else if (lang.includes('ko')) {
+                    return 'ko';
+                } else if (lang.includes('-')) {
+                    return lang.split('-')[0];
+                } else {
+                    return lang;
+                }
+            } else {
+                return "en";
+            }
+        }
+    </script>
+</body>
+
+</html>
