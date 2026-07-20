@@ -9,10 +9,12 @@ const DeepAffexWebResultsData = (() => {
                 "MENTAL_SCORE",
                 "PHYSICAL_SCORE",
                 "RISKS_SCORE",
-                "BP_CVD"
+                "BP_CVD",
+                "OVERALL_METABOLIC_RISK_PROB"
             ],
             "pointTitleOverrides": {
-                "BP_CVD": "DFXPOINT_TITLE:BP_CVD:OVERALL"
+                "BP_CVD": "DFXPOINT_TITLE:BP_CVD:OVERALL",
+                "OVERALL_METABOLIC_RISK_PROB": "DFXPOINT_TITLE:OVERALL_METABOLIC_RISK_PROB:OVERALL"
             }
         },
         {
@@ -412,7 +414,15 @@ const DeepAffexWebResultsData = (() => {
                 "key": "IHB_COUNT",
                 "decimalPlaces": 0,
                 "units": "",
-                "scales": {},
+                "scales": {
+                    "default": {
+                        "segments": [
+                            {"min": 0, "max": 2,  "color": "green"},
+                            {"min": 2, "max": 5,  "color": "yellow"},
+                            {"min": 5, "max": 10, "color": "yellow"}
+                        ]
+                    }
+                },
                 "lowerBound": 0,
                 "upperBound": 10
             },
@@ -1168,7 +1178,7 @@ const DeepAffexWebResultsData = (() => {
                                 "color": "green"
                             },
                             {
-                                "color": "lightGreen",
+                                "color": "green",
                                 "min": 120,
                                 "max": 130
                             },
@@ -1179,7 +1189,7 @@ const DeepAffexWebResultsData = (() => {
                             },
                             {
                                 "max": 180,
-                                "color": "red",
+                                "color": "yellow",
                                 "min": 140
                             }
                         ]
@@ -1644,7 +1654,7 @@ const DeepAffexWebResultsData = (() => {
                                 "color": "green"
                             },
                             {
-                                "color": "lightGreen",
+                                "color": "green",
                                 "max": 80,
                                 "min": 70
                             },
@@ -1655,7 +1665,7 @@ const DeepAffexWebResultsData = (() => {
                             },
                             {
                                 "min": 90,
-                                "color": "red",
+                                "color": "yellow",
                                 "max": 120
                             }
                         ]
@@ -2017,6 +2027,10 @@ const DeepAffexWebResultsData = (() => {
             "ko": "심혈관 질환 위험",
             "zh": "心血管疾病风险"
         },
+        "DFXPOINT_TITLE:CVD_MULTI_YEAR_RISK_PROBS:OVERALL": {
+            "default": "Cardiovascular Event Likelihood Index",
+            "zh": "心血管事件风险指数"
+        },
         "DFXPOINT_TITLE:BP_CVD:OVERALL": {
             "default": "Cardiovascular Event Likelihood Index",
             "zh": "心血管事件风险指数"
@@ -2268,7 +2282,7 @@ According to the [European Society of Cardiology and the European Society of Hyp
 
 #### DISCLAIMER:
 
-{APP_NAME} is not a medical device and should not be used for medical purposes. Always consult with your physician or other medical professional should you have any health-related question, issues or emergency.
+This product and this health insight is not a medical device and should not be used for diagnosis, treatment, cure or any medical purposes. Always consult with your physician or other medical professional should you have any health-related question, issues or emergency.
 
 #### Accuracy of blood pressure estimates:
 
@@ -2343,7 +2357,7 @@ According to the [European Society of Cardiology and the European Society of Hyp
 
 #### DISCLAIMER:
 
-{APP_NAME} is not a medical device and should not be used for medical purposes. Always consult with your physician or other medical professional should you have any health-related question, issues or emergency.
+This product and this health insight is not a medical device and should not be used for diagnosis, treatment, cure or any medical purposes. Always consult with your physician or other medical professional should you have any health-related question, issues or emergency.
 
 #### Accuracy of blood pressure estimates:
 

@@ -85,17 +85,8 @@ function renderResults(results, definitions, sections, pageLocale) {
 
         for (let i = 0; i < section.pointsIDs.length; i++) {
             let pointID = section.pointsIDs[i];
-            let nextPointID = section.pointsIDs[i + 1];
-            // Special handling for BP_SYSTOLIC and BP_DIASTOLIC combination
-            if (pointID === "BP_SYSTOLIC" && nextPointID === "BP_DIASTOLIC") {
-                renderBloodPressureRow(results, definitions, container, pageLocale);
-                i++; // Skip the next ID since it's already processed
-                numberOfChildren += 1;
-                continue;
-            }
-
-            // Hide BP_CVD when multi-year risk is present (it supersedes the single value)
-            if (pointID === "BP_CVD" && hasMultiYearRiskResult(results, definitions)) {
+            // In the Cardiovascular section, hide BP_CVD when multi-year risk is present (slider supersedes it)
+            if (pointID === "BP_CVD" && section.titleLocalizationKey === "SCREEN_RESULTS_SUBTITLE_GENERALRISKS" && hasMultiYearRiskResult(results, definitions)) {
                 continue
             }
 
@@ -109,6 +100,17 @@ function renderResults(results, definitions, sections, pageLocale) {
             }
 
             let result = getPointResult(pointID, results);
+
+            // In General Wellness, show 10-year CVD_MULTI_YEAR value for BP_CVD when multi-year data is present
+            if (pointID === "BP_CVD" && section.titleLocalizationKey === "SCREEN_RESULTS_SUBTITLE_OVERALL" && hasMultiYearRiskResult(results, definitions)) {
+                const multiYearDef = definitions["CVD_MULTI_YEAR_RISK_PROBS"]
+                const values = getMultiYearRiskValues(results, multiYearDef)
+                const firstAvailableIndex = values.findIndex(hasPointResultValue)
+                if (firstAvailableIndex !== -1) {
+                    const selectedIndex = values.length > 1 ? Math.min(9, values.length - 1) : firstAvailableIndex
+                    result = values[selectedIndex]
+                }
+            }
 
             if(pointID === "TEMPERATURE_SENSOR" && (isNaN(result) || result === 0)) {
                 // Fallback to BODY_TEMPERATURE if TEMPERATURE_SENSOR is not available
@@ -286,7 +288,12 @@ function renderMultiYearRiskRow(results, pointDefinition, container, locale) {
         slider.addEventListener('input', event => {
             updateSelectedYear(Number(event.target.value))
         })
+        slider.addEventListener('click', event => {
+            event.stopPropagation()
+        })
     }
+    resultEl.style.cursor = 'pointer'
+    resultEl.addEventListener('click', openDialog)
     updateSelectedYear(selectedYear)
     container.appendChild(resultEl)
     return true
@@ -427,6 +434,8 @@ function renderResultRow(result, pointDefinition, container, locale, titleKeyOve
     if (shouldShowInfoIcon(pointDefinition.key)) {
         let infoIndicator = PointInfoDialog.createResultInfoIcon(locale, openDialog)
         nameWrapper.appendChild(infoIndicator)
+        resultEl.style.cursor = 'pointer'
+        resultEl.addEventListener('click', openDialog)
     }
     resultEl.appendChild(nameWrapper)
 
@@ -511,6 +520,8 @@ function renderBloodPressureRow(results, definitions, container, locale) {
     nameWrapper.appendChild(infoIndicator)
     resultEl.appendChild(nameWrapper)
 
+    resultEl.style.cursor = 'pointer'
+    resultEl.addEventListener('click', openDialog)
     resultEl.appendChild(bloodPressureValueEl);
     resultEl.appendChild(unitEl);
 
@@ -703,7 +714,7 @@ function shouldShowInfoIcon(pointKey) {
 // Raw values for these points are on a 1–5 scale; display as percent-of-max (value/5*100)
 const PERCENT_OF_MAX_POINTS = new Set(['VITAL_SCORE', 'PHYSIO_SCORE', 'MENTAL_SCORE', 'PHYSICAL_SCORE'])
 
-const GAUGE_BAR_SKIP_POINTS = new Set(['AGE', 'IHB_COUNT', 'SNR'])
+const GAUGE_BAR_SKIP_POINTS = new Set(['AGE', 'SNR'])
 
 /**
  * Creates a compact inline colored gauge bar showing value position within scale segments.
