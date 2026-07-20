@@ -1014,6 +1014,11 @@ const DeepAffexWebResultsData = (() => {
                                 "min": 39.5,
                                 "max": 41.5,
                                 "color": "yellow"
+                            },
+                            {
+                                "min": 41.5,
+                                "max": 45,
+                                "color": "yellow"
                             }
                         ]
                     }
