@@ -119,6 +119,10 @@ function renderResults(results, definitions, sections, pageLocale) {
             let pointDefinition = definitions[pointID]
             if (!pointDefinition) continue;
 
+            if (Number.isFinite(result) && pointDefinition.multiplier) {
+                result = result * pointDefinition.multiplier;
+            }
+
             // Skip rendering if result is not available and point is configured to hide when missing
             if (pointDefinition.hideWhenMissing && (result === undefined || isNaN(result))) {
                 continue;
@@ -782,11 +786,11 @@ function createInlineGaugeBar(result, pointDefinition) {
 
 function getSegmentColorValue(colorKey) {
     const COLOR_MAP = {
-        green: '#4CAF50',
-        lightGreen: '#8BC34A',
-        yellow: '#E8B428',
-        lightRed: '#FD929D',
-        red: '#F44336',
+        green: '#00de93',
+        lightGreen: '#72e9b4',
+        yellow: '#ffeb78',
+        lightRed: '#ff8286',
+        red: '#ff444f',
         grey: '#9E9E9E'
     }
     return COLOR_MAP[colorKey] ?? '#9E9E9E'

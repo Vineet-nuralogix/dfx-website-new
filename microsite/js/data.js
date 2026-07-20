@@ -8,12 +8,11 @@ const DeepAffexWebResultsData = (() => {
                 "PHYSIO_SCORE",
                 "MENTAL_SCORE",
                 "PHYSICAL_SCORE",
-                "BP_CVD",
-                "OVERALL_METABOLIC_RISK_PROB"
+                "RISKS_SCORE",
+                "BP_CVD"
             ],
             "pointTitleOverrides": {
-                "BP_CVD": "DFXPOINT_TITLE:BP_CVD:OVERALL",
-                "OVERALL_METABOLIC_RISK_PROB": "DFXPOINT_TITLE:OVERALL_METABOLIC_RISK_PROB:OVERALL"
+                "BP_CVD": "DFXPOINT_TITLE:BP_CVD:OVERALL"
             }
         },
         {
@@ -277,42 +276,23 @@ const DeepAffexWebResultsData = (() => {
                 }
             },
             "RISKS_SCORE": {
-                "lowerBound": 1,
-                "upperBound": 5,
+                "lowerBound": 0,
+                "upperBound": 100,
+                "multiplier": 20,
                 "scales": {
                     "default": {
                         "segments": [
-                            {
-                                "max": 2,
-                                "color": "red",
-                                "min": 1
-                            },
-                            {
-                                "max": 3,
-                                "min": 2,
-                                "color": "lightRed"
-                            },
-                            {
-                                "min": 3,
-                                "color": "yellow",
-                                "max": 4
-                            },
-                            {
-                                "color": "lightGreen",
-                                "min": 4,
-                                "max": 5
-                            },
-                            {
-                                "color": "green",
-                                "min": 5,
-                                "max": 5
-                            }
+                            {"min": 0,  "max": 40,  "color": "red"},
+                            {"min": 40, "max": 60,  "color": "lightRed"},
+                            {"min": 60, "max": 80,  "color": "yellow"},
+                            {"min": 80, "max": 100, "color": "lightGreen"},
+                            {"min": 100, "max": 100, "color": "green"}
                         ]
                     }
                 },
                 "key": "RISKS_SCORE",
                 "decimalPlaces": 0,
-                "units": ""
+                "units": "PERCENT"
             },
             "BP_STROKE": {
                 "lowerBound": 0,
