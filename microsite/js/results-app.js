@@ -221,6 +221,11 @@ function renderMultiYearRiskRow(results, pointDefinition, container, locale) {
     mainRow.appendChild(valueEl)
     resultEl.appendChild(mainRow)
 
+    let gaugeBar = createInlineGaugeBar(selectedValue, pointDefinition)
+    if (gaugeBar) {
+        resultEl.appendChild(gaugeBar.el)
+    }
+
     let yearLabel
     let slider
     if (values.length > 1) {
@@ -275,6 +280,9 @@ function renderMultiYearRiskRow(results, pointDefinition, container, locale) {
             pointDefinition.units,
             locale
         )
+        if (gaugeBar) {
+            gaugeBar.updateValue(selectedValue)
+        }
         let yearTemplate = localize('DFXPOINT_CVD_YEAR_LABEL', locale)
         if (yearLabel) {
             yearLabel.textContent = yearTemplate.replace('{year}', year)
@@ -445,7 +453,7 @@ function renderResultRow(result, pointDefinition, container, locale, titleKeyOve
     // Inline gauge bar below the main row
     let gaugeBar = createInlineGaugeBar(displayResult, pointDefinition)
     if (gaugeBar) {
-        resultEl.appendChild(gaugeBar)
+        resultEl.appendChild(gaugeBar.el)
     }
 
     container.appendChild(resultEl)
@@ -717,11 +725,34 @@ const PERCENT_OF_MAX_POINTS = new Set(['VITAL_SCORE', 'PHYSIO_SCORE', 'MENTAL_SC
 const GAUGE_BAR_SKIP_POINTS = new Set(['AGE', 'SNR'])
 
 /**
+ * Calculates the pointer position (0–100%) for a given value within segment boundaries.
+ */
+function calculateGaugePointerPct(value, boundaries) {
+    let min = boundaries[0]
+    let max = boundaries[boundaries.length - 1]
+    let clampedValue = Math.min(Math.max(value, min), max)
+    let totalSegments = boundaries.length - 1
+    let ratio = 0
+    for (let i = 0; i < totalSegments; i++) {
+        let start = boundaries[i]
+        let end = boundaries[i + 1]
+        if (clampedValue >= end) { ratio = i + 1; continue }
+        if (clampedValue >= start && clampedValue <= end) {
+            let span = end - start
+            ratio = i + (span > 0 ? (clampedValue - start) / span : 0)
+            break
+        }
+    }
+    return Math.min(Math.max((ratio / totalSegments) * 100, 0), 100)
+}
+
+/**
  * Creates a compact inline colored gauge bar showing value position within scale segments.
- * Returns null when no scale segments are available for the point.
+ * Returns { el, updateValue } or null when no scale segments are available for the point.
+ * updateValue(newResult) repositions the pointer without rebuilding the bar.
  * @param {number} result - The current value.
  * @param {Object} pointDefinition - The point definition including scales.
- * @returns {HTMLElement|null}
+ * @returns {{ el: HTMLElement, updateValue: function }|null}
  */
 function createInlineGaugeBar(result, pointDefinition) {
     if (GAUGE_BAR_SKIP_POINTS.has(pointDefinition.key)) return null
@@ -750,24 +781,6 @@ function createInlineGaugeBar(result, pointDefinition) {
         track.appendChild(block)
     })
 
-    // Pointer position
-    let min = boundaries[0]
-    let max = boundaries[boundaries.length - 1]
-    let clampedValue = Math.min(Math.max(result, min), max)
-    let totalSegments = boundaries.length - 1
-    let ratio = 0
-    for (let i = 0; i < totalSegments; i++) {
-        let start = boundaries[i]
-        let end = boundaries[i + 1]
-        if (clampedValue >= end) { ratio = i + 1; continue }
-        if (clampedValue >= start && clampedValue <= end) {
-            let span = end - start
-            ratio = i + (span > 0 ? (clampedValue - start) / span : 0)
-            break
-        }
-    }
-    let pct = Math.min(Math.max((ratio / totalSegments) * 100, 0), 100)
-
     let pointerWrapper = document.createElement('div')
     pointerWrapper.className = 'result-gauge-pointer-wrapper'
 
@@ -776,7 +789,7 @@ function createInlineGaugeBar(result, pointDefinition) {
     pointer.setAttribute('width', '12')
     pointer.setAttribute('height', '12')
     pointer.setAttribute('viewBox', '0 0 20 20')
-    pointer.style.left = `${pct}%`
+    pointer.style.left = `${calculateGaugePointerPct(result, boundaries)}%`
     let whitePath = document.createElementNS('http://www.w3.org/2000/svg', 'path')
     whitePath.setAttribute('d', 'M 10 3 L 2 17 L 18 17 Z')
     whitePath.setAttribute('fill', 'white')
@@ -792,7 +805,13 @@ function createInlineGaugeBar(result, pointDefinition) {
 
     wrapper.appendChild(track)
     wrapper.appendChild(pointerWrapper)
-    return wrapper
+
+    return {
+        el: wrapper,
+        updateValue: newResult => {
+            pointer.style.left = `${calculateGaugePointerPct(newResult, boundaries)}%`
+        }
+    }
 }
 
 function getSegmentColorValue(colorKey) {
