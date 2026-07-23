@@ -1,767 +1,540 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MagicMirror™</title>
-    <script src="js/vendor/float16.min.js"></script>
-    <script>
-        const {
-            Float16Array, isFloat16Array, isTypedArray,
-            getFloat16, setFloat16,
-            f16round,
-        } = float16;
-    </script>
-    <script src="js/data.js"></script>
-    <script src="js/point-info-dialog.js"></script>
-    <script src="js/results-app.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap"
-        rel="stylesheet">
+    <title>MagicMirror Appliance</title>
     <style>
-        :root {
-            --bg: #0e1621;
-            --bg-card: rgba(255,255,255,0.06);
-            --bg-card-border: rgba(255,255,255,0.12);
-            --text: #e8eaf0;
-            --text-muted: rgba(232,234,240,0.55);
-            --accent: #e8eaf0;
-            --accent-underline: rgba(232,234,240,0.35);
-            --header-pink: #F65F77;
-        }
-
-        body {
-            font-family: "Work Sans", sans-serif;
+        * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            background-color: var(--bg);
-            color: var(--text);
         }
 
-        a {
-            color: var(--accent);
-        }
-
-        .result {
-            display: grid;
-            grid-template-columns: 40px 1fr auto auto;
-            grid-template-rows: auto auto;
-            column-gap: 10px;
-            align-items: center;
-            padding: 12px 14px;
-            margin: 6px 0;
-            background: var(--bg-card);
-            border: 1px solid var(--bg-card-border);
-            border-radius: 14px;
-            font-size: 1.05em;
-        }
-
-        .result-clickable {
-            cursor: pointer;
-        }
-
-        .result-clickable:focus {
-            outline: 2px solid var(--accent);
-            outline-offset: 4px;
-        }
-
-        .result-icon {
-            grid-column: 1;
-            grid-row: 1;
-            width: 32px;
-            height: 32px;
-            color: var(--accent);
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: black;
+            min-height: 100vh;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
+            flex-direction: column;
+            color: #fff;
         }
 
-        .result-icon svg {
-            width: 100%;
-            height: 100%;
-            display: block;
-        }
-
-        /* bitmap-embedded SVG icons (e.g. VITALITY, SLEEP_QUALITY, ANXIETY_INDEX) */
-        .result-icon svg image {
-            filter: invert(1);
-        }
-
-        .result-icon.fallback {
-            font-size: 20px;
-            text-align: center;
-            line-height: 32px;
-            color: currentColor;
-        }
-
-        .result-name-wrapper {
-            grid-column: 2;
-            grid-row: 1;
-            min-width: 0;
-        }
-
-        .result-name {
-            color: var(--text);
-            font-size: 0.92em;
-        }
-
-        .result-info-icon {
-            border: 1px solid rgba(255,255,255,0.25);
-            background-color: rgba(255,255,255,0.08);
-            color: var(--text);
-            border-radius: 50%;
-            width: 14px;
-            height: 14px;
-            margin-right: 0;
-            margin-left: 5px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            font-size: 0.45em;
-            cursor: pointer;
-            vertical-align: top;
-        }
-
-        #snrContainer .result-info-icon,
-        #starsContainer .result-info-icon {
-            margin-left: 5px;
-            margin-right: 0;
-        }
-
-        .wellness-dial-label .result-info-icon {
-            margin-left: 2px;
-            align-self: flex-start;
-            margin-top: 1px;
-            font-size: 0.38em;
-            width: 12px;
-            height: 12px;
-        }
-
-        .result-info-icon:hover,
-        .result-info-icon:active,
-        .result-info-icon:focus {
-            outline: none;
-            background-color: none;
-        }
-
-        .result-value {
-            grid-column: 3;
-            grid-row: 1;
-            margin-left: 8px;
-            font-size: 1.8em;
-            font-weight: bold;
-            white-space: nowrap;
-        }
-
-        .result-unit {
-            grid-column: 4;
-            grid-row: 1;
-            margin-left: 0.3em;
-            font-size: 0.85em;
-            color: var(--text-muted);
-            align-self: flex-end;
-            padding-bottom: 0.15em;
-        }
-
-        /* Inline gauge bar — spans full width below icon+name+value row */
-        .result-gauge-wrapper {
-            grid-column: 1 / -1;
-            grid-row: 2;
-            padding-top: 8px;
-        }
-
-        .result-gauge-track {
-            display: flex;
-            height: 8px;
-            border-radius: 999px;
-            overflow: hidden;
-        }
-
-        .result-gauge-segment {
+        .main-content {
             flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-bottom: 20px;
         }
 
-        .result-gauge-pointer-wrapper {
-            position: relative;
-            height: 14px;
-            margin-top: -2px; /* tip just touches the bottom of the bar */
-        }
-
-        .result-gauge-pointer {
-            position: absolute;
-            transform: translateX(-50%);
-            top: 0;
-        }
-
-        /* General Wellness Score dial card */
-        .wellness-dial-card {
-            background: var(--bg-card);
-            border: 1px solid var(--bg-card-border);
-            border-radius: 20px;
-            padding: 20px 16px 12px;
-            margin-top: 16px;
-            margin-bottom: 8px;
+        .page-header {
             text-align: center;
+            padding: 0 20px;
+            margin-bottom: 60px;
         }
 
-        .wellness-dial-card svg {
-            width: 100%;
-            max-width: 300px;
+        .logo {
+            width: 90%;
             height: auto;
             display: block;
             margin: 0 auto;
         }
 
-        .wellness-dial-label {
-            margin: 6px 0 0;
-            color: var(--text);
-            font-size: 1.05em;
-            letter-spacing: 0.04em;
+        .page-footer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            padding: 0 20px;
+        }
+
+        .next-button {
+            background: #005DBC;
+            color: white;
+            border: none;
+            padding: 14px 36px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+            max-width: 280px;
+        }
+
+        .next-button:hover {
+            opacity: 0.85;
+        }
+
+        .floating-actions {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 12px;
+        }
+
+        .settings-button {
+            width: 44px;
+            height: 44px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+            cursor: pointer;
+        }
+
+        .settings-button svg {
+            width: 20px;
+            height: 20px;
+            stroke: #fff;
+            fill: none;
+            stroke-width: 1.6;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .settings-button:hover {
+            background: rgba(255,255,255,0.25);
+        }
+
+        .language-menu {
+            display: none;
+            flex-direction: column;
             gap: 4px;
-        }
-
-        h2 {
-            position: relative;
-            padding-bottom: 6px;
-            margin-top: 28px;
-            margin-bottom: 6px;
-            color: var(--accent);
-            font-size: 1em;
-            font-weight: 700;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-        }
-
-        h2::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-bottom: 2px solid var(--accent-underline);
-        }
-
-        .star {
-            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-            display: inline-block;
-            height: 100%;
-            aspect-ratio: 1;
-            align-items: center;
-        }
-
-        .greenBackground {
-            background-color: #4CAF50;
-        }
-
-        .greyBackground {
-            background-color: rgba(255,255,255,0.25);
-        }
-
-        .green {
-            color: #4CAF50;
-        }
-
-        .lightGreen {
-            color: #8BC34A;
-        }
-
-        .yellow {
-            color: #e8b428;
-        }
-
-        .lightRed {
-            color: #fd929d;
-        }
-
-        .red {
-            color: #F44336;
-        }
-
-        .grey {
-            color: var(--text-muted);
-        }
-
-        #timestamp {
-            color: var(--text-muted);
-            font-weight: bold;
-            font-size: 0.9em;
-        }
-
-        #main-container {
-            margin: 1em;
-        }
-
-        .info-bar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: var(--bg-card);
-            border: 1px solid var(--bg-card-border);
+            width: 100px;
+            padding: 8px;
+            background: #1a1a1a;
             border-radius: 12px;
-            padding: 10px 16px;
-            margin: 8px 0 16px;
+            border: 1px solid #444;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
         }
 
-        #measurementInfo {
-            align-content: center;
-            color: var(--text-muted);
-            font-size: 1em;
+        .language-menu.active {
             display: flex;
-            align-items: center;
         }
 
-        #measurementInfo span+span {
-            border-left: solid rgba(255,255,255,0.25) 1px;
-        }
-
-        #snrContainer {
-            font-weight: bold;
-            padding-left: 0.5em;
-            padding-right: 0.5em;
-        }
-
-        #starsContainer {
-            padding-left: 0.5em;
-            padding-right: 0.5em;
-            display: flex;
-            align-items: center;
-            height: 1.5em;
-            white-space: nowrap;
-        }
-
-        .multi-year-result {
-            display: block;
-            padding-bottom: 0.35rem;
-        }
-
-        .multi-year-main-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .multi-year-main-row .result-name-wrapper {
-            flex: 1;
-        }
-
-        .multi-year-selected-label {
-            color: var(--text-muted);
-            font-size: 0.85em;
-            line-height: 1.2;
-            margin: -0.15rem 0 0.25rem;
+        .language-option {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 0.95rem;
+            padding: 8px 10px;
+            border-radius: 8px;
+            cursor: pointer;
             text-align: right;
         }
 
-        .multi-year-slider-row {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--text-muted);
-            font-size: 0.75em;
+        .language-option:hover {
+            background: #f0f0f0;
         }
 
-        .multi-year-slider {
-            flex: 1;
-            min-width: 0;
-            accent-color: var(--accent);
-            cursor: pointer;
-        }
-
-        .multi-year-slider:focus-visible {
-            outline: 2px solid var(--accent);
-            outline-offset: 3px;
-        }
-
-        #results-container {
-            display: block;
-            max-width: 55em;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        footer {
-            background-color: rgba(255,255,255,0.04);
-            border-top: 1px solid var(--bg-card-border);
-            color: var(--text-muted);
-            padding: 20px 0;
-            text-align: center;
-        }
-
-        footer p {
-            padding: 0.5em;
-        }
-
-        #disclaimer-container {
+        .video-wrapper {
             width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .point-info-overlay {
-            position: fixed;
-            inset: 0;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            background-color: rgba(0, 0, 0, 0.35);
-            padding: 1rem;
-            z-index: 1000;
-        }
-
-        .point-info-overlay.visible {
-            display: flex;
-        }
-
-        .point-info-dialog {
-            background: #1a2335;
-            border: 1px solid var(--bg-card-border);
-            border-radius: 16px;
-            max-width: 520px;
-            max-height: 80vh;
-            width: 100%;
-            padding: 1.5rem;
-            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
-            position: relative;
-            overflow-y: auto;
-        }
-
-        .point-info-title {
-            margin-top: 0;
-            margin-bottom: 0.5rem;
-            color: var(--accent);
-        }
-
-        .point-info-close {
-            position: absolute;
-            top: 0.75rem;
-            right: 0.75rem;
-            border: none;
-            background: none;
-            color: var(--text);
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 24px;
-            line-height: 1;
-            padding: 0;
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .point-info-close::before {
-            content: '×';
-        }
-
-        .point-info-close:hover,
-        .point-info-close:active,
-        .point-info-close:focus {
-            background: none;
-            outline: none;
-        }
-
-        .point-info-content p {
-            margin: 0.5rem 0;
-        }
-
-        .point-info-body {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            margin-top: 0.5rem;
-        }
-
-        .point-info-segments {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--bg-card-border);
-            border-radius: 18px;
-            padding: 1rem 1.25rem 1.35rem;
-        }
-
-        .point-info-current-value {
-            font-size: 2.2rem;
-            font-weight: 600;
-            text-align: center;
-        }
-
-        .point-info-segment-labels {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-top: 0.75rem;
-        }
-
-        .point-info-segments-track-wrapper {
-            position: relative;
-            margin-top: 0.8rem;
-        }
-
-        .point-info-segments-track {
-            position: relative;
-            display: flex;
-            height: 12px;
-            border-radius: 999px;
-            overflow: hidden;
-            background-color: #dfe4f5;
-        }
-
-        .point-info-segment-block {
-            flex: 1;
-        }
-
-        .point-info-segment-pointer {
-            position: absolute;
-            top: 100%;
-            transform: translateX(-50%) translateY(-10px);
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-        }
-
-        .point-info-special-block {
-            padding: 0 0.25rem;
-        }
-
-        .point-info-state-label {
-            margin: 0 0 0.35rem;
-            font-size: 0.9rem;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: var(--text-muted);
-        }
-
-        .point-info-markdown {
-            color: var(--text);
-            font-size: 0.95rem;
-            line-height: 1.55;
-            word-break: break-word;
-        }
-
-        .point-info-markdown h3,
-        .point-info-markdown h4 {
-            margin: 1rem 0 0.35rem;
-            color: var(--accent);
-        }
-
-        .point-info-markdown p {
-            margin: 0.4rem 0;
-        }
-
-        .point-info-markdown-list {
-            padding-left: 1.25rem;
-            margin: 0.35rem 0;
-        }
-
-        .point-info-markdown table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 0.85rem 0;
-            font-size: 0.9rem;
-        }
-
-        .point-info-markdown th,
-        .point-info-markdown td {
-            border: 1px solid #e0e2eb;
-            padding: 0.5rem;
-            text-align: left;
-        }
-
-        .point-info-markdown th {
-            background: rgba(255,255,255,0.08);
-            font-weight: 600;
-        }
-
-        .point-info-markdown a {
-            color: var(--accent);
-            text-decoration: none;
-        }
-
-        .point-info-markdown a:hover {
-            text-decoration: underline;
-        }
-
-        .point-info-stars {
-            display: flex;
-            justify-content: center;
-            gap: 0.35rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .point-info-stars .star {
-            width: 1.4rem;
-            height: 1.4rem;
-        }
-
-        .point-info-star-content {
-            text-align: center;
-        }
-
-        .point-info-legend-title {
-            margin-top: 1rem;
-            margin-bottom: 0.25rem;
-            font-weight: 600;
-            color: var(--accent);
-        }
-
-        .point-info-scale-list {
-            list-style: none;
-            padding: 0;
-            margin: 0.5rem 0 0;
-        }
-
-        .point-info-scale-list li {
-            display: flex;
-            align-items: center;
-            margin-bottom: 0.35rem;
-            font-size: 0.95rem;
-        }
-
-        .point-info-color-swatch {
-            width: 0.75rem;
-            height: 0.75rem;
-            border-radius: 999px;
-            margin-right: 0.5rem;
+            aspect-ratio: 16 / 9;
             flex-shrink: 0;
-        }
-
-        .point-info-color-swatch.green { background-color: #4CAF50; }
-        .point-info-color-swatch.lightGreen { background-color: #8BC34A; }
-        .point-info-color-swatch.yellow { background-color: #e8b428; }
-        .point-info-color-swatch.lightRed { background-color: #fd929d; }
-        .point-info-color-swatch.red { background-color: #F44336; }
-        .point-info-color-swatch.grey { background-color: #909090; }
-
-        .point-info-subsection h3 {
-            margin-top: 1rem;
-            margin-bottom: 0.25rem;
-            color: var(--accent);
-            font-size: 1.05rem;
-        }
-
-        .point-info-markdown td,
-        .point-info-markdown th {
-            border-color: var(--bg-card-border);
-        }
-
-        body.info-dialog-open {
             overflow: hidden;
+            background: #000;
+            margin-bottom: 260px;
         }
 
-        .footer-disclaimer {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            text-align: center;
-            white-space: pre-line;
-            line-height: 1.4;
-            margin: 0 1rem;
+        .video-banner {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
         }
+
+        .video-menu-button {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 44px;
+            height: 44px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 100;
+        }
+
+        .video-menu-button:hover {
+            background: rgba(255,255,255,0.25);
+        }
+
+        .video-menu-button svg {
+            width: 20px;
+            height: 20px;
+            stroke: #fff;
+            fill: none;
+            stroke-width: 1.6;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .video-menu {
+            position: fixed;
+            bottom: 74px;
+            left: 20px;
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 200px;
+            max-width: 280px;
+            padding: 8px;
+            background: #1a1a1a;
+            border-radius: 12px;
+            border: 1px solid #444;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.6);
+            z-index: 100;
+        }
+
+        .video-menu.active {
+            display: flex;
+        }
+
+        .video-menu-option {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 0.9rem;
+            padding: 9px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .video-menu-option:hover {
+            background: rgba(255,255,255,0.08);
+        }
+
+        .video-menu-option.active {
+            background: #005DBC;
+        }
+
     </style>
 </head>
-
 <body>
-    <div id="main-container">
-        <div id="measurementInfo"></div>
-        <div id="timestamp"></div>
-        <div id="results-container"></div>
+    <div class="main-content">
+        <div class="page-header">
+            <img class="logo" src="assets/imgs/Anura-MagicMirror-english.png" alt="MagicMirror Appliance">
+        </div>
+
+        <div class="video-wrapper">
+            <video class="video-banner"
+                   id="promo-video"
+                   autoplay
+                   playsinline
+                   webkit-playsinline
+                   preload="auto"
+                   disablePictureInPicture>
+            </video>
+        </div>
+
+        <div class="page-footer">
+            <button class="next-button" id="profile-button" onclick="navigateToProfile()">
+                Continue
+            </button>
+            <button class="next-button" id="sample-results-button" style="background:transparent; color:#fff; border:1px solid #fff;" onclick="showSampleResults()">
+                Sample Results
+            </button>
+        </div>
     </div>
-    <footer>
-        <div id="disclaimer-container"></div>
-    </footer>
+
+    <!-- Settings & Language Buttons -->
+    <div class="floating-actions">
+        <div class="settings-button" onclick="navigateToSettings()">
+            <!-- Gear / settings icon -->
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+        </div>
+        <div class="settings-button" id="language-button" onclick="toggleLanguageMenu(event)">
+            <!-- Globe / language icon -->
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="9"/>
+                <path d="M12 3c-2.5 3-4 5.7-4 9s1.5 6 4 9"/>
+                <path d="M12 3c2.5 3 4 5.7 4 9s-1.5 6-4 9"/>
+                <line x1="3" y1="12" x2="21" y2="12"/>
+                <path d="M3.6 7.5h16.8M3.6 16.5h16.8"/>
+            </svg>
+        </div>
+        <div class="language-menu" id="language-menu">
+            <button class="language-option" onclick="handleLanguageSelection('zh')">中文</button>
+            <button class="language-option" onclick="handleLanguageSelection('en')">English</button>
+        </div>
+    </div>
+
+
+    <!-- Video playlist menu -->
+    <div class="video-menu" id="video-menu"></div>
+    <div class="video-menu-button" id="video-menu-button" onclick="toggleVideoMenu(event)">
+        <!-- Playlist icon -->
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <line x1="3" y1="7" x2="15" y2="7"/>
+            <line x1="3" y1="12" x2="15" y2="12"/>
+            <line x1="3" y1="17" x2="15" y2="17"/>
+            <polygon points="18,9 23,12 18,15" fill="#fff" stroke="none"/>
+        </svg>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="js/common.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', async () => {
-            let definitions = DeepAffexWebResultsData.definitions
-            let sections = DeepAffexWebResultsData.sections
-            let encodedResultsQueryString = getResultsFromQueryString()
-            let decodedResults = decodeNuraQRString(encodedResultsQueryString)
+        const languages = {
+            'zh': {
+                'profile-button': '继续',
+                'sample-results-button': '样本结果'
+            },
+            'en': {
+                'profile-button': 'Continue',
+                'sample-results-button': 'Sample Results'
+            }
+        };
 
-            let lang = getLangFromBrowser();
-
-            renderHeader(lang);
-            renderResults(decodedResults, definitions.pointDefinitions, sections, lang);
-            renderDisclaimer(lang);
-
-            // Log profile input for debugging
-            let pointsIDs = [
-                'INPUT_AGE',
-                'INPUT_HEIGHT', 
-                'INPUT_WEIGHT', 
-                'INPUT_GENDER', // Male = 1, female = 2
-                'INPUT_DIABETES', // None = 3, Type1 = 4, Type2 = 5
-                'INPUT_SMOKING', // YES = 1, NO = 0
-                'INPUT_BP_MEDICATION' // YES = 1, NO = 0
-            ];
-            pointsIDs.forEach(id => {
-                let result = getPointResult(id, decodedResults);
-                console.log(`Profile input - ${id}: ${result}`);
-            });
-
-            let measurementID = getMeasurementIDFromQueryString();
-            console.log("measurementID from query string: " + measurementID);
-            let partnerID = getPartnerIDFromQueryString();
-            console.log("partnerID from query string: " + partnerID);
-
-        });
-
-
-        /**
-         * Retrieves query string results from the current URL.
-         * @returns {string|null} The result query string value if present.
-         */
-        function getResultsFromQueryString() {
-            const urlParams = new URLSearchParams(window.location.search)
-            const resultQuery = urlParams.get('r')
-            return resultQuery
+        function isAndroidBridgeAvailable() {
+            return typeof AndroidBridge !== 'undefined';
         }
 
-        /**
-         * Retrieves the measurement ID from the current URL query string.
-         * @returns {string|null} The measurement ID if present.
-         */
-        function getMeasurementIDFromQueryString() {
-            const urlParams = new URLSearchParams(window.location.search)
-            const measurementID = urlParams.get('mid')
-            return measurementID
+        function showSampleResults() {
+            window.location.href = 'result.html?r=TlExkyFmm6Qab1X0k6xTSQrGR9i5lkRgCn9SXMJ8VSbzADyYt3JBJmBEVHlaAEL4agdUcZJ1Q2Op%2Fjb4wABJHNF9Qh0OQETKAwBCSxjmUGuVhFQ1jCZI9s7RV8MiklBOPZpQSCxLTfITZ06U6YBOv6deTVGFkVTxTVpJGydASSfTVUOwKjYoU%2BpIWa6RU0ITZms209dATxW%2B5ERAzNBDSqa8T00KAABsnrZAQLAlRP8MklDYTwBCn6gATYQoWT5F6KI%2BBenpPsQpED%2BF61I%2FRCtvPwQqnj%2FF6v8%2Fhe4ZQEQuTEAp57xA6CfzQagmJUJp5oZCKCRIROnkl0Wp5axFaCXBRSgh1kXp4etF&mid=806e1a9d-3dd8-4847-b64d-3bce3043535e&pid=';
         }
 
-        /**
-         * Retrieves the partner ID from the current URL query string.
-         * @returns {string|null} The partner ID if present.
-         */
-        function getPartnerIDFromQueryString() {
-            const urlParams = new URLSearchParams(window.location.search)
-            const partnerID = urlParams.get('pid')
-            return partnerID
+        function navigateToProfile() {
+            console.warn('AndroidBridge not available');
+            window.location.href = 'profile.html';
         }
 
-        /**
-         * Gets the browser's preferred language.
-         * @returns {string} The language code (e.g., 'en', 'zh'), defaults to 'en' if not found.
-         */
-        function getLangFromBrowser() {
-            let lang = navigator.language
-            console.log("current browser language: " + lang);
-            if (lang) {
-                if (lang.includes('zh')) {
-                    return 'zh';
-                } else if (lang.includes('ko')) {
-                    return 'ko';
-                } else if (lang.includes('-')) {
-                    return lang.split('-')[0];
-                } else {
-                    return lang;
+        function getDeviceID() {
+            if (isAndroidBridgeAvailable()) {
+                const request = { type: "getDeviceID", data: null };
+                try {
+                    return AndroidBridge.onJSRequest(JSON.stringify(request));
+                } catch (error) {
+                    console.error('Failed to communicate with Android:', error);
+                    return "error";
+                }
+            } else {
+                return "mock_device_id";
+            }
+        }
+
+        function getCurrentLanguageCode() {
+            if (isAndroidBridgeAvailable()) {
+                const request = { type: "getCurrentLanguageCode", data: null };
+                try {
+                    return AndroidBridge.onJSRequest(JSON.stringify(request));
+                } catch (error) {
+                    console.error('Failed to communicate with Android:', error);
+                    return "error";
                 }
             } else {
                 return "en";
             }
         }
+
+        function navigateToMeasurement() {
+            if (isAndroidBridgeAvailable()) {
+                const request = {
+                    type: "navigate",
+                    data: JSON.stringify({ destination: "measurement", params: {} })
+                };
+                try {
+                    AndroidBridge.onJSRequest(JSON.stringify(request));
+                } catch (error) {
+                    console.error('Failed to communicate with Android:', error);
+                    alert('Navigation feature is temporarily unavailable, please try again later');
+                }
+            } else {
+                alert('Will navigate to measurement screen');
+            }
+        }
+
+        function navigateToSettings() {
+            if (isAndroidBridgeAvailable()) {
+                const request = {
+                    type: "navigate",
+                    data: JSON.stringify({ destination: "agent/login", params: {} })
+                };
+                try {
+                    AndroidBridge.onJSRequest(JSON.stringify(request));
+                } catch (error) {
+                    console.error('Failed to communicate with Android:', error);
+                    alert('Navigation feature is temporarily unavailable, please try again later');
+                }
+            } else {
+                alert('Will navigate to measurement screen');
+            }
+        }
+
+        const languageMenu = document.getElementById('language-menu');
+        const languageButton = document.getElementById('language-button');
+        let isLanguageMenuVisible = false;
+
+        function updateLanguageMenuVisibility() {
+            if (!languageMenu) return;
+            languageMenu.classList.toggle('active', isLanguageMenuVisible);
+        }
+
+        function toggleLanguageMenu(event) {
+            if (event) event.stopPropagation();
+            isLanguageMenuVisible = !isLanguageMenuVisible;
+            updateLanguageMenuVisibility();
+        }
+
+        function handleLanguageSelection(languageCode) {
+            const lang = languages[languageCode];
+            if (lang) {
+                Object.keys(lang).forEach(key => {
+                    const element = document.getElementById(key);
+                    if (element) element.innerText = lang[key];
+                });
+            }
+
+            localStorage.setItem('selectedLanguage', languageCode);
+
+            if (isAndroidBridgeAvailable()) {
+                const request = { type: "switchLanguage", data: languageCode };
+                try {
+                    AndroidBridge.onJSRequest(JSON.stringify(request));
+                } catch (error) {
+                    console.error('Failed to communicate with Android:', error);
+                }
+            }
+
+            updateSelectedLanguage(languageCode);
+            isLanguageMenuVisible = false;
+            updateLanguageMenuVisibility();
+        }
+
+        function updateSelectedLanguage(selectedCode) {
+            const options = document.querySelectorAll('.language-option');
+            options.forEach(option => {
+                const onclickMatch = option.onclick.toString().match(/handleLanguageSelection\('([^']+)'\)/);
+                if (onclickMatch) {
+                    const langCode = onclickMatch[1];
+                    const baseText = option.textContent.replace(' ✓', '').replace('✔', '');
+                    option.innerHTML = langCode === selectedCode ? baseText + ' <span style="color:#F65F77;">✔</span>' : baseText;
+                }
+            });
+        }
+
+        if (languageMenu) {
+            languageMenu.addEventListener('click', e => e.stopPropagation());
+        }
+
+        document.addEventListener('click', function(event) {
+            if (!isLanguageMenuVisible) return;
+            const clickedInsideButton = languageButton && languageButton.contains(event.target);
+            const clickedInsideMenu = languageMenu && languageMenu.contains(event.target);
+            if (!clickedInsideButton && !clickedInsideMenu) {
+                isLanguageMenuVisible = false;
+                updateLanguageMenuVisibility();
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Index page loaded');
+            const savedLang = localStorage.getItem('selectedLanguage');
+            const currentLang = savedLang || getCurrentLanguageCode();
+            handleLanguageSelection(currentLang);
+
+            const video = document.getElementById('promo-video');
+            const playlist = (typeof APP_CONFIG !== 'undefined' && APP_CONFIG.videos && APP_CONFIG.videos.length)
+                ? APP_CONFIG.videos
+                : [];
+            let currentIndex = 0;
+            let currentMode = 'all'; // 'all' or a numeric index
+
+            function getVideoDisplayName(path) {
+                return path.split('/').pop().replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ');
+            }
+
+            function loadAndPlay(index) {
+                if (!playlist.length) return;
+                video.src = playlist[index];
+                video.load();
+                video.play().catch(function(err) {
+                    console.warn('Autoplay blocked, will retry on interaction:', err);
+                    document.addEventListener('touchstart', function retryPlay() {
+                        video.play();
+                        document.removeEventListener('touchstart', retryPlay);
+                    }, { once: true });
+                });
+            }
+
+            function buildVideoMenu() {
+                const menu = document.getElementById('video-menu');
+                menu.innerHTML = '';
+
+                const allOpt = document.createElement('button');
+                allOpt.className = 'video-menu-option' + (currentMode === 'all' ? ' active' : '');
+                allOpt.textContent = 'Play all';
+                allOpt.onclick = function() { selectVideoMode('all'); };
+                menu.appendChild(allOpt);
+
+                playlist.forEach(function(path, i) {
+                    const opt = document.createElement('button');
+                    opt.className = 'video-menu-option' + (currentMode === i ? ' active' : '');
+                    opt.textContent = getVideoDisplayName(path);
+                    opt.onclick = function() { selectVideoMode(i); };
+                    menu.appendChild(opt);
+                });
+            }
+
+            function selectVideoMode(mode) {
+                currentMode = mode;
+                if (typeof mode === 'number') {
+                    currentIndex = mode;
+                }
+                toggleVideoMenu(null, false);
+                buildVideoMenu();
+                loadAndPlay(currentIndex);
+            }
+
+            window.toggleVideoMenu = function(event, forceClose) {
+                if (event) event.stopPropagation();
+                const menu = document.getElementById('video-menu');
+                const show = forceClose === false ? false : !menu.classList.contains('active');
+                if (show) {
+                    buildVideoMenu();
+                    menu.classList.add('active');
+                } else {
+                    menu.classList.remove('active');
+                }
+            };
+
+            document.addEventListener('click', function(event) {
+                const menu = document.getElementById('video-menu');
+                const btn = document.getElementById('video-menu-button');
+                if (menu && menu.classList.contains('active')) {
+                    if (!menu.contains(event.target) && !btn.contains(event.target)) {
+                        menu.classList.remove('active');
+                    }
+                }
+            });
+
+            if (video && playlist.length) {
+                video.addEventListener('ended', function() {
+                    if (currentMode === 'all') {
+                        currentIndex = (currentIndex + 1) % playlist.length;
+                    }
+                    loadAndPlay(currentIndex);
+                });
+                loadAndPlay(0);
+            }
+
+            buildVideoMenu();
+        });
     </script>
 </body>
-
 </html>

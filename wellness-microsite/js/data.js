@@ -14,6 +14,10 @@ const DeepAffexWebResultsData = (() => {
             "pointTitleOverrides": {
                 "BP_CVD": "DFXPOINT_TITLE:BP_CVD:OVERALL",
                 "OVERALL_METABOLIC_RISK_PROB": "DFXPOINT_TITLE:OVERALL_METABOLIC_RISK_PROB:OVERALL"
+            },
+            "pointIconOverrides": {
+                "BP_CVD": "VITAL_SCORE",
+                "OVERALL_METABOLIC_RISK_PROB": "VITAL_SCORE"
             }
         },
         {
@@ -277,42 +281,43 @@ const DeepAffexWebResultsData = (() => {
                 }
             },
             "RISKS_SCORE": {
-                "lowerBound": 1,
-                "upperBound": 5,
+                "lowerBound": 0,
+                "upperBound": 100,
+                "multiplier": 20,
                 "scales": {
                     "default": {
                         "segments": [
                             {
-                                "max": 2,
+                                "max": 40,
                                 "color": "red",
-                                "min": 1
+                                "min": 0
                             },
                             {
-                                "max": 3,
-                                "min": 2,
+                                "max": 60,
+                                "min": 40,
                                 "color": "lightRed"
                             },
                             {
-                                "min": 3,
+                                "min": 60,
                                 "color": "yellow",
-                                "max": 4
+                                "max": 80
                             },
                             {
                                 "color": "lightGreen",
-                                "min": 4,
-                                "max": 5
+                                "min": 80,
+                                "max": 100
                             },
                             {
                                 "color": "green",
-                                "min": 5,
-                                "max": 5
+                                "min": 100,
+                                "max": 100
                             }
                         ]
                     }
                 },
                 "key": "RISKS_SCORE",
                 "decimalPlaces": 0,
-                "units": ""
+                "units": "PERCENT"
             },
             "BP_STROKE": {
                 "lowerBound": 0,
@@ -432,7 +437,15 @@ const DeepAffexWebResultsData = (() => {
                 "key": "IHB_COUNT",
                 "decimalPlaces": 0,
                 "units": "",
-                "scales": {},
+                "scales": {
+                    "default": {
+                        "segments": [
+                            {"min": 0, "max": 2,  "color": "green"},
+                            {"min": 2, "max": 5,  "color": "yellow"},
+                            {"min": 5, "max": 10, "color": "yellow"}
+                        ]
+                    }
+                },
                 "lowerBound": 0,
                 "upperBound": 10
             },
@@ -1006,29 +1019,29 @@ const DeepAffexWebResultsData = (() => {
                     "default": {
                         "segments": [
                             {
-                                "color": "lightGreen",
-                                "max": 36.5,
-                                "min": 30
+                                "color": "yellow",
+                                "max": 35.5,
+                                "min": 0
                             },
                             {
-                                "min": 36.5,
-                                "max": 37.5,
+                                "min": 35.5,
+                                "max": 37.2,
                                 "color": "green"
                             },
                             {
-                                "min": 37.5,
+                                "min": 37.2,
                                 "max": 39.5,
                                 "color": "yellow"
                             },
                             {
                                 "min": 39.5,
                                 "max": 41.5,
-                                "color": "lightRed"
+                                "color": "yellow"
                             },
                             {
+                                "min": 41.5,
                                 "max": 45,
-                                "color": "red",
-                                "min": 41.5
+                                "color": "yellow"
                             }
                         ]
                     }
@@ -1188,7 +1201,7 @@ const DeepAffexWebResultsData = (() => {
                                 "color": "green"
                             },
                             {
-                                "color": "lightGreen",
+                                "color": "green",
                                 "min": 120,
                                 "max": 130
                             },
@@ -1199,7 +1212,7 @@ const DeepAffexWebResultsData = (() => {
                             },
                             {
                                 "max": 180,
-                                "color": "red",
+                                "color": "yellow",
                                 "min": 140
                             }
                         ]
@@ -1664,7 +1677,7 @@ const DeepAffexWebResultsData = (() => {
                                 "color": "green"
                             },
                             {
-                                "color": "lightGreen",
+                                "color": "green",
                                 "max": 80,
                                 "min": 70
                             },
@@ -1675,7 +1688,7 @@ const DeepAffexWebResultsData = (() => {
                             },
                             {
                                 "min": 90,
-                                "color": "red",
+                                "color": "yellow",
                                 "max": 120
                             }
                         ]
@@ -2024,6 +2037,10 @@ const DeepAffexWebResultsData = (() => {
             "default": "Multi-year Cardiovascular Disease Risk",
             "zh": "多年心血管疾病风险"
         },
+        "DFXPOINT_TITLE:CVD_MULTI_YEAR_RISK_PROBS:OVERALL": {
+            "default": "Cardiovascular Event Likelihood Index",
+            "zh": "心血管事件风险指数"
+        },
         "DFXPOINT_CVD_YEAR_LABEL": {
             "default": "{year}-year likelihood",
             "zh": "{year}年风险"
@@ -2288,7 +2305,7 @@ According to the [European Society of Cardiology and the European Society of Hyp
 
 #### DISCLAIMER:
 
-{APP_NAME} is not a medical device and should not be used for medical purposes. Always consult with your physician or other medical professional should you have any health-related question, issues or emergency.
+This product and this health insight is not a medical device and should not be used for diagnosis, treatment, cure or any medical purposes. Always consult with your physician or other medical professional should you have any health-related question, issues or emergency.
 
 #### Accuracy of blood pressure estimates:
 
@@ -2363,7 +2380,7 @@ According to the [European Society of Cardiology and the European Society of Hyp
 
 #### DISCLAIMER:
 
-{APP_NAME} is not a medical device and should not be used for medical purposes. Always consult with your physician or other medical professional should you have any health-related question, issues or emergency.
+This product and this health insight is not a medical device and should not be used for diagnosis, treatment, cure or any medical purposes. Always consult with your physician or other medical professional should you have any health-related question, issues or emergency.
 
 #### Accuracy of blood pressure estimates:
 
