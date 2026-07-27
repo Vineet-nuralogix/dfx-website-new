@@ -2,51 +2,86 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MagicMirror Appliance</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
+            background: #000;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: black;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
             color: #fff;
         }
 
-        .main-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding-bottom: 20px;
+        /* Fullscreen video */
+        #promo-video {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #000;
+            z-index: 0;
         }
 
-        .page-header {
-            text-align: center;
-            padding: 0 20px;
-            margin-bottom: 60px;
+        #promo-video::-webkit-media-controls,
+        #promo-video::-webkit-media-controls-enclosure,
+        #promo-video::-webkit-media-controls-panel,
+        #promo-video::-webkit-media-controls-play-button,
+        #promo-video::-webkit-media-controls-overlay-play-button {
+            display: none !important;
+            opacity: 0 !important;
         }
 
-        .logo {
+        /* UI overlay — hidden by default, shown on touch */
+        .ui-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 10;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            background: linear-gradient(
+                to bottom,
+                rgba(0,0,0,0.55) 0%,
+                transparent 30%,
+                transparent 65%,
+                rgba(0,0,0,0.65) 100%
+            );
+        }
+
+        .ui-overlay.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* Logo — top center */
+        .overlay-logo {
+            position: absolute;
+            top: 32px;
+            left: 50%;
+            transform: translateX(-50%);
             width: 90%;
+            max-width: 520px;
             height: auto;
             display: block;
-            margin: 0 auto;
         }
 
-        .page-footer {
+        /* Action buttons — bottom center */
+        .overlay-footer {
+            position: absolute;
+            bottom: 48px;
+            left: 50%;
+            transform: translateX(-50%);
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 10px;
-            padding: 0 20px;
+            gap: 12px;
+            width: 80%;
+            max-width: 300px;
         }
 
         .next-button {
@@ -59,13 +94,11 @@
             border-radius: 50px;
             cursor: pointer;
             width: 100%;
-            max-width: 280px;
         }
 
-        .next-button:hover {
-            opacity: 0.85;
-        }
+        .next-button:hover { opacity: 0.85; }
 
+        /* Settings & language — top right */
         .floating-actions {
             position: absolute;
             top: 20px;
@@ -97,9 +130,7 @@
             stroke-linejoin: round;
         }
 
-        .settings-button:hover {
-            background: rgba(255,255,255,0.25);
-        }
+        .settings-button:hover { background: rgba(255,255,255,0.25); }
 
         .language-menu {
             display: none;
@@ -113,9 +144,7 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.5);
         }
 
-        .language-menu.active {
-            display: flex;
-        }
+        .language-menu.active { display: flex; }
 
         .language-option {
             background: transparent;
@@ -128,29 +157,12 @@
             text-align: right;
         }
 
-        .language-option:hover {
-            background: #f0f0f0;
-        }
+        .language-option:hover { background: rgba(255,255,255,0.1); }
 
-        .video-wrapper {
-            width: 100%;
-            aspect-ratio: 16 / 9;
-            flex-shrink: 0;
-            overflow: hidden;
-            background: #000;
-            margin-bottom: 260px;
-        }
-
-        .video-banner {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
+        /* Video playlist menu — bottom left */
         .video-menu-button {
-            position: fixed;
-            bottom: 20px;
+            position: absolute;
+            bottom: 60px;
             left: 20px;
             width: 44px;
             height: 44px;
@@ -160,12 +172,9 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            z-index: 100;
         }
 
-        .video-menu-button:hover {
-            background: rgba(255,255,255,0.25);
-        }
+        .video-menu-button:hover { background: rgba(255,255,255,0.25); }
 
         .video-menu-button svg {
             width: 20px;
@@ -178,8 +187,8 @@
         }
 
         .video-menu {
-            position: fixed;
-            bottom: 74px;
+            position: absolute;
+            bottom: 114px;
             left: 20px;
             display: none;
             flex-direction: column;
@@ -191,12 +200,9 @@
             border-radius: 12px;
             border: 1px solid #444;
             box-shadow: 0 4px 16px rgba(0,0,0,0.6);
-            z-index: 100;
         }
 
-        .video-menu.active {
-            display: flex;
-        }
+        .video-menu.active { display: flex; }
 
         .video-menu-option {
             background: transparent;
@@ -212,95 +218,87 @@
             text-overflow: ellipsis;
         }
 
-        .video-menu-option:hover {
-            background: rgba(255,255,255,0.08);
-        }
-
-        .video-menu-option.active {
-            background: #005DBC;
-        }
-
+        .video-menu-option:hover { background: rgba(255,255,255,0.08); }
+        .video-menu-option.active { background: #005DBC; }
     </style>
 </head>
 <body>
-    <div class="main-content">
-        <div class="page-header">
-            <img class="logo" src="assets/imgs/Anura-MagicMirror-english.png" alt="MagicMirror Appliance">
+
+    <!-- Fullscreen video -->
+    <video id="promo-video" autoplay playsinline webkit-playsinline preload="auto" disablePictureInPicture poster="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"></video>
+
+    <!-- UI overlay (hidden until touched) -->
+    <div class="ui-overlay" id="ui-overlay">
+
+        <!-- Logo -->
+        <img class="overlay-logo" src="assets/imgs/Anura-MagicMirror-english.png" alt="MagicMirror Appliance">
+
+        <!-- Settings & Language — top right -->
+        <div class="floating-actions">
+            <div class="settings-button" onclick="navigateToSettings()">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            </div>
+            <div class="settings-button" id="language-button" onclick="toggleLanguageMenu(event)">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3c-2.5 3-4 5.7-4 9s1.5 6 4 9"/><path d="M12 3c2.5 3 4 5.7 4 9s-1.5 6-4 9"/><line x1="3" y1="12" x2="21" y2="12"/><path d="M3.6 7.5h16.8M3.6 16.5h16.8"/></svg>
+            </div>
+            <div class="language-menu" id="language-menu">
+                <button class="language-option" onclick="handleLanguageSelection('zh')">中文</button>
+                <button class="language-option" onclick="handleLanguageSelection('en')">English</button>
+            </div>
         </div>
 
-        <div class="video-wrapper">
-            <video class="video-banner"
-                   id="promo-video"
-                   autoplay
-                   playsinline
-                   webkit-playsinline
-                   preload="auto"
-                   disablePictureInPicture>
-            </video>
+        <!-- Video playlist menu — bottom left -->
+        <div class="video-menu" id="video-menu"></div>
+        <div class="video-menu-button" id="video-menu-button" onclick="toggleVideoMenu(event)">
+            <svg viewBox="0 0 24 24"><line x1="3" y1="7" x2="15" y2="7"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="17" x2="15" y2="17"/><polygon points="18,9 23,12 18,15" fill="#fff" stroke="none"/></svg>
         </div>
 
-        <div class="page-footer">
-            <button class="next-button" id="profile-button" onclick="navigateToProfile()">
-                Continue
-            </button>
-            <button class="next-button" id="sample-results-button" style="background:transparent; color:#fff; border:1px solid #fff;" onclick="showSampleResults()">
-                Sample Results
-            </button>
+        <!-- Action buttons — bottom center -->
+        <div class="overlay-footer">
+            <button class="next-button" id="profile-button" onclick="navigateToProfile()">Continue</button>
+            <button class="next-button" id="sample-results-button" style="background:transparent;border:1px solid #fff;" onclick="showSampleResults()">Sample Results</button>
         </div>
-    </div>
 
-    <!-- Settings & Language Buttons -->
-    <div class="floating-actions">
-        <div class="settings-button" onclick="navigateToSettings()">
-            <!-- Gear / settings icon -->
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="12" cy="12" r="3"/>
-                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-            </svg>
-        </div>
-        <div class="settings-button" id="language-button" onclick="toggleLanguageMenu(event)">
-            <!-- Globe / language icon -->
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="12" cy="12" r="9"/>
-                <path d="M12 3c-2.5 3-4 5.7-4 9s1.5 6 4 9"/>
-                <path d="M12 3c2.5 3 4 5.7 4 9s-1.5 6-4 9"/>
-                <line x1="3" y1="12" x2="21" y2="12"/>
-                <path d="M3.6 7.5h16.8M3.6 16.5h16.8"/>
-            </svg>
-        </div>
-        <div class="language-menu" id="language-menu">
-            <button class="language-option" onclick="handleLanguageSelection('zh')">中文</button>
-            <button class="language-option" onclick="handleLanguageSelection('en')">English</button>
-        </div>
-    </div>
-
-
-    <!-- Video playlist menu -->
-    <div class="video-menu" id="video-menu"></div>
-    <div class="video-menu-button" id="video-menu-button" onclick="toggleVideoMenu(event)">
-        <!-- Playlist icon -->
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <line x1="3" y1="7" x2="15" y2="7"/>
-            <line x1="3" y1="12" x2="15" y2="12"/>
-            <line x1="3" y1="17" x2="15" y2="17"/>
-            <polygon points="18,9 23,12 18,15" fill="#fff" stroke="none"/>
-        </svg>
     </div>
 
     <script src="config.js"></script>
     <script src="js/common.js"></script>
     <script>
         const languages = {
-            'zh': {
-                'profile-button': '继续',
-                'sample-results-button': '样本结果'
-            },
-            'en': {
-                'profile-button': 'Continue',
-                'sample-results-button': 'Sample Results'
-            }
+            'zh': { 'profile-button': '继续', 'sample-results-button': '样本结果' },
+            'en': { 'profile-button': 'Continue', 'sample-results-button': 'Sample Results' }
         };
 
+        // --- Touch-to-reveal overlay ---
+        const overlay = document.getElementById('ui-overlay');
+        let hideTimer = null;
+        const HIDE_DELAY = 4000;
+
+        function showOverlay() {
+            overlay.classList.add('visible');
+            resetHideTimer();
+        }
+
+        function resetHideTimer() {
+            clearTimeout(hideTimer);
+            hideTimer = setTimeout(hideOverlay, HIDE_DELAY);
+        }
+
+        function hideOverlay() {
+            // Don't hide if language or video menu is open
+            const langMenu = document.getElementById('language-menu');
+            const vidMenu = document.getElementById('video-menu');
+            if (langMenu.classList.contains('active') || vidMenu.classList.contains('active')) {
+                resetHideTimer();
+                return;
+            }
+            overlay.classList.remove('visible');
+        }
+
+        document.addEventListener('touchstart', showOverlay, { passive: true });
+        document.addEventListener('click', showOverlay);
+
+        // --- Android bridge helpers ---
         function isAndroidBridgeAvailable() {
             return typeof AndroidBridge !== 'undefined';
         }
@@ -310,78 +308,40 @@
         }
 
         function navigateToProfile() {
-            console.warn('AndroidBridge not available');
+            const video = document.getElementById('promo-video');
+            if (video) { video.pause(); video.src = ''; video.load(); }
             window.location.href = 'profile.html';
         }
 
         function getDeviceID() {
             if (isAndroidBridgeAvailable()) {
-                const request = { type: "getDeviceID", data: null };
-                try {
-                    return AndroidBridge.onJSRequest(JSON.stringify(request));
-                } catch (error) {
-                    console.error('Failed to communicate with Android:', error);
-                    return "error";
-                }
-            } else {
-                return "mock_device_id";
+                try { return AndroidBridge.onJSRequest(JSON.stringify({ type: "getDeviceID", data: null })); }
+                catch (e) { return "error"; }
             }
+            return "mock_device_id";
         }
 
         function getCurrentLanguageCode() {
             if (isAndroidBridgeAvailable()) {
-                const request = { type: "getCurrentLanguageCode", data: null };
-                try {
-                    return AndroidBridge.onJSRequest(JSON.stringify(request));
-                } catch (error) {
-                    console.error('Failed to communicate with Android:', error);
-                    return "error";
-                }
-            } else {
-                return "en";
+                try { return AndroidBridge.onJSRequest(JSON.stringify({ type: "getCurrentLanguageCode", data: null })); }
+                catch (e) { return "en"; }
             }
-        }
-
-        function navigateToMeasurement() {
-            if (isAndroidBridgeAvailable()) {
-                const request = {
-                    type: "navigate",
-                    data: JSON.stringify({ destination: "measurement", params: {} })
-                };
-                try {
-                    AndroidBridge.onJSRequest(JSON.stringify(request));
-                } catch (error) {
-                    console.error('Failed to communicate with Android:', error);
-                    alert('Navigation feature is temporarily unavailable, please try again later');
-                }
-            } else {
-                alert('Will navigate to measurement screen');
-            }
+            return "en";
         }
 
         function navigateToSettings() {
             if (isAndroidBridgeAvailable()) {
-                const request = {
-                    type: "navigate",
-                    data: JSON.stringify({ destination: "agent/login", params: {} })
-                };
-                try {
-                    AndroidBridge.onJSRequest(JSON.stringify(request));
-                } catch (error) {
-                    console.error('Failed to communicate with Android:', error);
-                    alert('Navigation feature is temporarily unavailable, please try again later');
-                }
-            } else {
-                alert('Will navigate to measurement screen');
+                try { AndroidBridge.onJSRequest(JSON.stringify({ type: "navigate", data: JSON.stringify({ destination: "agent/login", params: {} }) })); }
+                catch (e) { console.error(e); }
             }
         }
 
+        // --- Language ---
         const languageMenu = document.getElementById('language-menu');
         const languageButton = document.getElementById('language-button');
         let isLanguageMenuVisible = false;
 
         function updateLanguageMenuVisibility() {
-            if (!languageMenu) return;
             languageMenu.classList.toggle('active', isLanguageMenuVisible);
         }
 
@@ -389,71 +349,50 @@
             if (event) event.stopPropagation();
             isLanguageMenuVisible = !isLanguageMenuVisible;
             updateLanguageMenuVisibility();
+            resetHideTimer();
         }
 
         function handleLanguageSelection(languageCode) {
             const lang = languages[languageCode];
             if (lang) {
-                Object.keys(lang).forEach(key => {
-                    const element = document.getElementById(key);
-                    if (element) element.innerText = lang[key];
+                Object.keys(lang).forEach(k => {
+                    const el = document.getElementById(k);
+                    if (el) el.innerText = lang[k];
                 });
             }
-
             localStorage.setItem('selectedLanguage', languageCode);
-
             if (isAndroidBridgeAvailable()) {
-                const request = { type: "switchLanguage", data: languageCode };
-                try {
-                    AndroidBridge.onJSRequest(JSON.stringify(request));
-                } catch (error) {
-                    console.error('Failed to communicate with Android:', error);
-                }
+                try { AndroidBridge.onJSRequest(JSON.stringify({ type: "switchLanguage", data: languageCode })); }
+                catch (e) { console.error(e); }
             }
-
             updateSelectedLanguage(languageCode);
             isLanguageMenuVisible = false;
             updateLanguageMenuVisibility();
         }
 
         function updateSelectedLanguage(selectedCode) {
-            const options = document.querySelectorAll('.language-option');
-            options.forEach(option => {
-                const onclickMatch = option.onclick.toString().match(/handleLanguageSelection\('([^']+)'\)/);
-                if (onclickMatch) {
-                    const langCode = onclickMatch[1];
-                    const baseText = option.textContent.replace(' ✓', '').replace('✔', '');
-                    option.innerHTML = langCode === selectedCode ? baseText + ' <span style="color:#F65F77;">✔</span>' : baseText;
+            document.querySelectorAll('.language-option').forEach(option => {
+                const match = option.onclick.toString().match(/handleLanguageSelection\('([^']+)'\)/);
+                if (match) {
+                    const code = match[1];
+                    const base = option.textContent.replace(' ✓', '').replace('✔', '');
+                    option.innerHTML = code === selectedCode ? base + ' <span style="color:#F65F77;">✔</span>' : base;
                 }
             });
         }
 
-        if (languageMenu) {
-            languageMenu.addEventListener('click', e => e.stopPropagation());
-        }
-
-        document.addEventListener('click', function(event) {
-            if (!isLanguageMenuVisible) return;
-            const clickedInsideButton = languageButton && languageButton.contains(event.target);
-            const clickedInsideMenu = languageMenu && languageMenu.contains(event.target);
-            if (!clickedInsideButton && !clickedInsideMenu) {
-                isLanguageMenuVisible = false;
-                updateLanguageMenuVisibility();
-            }
-        });
-
-        document.addEventListener('DOMContentLoaded', function() {
+        // --- Video playlist ---
+        document.addEventListener('DOMContentLoaded', function () {
             console.log('Index page loaded');
+
             const savedLang = localStorage.getItem('selectedLanguage');
-            const currentLang = savedLang || getCurrentLanguageCode();
-            handleLanguageSelection(currentLang);
+            handleLanguageSelection(savedLang || getCurrentLanguageCode());
 
             const video = document.getElementById('promo-video');
             const playlist = (typeof APP_CONFIG !== 'undefined' && APP_CONFIG.videos && APP_CONFIG.videos.length)
-                ? APP_CONFIG.videos
-                : [];
+                ? APP_CONFIG.videos : [];
             let currentIndex = 0;
-            let currentMode = 'all'; // 'all' or a numeric index
+            let currentMode = 'all';
 
             function getVideoDisplayName(path) {
                 return path.split('/').pop().replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ');
@@ -463,11 +402,10 @@
                 if (!playlist.length) return;
                 video.src = playlist[index];
                 video.load();
-                video.play().catch(function(err) {
-                    console.warn('Autoplay blocked, will retry on interaction:', err);
-                    document.addEventListener('touchstart', function retryPlay() {
+                video.play().catch(function () {
+                    document.addEventListener('touchstart', function retry() {
                         video.play();
-                        document.removeEventListener('touchstart', retryPlay);
+                        document.removeEventListener('touchstart', retry);
                     }, { once: true });
                 });
             }
@@ -475,63 +413,56 @@
             function buildVideoMenu() {
                 const menu = document.getElementById('video-menu');
                 menu.innerHTML = '';
-
                 const allOpt = document.createElement('button');
                 allOpt.className = 'video-menu-option' + (currentMode === 'all' ? ' active' : '');
                 allOpt.textContent = 'Play all';
-                allOpt.onclick = function() { selectVideoMode('all'); };
+                allOpt.onclick = function () { selectVideoMode('all'); };
                 menu.appendChild(allOpt);
-
-                playlist.forEach(function(path, i) {
+                playlist.forEach(function (path, i) {
                     const opt = document.createElement('button');
                     opt.className = 'video-menu-option' + (currentMode === i ? ' active' : '');
                     opt.textContent = getVideoDisplayName(path);
-                    opt.onclick = function() { selectVideoMode(i); };
+                    opt.onclick = function () { selectVideoMode(i); };
                     menu.appendChild(opt);
                 });
             }
 
             function selectVideoMode(mode) {
                 currentMode = mode;
-                if (typeof mode === 'number') {
-                    currentIndex = mode;
-                }
+                if (typeof mode === 'number') currentIndex = mode;
                 toggleVideoMenu(null, false);
                 buildVideoMenu();
                 loadAndPlay(currentIndex);
             }
 
-            window.toggleVideoMenu = function(event, forceClose) {
+            window.toggleVideoMenu = function (event, forceClose) {
                 if (event) event.stopPropagation();
                 const menu = document.getElementById('video-menu');
                 const show = forceClose === false ? false : !menu.classList.contains('active');
-                if (show) {
-                    buildVideoMenu();
-                    menu.classList.add('active');
-                } else {
-                    menu.classList.remove('active');
-                }
+                if (show) { buildVideoMenu(); menu.classList.add('active'); }
+                else { menu.classList.remove('active'); }
+                resetHideTimer();
             };
 
-            document.addEventListener('click', function(event) {
-                const menu = document.getElementById('video-menu');
-                const btn = document.getElementById('video-menu-button');
-                if (menu && menu.classList.contains('active')) {
-                    if (!menu.contains(event.target) && !btn.contains(event.target)) {
-                        menu.classList.remove('active');
-                    }
-                }
-            });
-
             if (video && playlist.length) {
-                video.addEventListener('ended', function() {
-                    if (currentMode === 'all') {
-                        currentIndex = (currentIndex + 1) % playlist.length;
-                    }
+                video.addEventListener('ended', function () {
+                    if (currentMode === 'all') currentIndex = (currentIndex + 1) % playlist.length;
                     loadAndPlay(currentIndex);
                 });
                 loadAndPlay(0);
             }
+
+            // Free video memory when page is hidden (e.g. scan overlay shown by Android)
+            document.addEventListener('visibilitychange', function () {
+                if (!video) return;
+                if (document.hidden) {
+                    video.pause();
+                    video.src = '';
+                    video.load();
+                } else {
+                    loadAndPlay(currentIndex);
+                }
+            });
 
             buildVideoMenu();
         });

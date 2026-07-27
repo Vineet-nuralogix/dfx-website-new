@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Measurement Results</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -255,14 +255,62 @@
         }
 
         .multi-year-slider {
+            -webkit-appearance: none;
+            appearance: none;
             flex: 1;
             min-width: 0;
-            accent-color: #e8eaf0;
+            height: 20px;
+            background: transparent;
+            outline: none;
             cursor: pointer;
+            --slider-fill: 50%;
+        }
+
+        .multi-year-slider::-webkit-slider-runnable-track {
+            height: 4px;
+            border-radius: 2px;
+            background: linear-gradient(
+                to right,
+                #fff 0%, #fff var(--slider-fill),
+                rgba(255,255,255,0.25) var(--slider-fill), rgba(255,255,255,0.25) 100%
+            );
+        }
+
+        .multi-year-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #fff;
+            cursor: pointer;
+            margin-top: -8px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+        }
+
+        .multi-year-slider::-moz-range-track {
+            height: 4px;
+            border-radius: 2px;
+            background: rgba(255,255,255,0.25);
+        }
+
+        .multi-year-slider::-moz-range-progress {
+            height: 4px;
+            border-radius: 2px;
+            background: #fff;
+        }
+
+        .multi-year-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #fff;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.4);
         }
 
         .multi-year-slider:focus-visible {
-            outline: 2px solid #e8eaf0;
+            outline: 2px solid #fff;
             outline-offset: 3px;
         }
 
@@ -976,7 +1024,43 @@
         // Called by Android native to deliver results
         function setMeasurementResults(paramsJson) {
             try {
-                measurementData = JSON.parse(paramsJson);
+                const raw = JSON.parse(paramsJson);
+
+                if (raw.Channels && raw.Multiplier) {
+                    // New raw DeepAffex format: {MeasurementID, Multiplier, Channels: {KEY: {Data:[...]}}}
+                    const multiplier = raw.Multiplier;
+                    const result = {};
+                    if (raw.MeasurementID) result.measurementID = raw.MeasurementID;
+                    for (const [key, channel] of Object.entries(raw.Channels)) {
+                        const data = channel.Data;
+                        if (!data || data.length === 0) continue;
+                        if (data.length > 1 && key === 'CVD_MULTI_YEAR_RISK_PROBS') {
+                            // Expand to _COUNT + indexed keys for the multi-year slider
+                            result[`${key}_COUNT`] = data.length;
+                            data.forEach((v, i) => result[`${key}_${i}`] = v / multiplier);
+                        } else {
+                            result[key] = data[0] / multiplier;
+                        }
+                    }
+                    // Pick up top-level keys injected by Android (e.g. STAR_RATING) that are
+                    // not part of the SDK Channels object.
+                    const SKIP_KEYS = new Set(['MeasurementID', 'MeasurementDataID', 'MeasurementResultID', 'Multiplier', 'Channels', 'timestamp']);
+                    for (const [key, val] of Object.entries(raw)) {
+                        if (SKIP_KEYS.has(key) || key in result) continue;
+                        const n = parseFloat(val);
+                        result[key] = !isNaN(n) && String(val).trim() !== '' ? n : val;
+                    }
+                    measurementData = result;
+                } else {
+                    // Flat format from ?r= decode (already numbers) or old native bridge (string values)
+                    measurementData = Object.fromEntries(
+                        Object.entries(raw).map(([k, v]) => {
+                            const n = parseFloat(v);
+                            return [k, !isNaN(n) && String(v).trim() !== '' ? n : v];
+                        })
+                    );
+                }
+
                 displayResults(measurementData);
             } catch (error) {
                 console.error('Error parsing measurement data:', error);

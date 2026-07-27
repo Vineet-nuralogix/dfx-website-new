@@ -25,7 +25,7 @@ function renderResults(results, definitions, sections, pageLocale) {
     }
 
     let starRating = getPointResult("STAR_RATING", results)
-    if (starRating && !isNaN(starRating)) {
+    if (starRating != null && !isNaN(starRating)) {
         let stars = document.createElement('span')
         stars.id = "starsContainer"
         for (let i = 1; i <= 5; i++) {
@@ -247,6 +247,11 @@ function renderMultiYearRiskRow(results, pointDefinition, container, locale) {
         resultEl.appendChild(sliderRow)
     }
 
+    function updateSliderFill(sl) {
+        const pct = (sl.value - sl.min) / (sl.max - sl.min) * 100
+        sl.style.setProperty('--slider-fill', pct + '%')
+    }
+
     const colorClasses = ['green', 'lightGreen', 'yellow', 'lightRed', 'red', 'grey']
     const updateSelectedYear = year => {
         selectedYear = year
@@ -256,7 +261,10 @@ function renderMultiYearRiskRow(results, pointDefinition, container, locale) {
         if (gaugeBar) gaugeBar.updateValue(selectedValue)
         let yearTemplate = localize('DFXPOINT_CVD_YEAR_LABEL', locale)
         if (yearLabel) yearLabel.textContent = yearTemplate.replace('{year}', year)
-        if (slider) slider.setAttribute('aria-valuetext', yearLabel ? yearLabel.textContent : '')
+        if (slider) {
+            slider.setAttribute('aria-valuetext', yearLabel ? yearLabel.textContent : '')
+            updateSliderFill(slider)
+        }
     }
 
     if (slider) {
@@ -447,23 +455,15 @@ function roundToDecimalPlaces(value, decimalPlaces) {
 function loadSVGIcon(iconElement, iconName) {
     const iconAliases = { 'BP_SYSTOLIC': 'BP', 'BP_DIASTOLIC': 'BP' };
     const resolvedName = iconAliases[iconName] || iconName;
-    fetch(`assets/svg/${resolvedName}.svg`)
-        .then(response => {
-            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-            return response.text();
-        })
-        .then(svgContent => {
-            svgContent = svgContent.replace(/fill="black"/g, 'fill="currentColor"');
-            svgContent = svgContent.replace(/stroke="black"/g, 'stroke="currentColor"');
-            svgContent = svgContent.replace(/fill="%23cccccc"/g, 'fill="currentColor"');
-            svgContent = svgContent.replace(/fill="#cccccc"/g, 'fill="currentColor"');
-            svgContent = svgContent.replace(/fill="#1D1D1B"/g, 'fill="currentColor"');
-            iconElement.innerHTML = svgContent;
-        })
-        .catch(() => {
-            iconElement.innerHTML = '●';
-            iconElement.classList.add('fallback');
-        });
+    const img = document.createElement('img');
+    img.src = `assets/svg/${resolvedName}.svg`;
+    img.style.cssText = 'width:100%;height:100%;filter:brightness(0) invert(1);';
+    img.onerror = function () {
+        iconElement.innerHTML = '●';
+        iconElement.classList.add('fallback');
+    };
+    iconElement.innerHTML = '';
+    iconElement.appendChild(img);
 }
 
 function shouldShowInfoIcon(pointKey) {
