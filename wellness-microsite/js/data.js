@@ -1057,7 +1057,7 @@ const DeepAffexWebResultsData = (() => {
                 "decimalPlaces": 0,
                 "upperBound": 100,
                 "key": "AGE",
-                "units": "",
+                "units": "YEARS",
                 "lowerBound": 10
             },
             "AGE_CVM": {
@@ -2490,7 +2490,7 @@ Video images taken in poor lighting conditions (e.g., backlighting, overhead lig
 
 Cardiac Workload can be calculated using the formula: Heart Rate x Systolic Blood Pressure.
 
-When measured at rest, this index can be used as an indicator of cardiovascular health.
+When measured at rest, this index can be used as an indicator of cardiovascular health. A person with lower Cardiac Workload is better able to tolerate the stress on the heart muscle.
 
 For example, a person who exercises regularly may have lower Cardiac Workload than another person who has a sedentary lifestyle. During intense physical exercise, your Cardiac Workload may increase but should decrease post-exercise.`,
             "zh": `心脏负荷，或者更准确地说是心肌负荷，是对心肌压力的测量。
@@ -2501,28 +2501,70 @@ For example, a person who exercises regularly may have lower Cardiac Workload th
 例如，通常情况下，一个经常锻炼的人可能比另一个久坐不动的人应该有更低的心脏负荷。你的心脏负荷应该在剧烈运动时增加，但在运动结束后降低。`
         },
         "DFXPOINT_DESC:CVD_RISK": {
-            "default": `Cardiovascular Disease Risk is your likelihood of experiencing your first heart attack or stroke within the next 10 years, expressed as a percentage.
+            "default": `Cardiovascular Event Likelihood Index is your likelihood of experiencing your first heart attack or stroke within the next 10 years, expressed as a percentage, given that you have had no prior cardiovascular events.
 
-This risk score considers your gender, age, Body Mass Index, systolic blood pressure and antihypertensive medication status, as well as your smoking status and diabetes status when available. It was developed using the Framingham method. It is based on data from prospective studies that followed participants' cardiovascular health for over 10 years.`,
-            "zh": `心血管疾病风险是指您在未来10年内发生第一次心脏病发作或中风的可能性，以百分比表示。
+This likelihood index is influenced by your:
+- Gender
+- Age
+- Body Mass Index
+- Systolic Blood Pressure
+- Antihypertensive medication status, Smoking status and Diabetes status when available.
 
-此风险评估包含对您的性别、年龄、体重指数、收缩压和使用抗高血压药物状况的考量，以及您的吸烟状况和糖尿病状况（如有）。它是用弗雷明翰方法（Framingham）、基于对参与者心血管健康进行了10年以上的前瞻性研究的数据开发的。`
+It was developed using the Framingham method. It is based on data from prospective studies that followed participants' cardiovascular health for over 10 years.`,
+            "zh": `心血管疾病概率是指您在未来10年内发生第一次心脏病发作或中风的可能性，以百分比表示，假设您此前没有心血管事件。
+
+此概率指数受以下因素影响：
+- 性别
+- 年龄
+- 体重指数
+- 收缩压
+- 抗高血压药物使用状况、吸烟状况和糖尿病状况（如有）。
+
+它是用弗雷明翰方法（Framingham）、基于对参与者心血管健康进行了10年以上的前瞻性研究的数据开发的。`
         },
         "DFXPOINT_DESC:HEART_ATTACK_RISK": {
-            "default": `Heart Attack Risk is your likelihood of experiencing your first heart attack within the next 10 years, expressed as a percentage.
+            "default": `Heart Attack Likelihood Index is your likelihood of experiencing your first heart attack within the next 10 years, expressed as a percentage.
 
-This risk score considers your gender, age, Body Mass Index, systolic blood pressure and antihypertensive medication status, as well as your smoking status and diabetes status when available. It was developed using the Framingham method. It is based on data from prospective studies that followed participants' cardiovascular health for over 10 years.`,
-            "zh": `心脏病风险是指您在未来10年内发生首次心脏病发作的可能性，以百分比表示。
+This likelihood index is influenced by your:
+- Gender
+- Age
+- Body Mass Index
+- Systolic Blood Pressure
+- Antihypertensive medication status, Smoking status and Diabetes status when available.
 
-此风险评估包含对您的性别、年龄、体重指数、收缩压和使用抗高血压药物状况的考量，以及您的吸烟状况和糖尿病状况（如有）。它是用弗雷明翰方法（Framingham）、基于对参与者心血管健康进行了10年以上的前瞻性研究的数据开发的。`
+It was developed using the Framingham method. It is based on data from prospective studies that followed participants' cardiovascular health for over 10 years.`,
+            "zh": `心脏病概率是指您在未来10年内发生首次心脏病发作的可能性，以百分比表示。
+
+此概率指数受以下因素影响：
+- 性别
+- 年龄
+- 体重指数
+- 收缩压
+- 抗高血压药物使用状况、吸烟状况和糖尿病状况（如有）。
+
+它是用弗雷明翰方法（Framingham）、基于对参与者心血管健康进行了10年以上的前瞻性研究的数据开发的。`
         },
         "DFXPOINT_DESC:STROKE_RISK": {
-            "default": `Stroke Risk is your likelihood of experiencing your first stroke within the next 10 years, expressed as a percentage.
+            "default": `Stroke Likelihood Index is your likelihood of experiencing your first stroke within the next 10 years, expressed as a percentage.
 
-This risk score considers your gender, age, Body Mass Index, systolic blood pressure and antihypertensive medication status, as well as your smoking status and diabetes status (males only) when available. It was developed using the Framingham method. It is based on data from prospective studies that followed participants' cardiovascular health for over 10 years.`,
-            "zh": `中风风险是您在未来10年内首次中风的可能性，以百分比表示。
+This likelihood index is influenced by your:
+- Gender
+- Age
+- Body Mass Index
+- Systolic Blood Pressure
+- Antihypertensive medication status, Smoking status and Diabetes status (males only) when available.
 
-此风险评分考虑您的性别、年龄、体重指数、收缩压和抗高血压药物状态，以及您的吸烟状态和糖尿病状态（仅限男性）。它是用弗雷明翰方法（Framingham）、基于对参与者心血管健康进行了10年以上的前瞻性研究的数据开发的。`
+It was developed using the Framingham method. It is based on data from prospective studies that followed participants' cardiovascular health for over 10 years.`,
+            "zh": `中风概率是您在未来10年内首次中风的可能性，以百分比表示。
+
+此概率指数受以下因素影响：
+- 性别
+- 年龄
+- 体重指数
+- 收缩压
+- 抗高血压药物使用状况、吸烟状况和糖尿病状况（仅限男性）（如有）。
+
+它是用弗雷明翰方法（Framingham）、基于对参与者心血管健康进行了10年以上的前瞻性研究的数据开发的。`
         },
         "DFXPOINT_DESC:VITAL_SCORE": {
             "default": `Vitals Index is a measure of your cardiovascular health. The index is calculated from the combination of:
@@ -2565,12 +2607,12 @@ Your physical attributes contribute to your overall wellbeing. A higher index in
 - Heart rate
 - Stress
 - Blood Pressure
-- Heart Rate Variability
+- Irregular Heartbeats
 - Body Mass Index
 - Cardiac Workload
 - Waist-to-height Ratio
 - Body Shape Index
-- Cardiovascular Disease Risks
+- Cardiovascular Event Likelihood Index
 
 The higher your General Wellness Score, the better your health.`,
             "zh": `综合健康评分是根据最基本的生命体征综合计算得出的生理健康指标，其中包括：
@@ -2583,17 +2625,17 @@ The higher your General Wellness Score, the better your health.`,
 - 腰围身高比
 - 体型指数
 - 心脏负荷
-- 心血管疾病风险
+- 心血管疾病概率
 
 
 通常情况下，你的综合健康评分越高，你的健康状况就越好。`
         },
         "DFXPOINT_DESC:BREATHING": {
-            "default": `The normal resting breathing rate for adults is between 12 and 25 breaths per minute. A slower breathing rate may be caused by certain medications or suggest an underlying medical condition, for example, hypothyroidism, heart condition, electrolyte imbalance, etc. A faster breathing rate could have many causes including walking fast or exercise, asthma, anxiety, infection, or cardiovascular condition. You may want to consult your doctor if your breathing rate falls outside of the normal range.`,
+            "default": `Breathing Rate is a measurement of the number of breaths you took during a 30 second scan. The normal resting breathing rate for adults is between 12 and 25 breaths per minute. A slower breathing rate may be caused by certain medications or suggest an underlying medical condition, for example, hypothyroidism, heart condition, electrolyte imbalance, etc. A faster breathing rate could have many causes including walking fast or exercise, asthma, anxiety, infection, or cardiovascular condition. You may want to consult your doctor if your breathing rate falls outside of the normal range.`,
             "zh": `成年人的正常静息呼吸频率为每分钟12到25次。呼吸速率减慢可能是由某些药物引起的，也可能是潜在的健康问题，例如甲状腺功能减退、心脏病、电解质失衡等。呼吸速率加快可能有许多原因，包括快走或运动、哮喘、焦虑、感染或心血管疾病。如果你的呼吸频率超出正常范围，您可能需要咨询您的医生。`
         },
         "DFXPOINT_DESC:IHB": {
-            "default": `The number displayed is the number of irregular heartbeats {APP_NAME} detected in 30 seconds.
+            "default": `Irregular Heartbeats is a measurement of the number of irregular heartbeats detected during the 30 second scan.
 
 An irregular heartbeat is one that occurs outside of your heart's normal rhythm. The beat may have occurred sooner than expected or your heart may have seemed to 'skip' a beat. Sometimes it can feel like a thump in your chest, or the feeling that your heart is beating quickly or fluttering.
 
@@ -2609,9 +2651,9 @@ In rare cases, they could indicate a more serious condition like an electrolyte 
 但是，在极少数情况下，不规则的心跳可能表明严重的问题，如电解质失衡或心脏疾病。如果您有持续不规则的心跳，或者不规则心跳发生时有其它症状，如头晕、胸痛或呼吸短促，您应该咨询医生或立即就医。`
         },
         "DFXPOINT_DESC:HRV": {
-            "default": `Heart Rate Variability refers to the variability in the timing between one heartbeat and the next. {APP_NAME} measures this with SDNN, which is the standard deviation of the interval between normal heartbeats (in milliseconds). A higher SDNN corresponds to more inter-beat variability.
+            "default": `Heart Rate Variability refers to the variability in the timing between one heartbeat and the next. This is measured with the standard deviation of the interval between normal heartbeats (in milliseconds). A higher standard deviation corresponds to more inter-beat variability.
 
-Increased heart rate variability suggests an increase in parasympathetic activity and/or a decrease in sympathetic activity of the autonomic nervous system.
+Increased heart rate variability suggests an increase in parasympathetic ("rest-and-digest") activity and/or a decrease in sympathetic ("fight-or-flight") activity of the autonomic nervous system.
 
 High resting heart rate variability is considered healthy and means that the heart is more flexible to the changing needs of the body.
 `,
@@ -2622,11 +2664,9 @@ High resting heart rate variability is considered healthy and means that the hea
 较高的静息心率变异性被认为是健康的，意味着心脏对身体不断变化的需求更加灵活。`
         },
         "DFXPOINT_DESC:WATHR": {
-            "default": `Waist-to-height ratio is an individual's waist circumference expressed as a percentage of their height (with both measured in the same units). For the average person, {APP_NAME} will estimate this to within 4 percentage points of its actual value.
+            "default": `Waist-to-height ratio is an individual's waist circumference expressed as a percentage of their height (with both measured in the same units). For the average person the estimate is within 4 percentage points of its actual value.
 
 Waist-to-height ratio is a particularly good predictor of cardiovascular disease risk. It is associated with cardiovascular disease risk factors like elevated total cholesterol and lower high-density lipoprotein (HDL).
-
-On average, {APP_NAME} will estimate your waist-to-height ratio to within 4 percentage points of its actual value.
 
 For more information, see: Zhou, W., Wang, Y., Gu, X., Feng, Z. P., Lee, K., Peng, Y., & Barszczyk, A. (2020) Importance of general adiposity, visceral adiposity and vital signs in predicting blood biomarkers using machine learning. _International Journal of Clinical Practice_, e13664.`,
             "zh": `腰围身高比WHR是一个人的腰围长度占身高长度的百分比来表示的数值（两者使用相同的长度单位）。这种脂肪与各种健康风险有关。
@@ -2722,13 +2762,17 @@ Hypercholesterolemia is a treatable risk factor for cardiovascular disease. Ther
 **注意**：您的生理状况在瞬间之间波动，这意味着您的风险估算可能会在某种程度上随一次测量而有所不同。 因此，可以通过对一天中和几天中的几次测量结果求平均来充分考虑这种生理变化，从而获得对您总体风险的最佳估计。`
         },
         "DFXPOINT_DESC:OVERALL_METABOLIC_RISK_PROB": {
-            "default": `Overall Metabolic Health Risk evaluation offers a comprehensive assessment of an individual's susceptibility to a spectrum of metabolic conditions. It utilizes information from facial blood flow measurements (TOI) and data about the individual's profile to measure and estimate the likelihood of certain health issues occurring.
+            "default": `Metabolic Biomarkers Likelihood Index offers a comprehensive assessment of an individual's susceptibility to a spectrum of metabolic conditions. It uses your facial blood flow and profile data to estimate the likelihood of certain health issues occurring. This index is calculated from the combination of:
 
-The combination of the outlined risks—Hypertension Risk, Type 2 Diabetes Risk, Hypertriglyceridemia Risk, Hypercholesterolemia Risk, and Fatty Liver Disease Risk—forms a comprehensive image of an individual's metabolic health. Evaluated via facial blood flow (TOI) measurements and subject's profile data, these risks highlight the complex overlap between metabolic well-being and cardiovascular health.
+- Hypertension Risk
+- Type 2 Diabetes Risk
+- Hypertriglyceridemia Risk
+- Hypercholesterolemia Risk
+- Fatty Liver Disease Risk
 
-The combined impact of these risks emphasizes the necessity for taking proactive steps in managing one's health. The potential emergence of high blood pressure, Type 2 diabetes, elevated triglyceride and cholesterol levels, or fatty liver disease emphasizes the significance of adopting healthier habits and seeking guidance from professionals. The combined impact of these risks has a broader influence that reaches into the area of potential heart-related problems and disorders that affect blood vessels, which can include a range of cardiovascular diseases.
+The combined impact of these risks emphasize the need for proactive steps in managing your daily health. The lower your Metabolic Biomarkers Likelihood Index, the less likely you are to be impacted by metabolic conditions.
 
-**Notice:** Moment-to-moment fluctuations in the subject's physiology mean that their risk estimates could vary to some degree from one measurement to the next. Therefore, the best estimate of the subject's overall risk is obtained by averaging several measurements throughout the day and across several days to adequately account for this physiological variation.`,
+**Notice:** Moment-to-moment fluctuations in the physiological blood flow means that the biomarker indices could vary to some degree from one measurement to the next. Therefore, the best estimate of the overall metabolic health is obtained by averaging several measurements throughout the day and across several days to adequately account for this physiological variation.`,
             "zh": `整体代谢健康风险评估能够全面评估个人对一系列代谢疾病的易感性。它利用面部血流测量 (TOI) 信息和个人档案数据来测量和估计出现某些健康问题的可能性。
 
 高血压风险、2 型糖尿病风险、高甘油三酯血症风险、高胆固醇血症风险和脂肪肝风险 — 这几项风险的组合构成了一个人代谢健康的综合状况。通过面部血流 (TOI) 测量和受试者的个人档案数据对这些风险进行评估，能够凸显新陈代谢健康与心血管健康之间复杂的重叠关系。
@@ -2775,11 +2819,13 @@ Fasting blood glucose (FBG) test is a laboratory blood test ordered by your heal
         "DFXPOINT_DESC:STRESS_TITLE_4": { "default": `Vigilant`, "zh": `警惕` },
         "DFXPOINT_DESC:STRESS_TITLE_5": { "default": `Overloaded`, "zh": `超载` },
         "DFXPOINT_DESC:STRESS_1": {
-            "default": `- A well below normal stress results in a very low Stress Index that is ideal for maintaining good mental and physical health
-- An Stress Index reading this low suggests the possibility that at this moment, you have nothing to worry about in your life or are in a state of deep relaxation
+            "default": `Mental Stress Index is a snapshot measure of your mental stress based on your facial blood flow.
+
+This reading indicates you have well below normal stress results in a very low Stress Index that is ideal for maintaining good mental and physical health
+- A Stress Index reading this low suggests the possibility that at this moment, you have nothing to worry about in your life or are in a state of deep relaxation
 - However, you may also not be experiencing enough mental arousal to keep you alert in certain tasks. A minimum stress is useful while engaged with daily activities or chores
 
-Just as your resting heart rate can vary constantly it is also normal for stress levels to change constantly. This is because your heart rate variability (HRV) is also changing constantly. As a result it is not unusual to experience variations in your Stress Index results by as much as 1.0 when you take consecutive measurements.`,
+**Notice:** Moment-to-moment fluctuations in the physiological blood flow means that the mental stress index could vary to some degree from one measurement to the next. Therefore, the best estimate of the mental stress index is obtained by averaging several measurements throughout the day and across several days to adequately account for this physiological variation.`,
             "zh": `- 心理压力值 ”极低“ 表示你几乎没有心理压力，身心健康极佳
 - 你可能处于生活无忧或深度放松的状态
 - 但是，过于放松的心态可能使你有时无法集中足够的注意力从事日常活动，因为必要的压力是有正面作用的
@@ -2787,11 +2833,13 @@ Just as your resting heart rate can vary constantly it is also normal for stress
 正如静息心率 (RHR) 会持续变化一样，你的心理压力值在连续的测量中显示不同的结果也是正常现象，这是因为心率变异性 (HRV) 也是持续变化的。所以，当你连续测量时，心理压力值结果出现多至1.0的波动也并非异常现象。`
         },
         "DFXPOINT_DESC:STRESS_2": {
-            "default": `- Your below normal stress reading results in a lower Stress Index that is beneficial for long term psychological and physical health
+            "default": `Mental Stress Index is a snapshot measure of your mental stress based on your facial blood flow.
+
+This reading indicates you have below normal stress reading results in a lower Stress Index that is beneficial for long term psychological and physical health
 - Receiving Stress Index readings in this zone are most suitable for the home or leisure environments
 - The ability to activate this lower level of mental arousal may facilitate concentration in difficult or unfamiliar tasks
 
-Just as your resting heart rate can vary constantly it is also normal for stress levels to change constantly. This is because your heart rate variability (HRV) is also changing constantly. As a result it is not unusual to experience variations in your Stress Index results by as much as 1.0 when you take consecutive measurements.`,
+**Notice:** Moment-to-moment fluctuations in the physiological blood flow means that the mental stress index could vary to some degree from one measurement to the next. Therefore, the best estimate of the mental stress index is obtained by averaging several measurements throughout the day and across several days to adequately account for this physiological variation.`,
             "zh": `- 心理压力值 "较低" 表示你有适当的心理压力，身心健康处于良好状态
 - 这个状态是大多数人休息的时候应有的状态，同时也适宜处理一些简单的日常事务
 - 有意识地增加心理压力有助于集中注意力去应对困难和挑战
@@ -2799,11 +2847,13 @@ Just as your resting heart rate can vary constantly it is also normal for stress
 正如静息心率 (RHR) 会持续变化一样，你的心理压力值在连续的测量中显示不同的结果也是正常现象，这是因为心率变异性 (HRV) 也是持续变化的。所以，当你连续测量时，心理压力值结果出现多至1.0的波动也并非异常现象。`
         },
         "DFXPOINT_DESC:STRESS_3": {
-            "default": `- Currently, your normal stress results in a moderate Stress Index that is not considered harmful to your psychological and physical health.
-- Most people work optimally having an Stress Index within this stress zone.
+            "default": `Mental Stress Index is a snapshot measure of your mental stress based on your facial blood flow.
+
+This reading indicates you have normal stress results in a moderate Stress Index that is not considered harmful to your psychological and physical health.
+- Most people work optimally having a Stress Index within this stress zone.
 - However, if your stress remains within this zone under all situations, including moments of relaxation, then you may benefit from learning effective relaxation techniques
 
-Just as your resting heart rate can vary constantly it is also normal for stress levels to change constantly. This is because your heart rate variability (HRV) is also changing constantly.   As a result it is not unusual to experience variations in your Stress Index results by as much as 1.0 when you take consecutive measurements.`,
+**Notice:** Moment-to-moment fluctuations in the physiological blood flow means that the mental stress index could vary to some degree from one measurement to the next. Therefore, the best estimate of the mental stress index is obtained by averaging several measurements throughout the day and across several days to adequately account for this physiological variation.`,
             "zh": `- 心理压力值 "适中" 表示你有一定的心理压力，身心健康处于稳定状态
 - 大多数人在此ASI区间会表现出最佳的工作状态
 - 如果你在工作中保持此ASI状态并在休息时适当放松，将会受益匪浅
@@ -2811,11 +2861,13 @@ Just as your resting heart rate can vary constantly it is also normal for stress
 正如静息心率 (RHR) 会持续变化一样，你的心理压力值在连续的测量中显示不同的结果也是正常现象，这是因为心率变异性 (HRV) 也是持续变化的。所以，当你连续测量时，心理压力值结果出现多至1.0的波动也并非异常现象。`
         },
         "DFXPOINT_DESC:STRESS_4": {
-            "default": `- Experiencing higher than normal stress resulting in a higher Stress Index that allows you to improve short term performance by boosting your motivation to do more difficult tasks, particularly those requiring stamina or persistence
+            "default": `Mental Stress Index is a snapshot measure of your mental stress based on your facial blood flow.
+
+This reading indicates you are experiencing higher than normal stress resulting in a higher Stress Index that allows you to improve short term performance by boosting your motivation to do more difficult tasks, particularly those requiring stamina or persistence
 - During exposure to this level of stress, you may experience mental or physical strain
 - However, Stress Index readings in this zone should not be a constant part of your life. Otherwise, it may negatively affect your long term psychological and physical health outcomes
 
-Just as your resting heart rate can vary constantly it is also normal for stress levels to change constantly. This is because your heart rate variability (HRV) is also changing constantly.   As a result it is not unusual to experience variations in your Stress Index results by as much as 1.0 when you take consecutive measurements.`,
+**Notice:** Moment-to-moment fluctuations in the physiological blood flow means that the mental stress index could vary to some degree from one measurement to the next. Therefore, the best estimate of the mental stress index is obtained by averaging several measurements throughout the day and across several days to adequately account for this physiological variation.`,
             "zh": `- 心理压力值 "较高" 表示你有相当大的心理压力，并高度警觉
 - 保持此ASI状态，你处理短期棘手的任务会非常高效
 - 但是，不要让你的心理压力长期处于该状态，否则可能会对你的身心健康产生负面影响
@@ -2823,12 +2875,14 @@ Just as your resting heart rate can vary constantly it is also normal for stress
 正如静息心率 (RHR) 会持续变化一样，你的心理压力值在连续的测量中显示不同的结果也是正常现象，这是因为心率变异性 (HRV) 也是持续变化的。所以，当你连续测量时，心理压力值结果出现多至1.0的波动也并非异常现象。`
         },
         "DFXPOINT_DESC:STRESS_5": {
-            "default": `- You are experiencing a significantly higher than normal stress indicated by a very high Stress Index meaning that you will likely encounter impaired performance on certain tasks due to higher than normal anxiety
+            "default": `Mental Stress Index is a snapshot measure of your mental stress based on your facial blood flow.
+
+This reading indicates you are experiencing a significantly higher than normal stress indicated by a very high Stress Index meaning that you will likely encounter impaired performance on certain tasks due to higher than normal anxiety.
 - You may feel unable to calm yourself. Stop what you are doing and take slow, deep breaths. You should also avoid drinking caffeinated beverages like coffee
 - Reducing the causes of your stress and engaging in calming activities may help restore your stress balance including practicing deep breathing, yoga, or meditation daily
 - Be aware that prolonged periods of time spent experiencing such elevated Stress Index readings has the potential to cause health complications
 
-Just as your resting heart rate can vary constantly it is also normal for stress levels to change constantly. This is because your heart rate variability (HRV) is also changing constantly.   As a result it is not unusual to experience variations in your Stress Index results by as much as 1.0 when you take consecutive measurements.`,
+**Notice:** Moment-to-moment fluctuations in the physiological blood flow means that the mental stress index could vary to some degree from one measurement to the next. Therefore, the best estimate of the mental stress index is obtained by averaging several measurements throughout the day and across several days to adequately account for this physiological variation.`,
             "zh": `- 心理压力值 "极高" 表示你有巨大的心理压力，身心健康令人担忧
 - 你可能处于极度焦虑的状态，无法让自己平静
 - 建议你劳逸结合，保证充分的睡眠、多运动、多练习深呼吸、避免喝含咖啡因的饮料，尽量使自己放松。平静的生活有助于恢复心理压力的长期平衡，否则可能会导致多种健康问题
@@ -2844,13 +2898,17 @@ This estimation can be used as an indicator for your facial vascular aging.`,
 这个评估值可以作为面部血管老化的指标。`
         },
         "DFXPOINT_DESC:VASCULARCAPACITY": {
-            "default": `Vascular Capacity, or Tau, is a measure of the elasticity of your blood vessels.
+            "default": `Vascular Capacity is a measure of the elasticity of your blood vessels.
 
-Vascular Capacity can be calculated using the formula: R (Vascular Resistance) x C (Arterial Compliance).
+Vascular Capacity can be calculated from the Vascular Resistance x Arterial Compliance.
+Vascular Resistance is a measure of how much the body opposes the flow of blood.
+Arterial Compliance is a measure of how easily your arteries can expand and contract with the pumping of the heart.
 
 When measured at rest, this index can be used as an indicator of cardiovascular health as it is strongly correlated with vascular stiffness.
 
-A person with a high Tau has better vascular health than a person with a low Tau. Also, certain transient activities and physiological events can lead to immediate changes in Tau (e.g., drinking alcohol, smoking).`,
+A person with a high Vascular Capacity has better vascular health than a person with a low Vascular Capacity.
+
+***Disclaimer/Note*** Also, certain transient activities and physiological events can lead to immediate changes in Vascular Capacity (e.g., drinking alcohol, smoking).`,
             "zh": `血管功能，或Tau，是衡量血管弹性的一个指标。
 
 血管功能可用以下公式计算：
@@ -2870,13 +2928,11 @@ Cardiovascular Metabolic Age compares the subject's overall cardiovascular and m
 *There is no interpretation table for AGE_CVM.*`
         },
         "DFXPOINT_DESC:CVD_MULTI_YEAR_RISK_PROBS": {
-            "default": `*Multi-year Cardiovascular Disease Risk* is the subject's likelihood of experiencing their first cardiovascular disease event within a selected time horizon from 1 to 20 years, expressed as a percentage. The result provides the corresponding cardiovascular disease risk for each year. Cardiovascular disease refers to conditions affecting the heart and blood vessels, such as heart attack and stroke. Multi-year Cardiovascular Disease Risk does not apply to subjects who have already had a heart attack or stroke.
+            "default": `Multi-year CVD Risk is your likelihood of experiencing your first cardiovascular disease event within a selected time horizon from 1 to 20 years, expressed as a percentage.
 
-## Background
+Cardiovascular disease refers to conditions affecting the heart and blood vessels, such as heart attack and stroke. This risk score is based on advanced machine learning and estimates your likelihood of developing cardiovascular disease over a user-selected time window.
 
-This risk score is based on advanced machine learning and estimates the subject's likelihood of developing cardiovascular disease over a user-selected time window, from 1 year up to 20 years into the future.
-
-Regardless of the selected year, the same interpretation scale applies to the reported result.`
+Multi-year Cardiovascular Disease Risk does not apply to subjects who have already had a heart attack or stroke.`
         },
         "DFXPOINT_DESC:AGE": {
             "default": `Skin Age is an estimate of your age based on the condition of the surface of your face.
