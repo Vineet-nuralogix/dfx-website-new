@@ -1819,8 +1819,11 @@ const DeepAffexWebResultsData = (() => {
             "zh": "智能健康魔镜"
         },
         "RESULTS_DISCLAIMER": {
-            "default": `Health insights, wellness metrics, and condition likelihood assessments are intended for informational and wellness purposes only. These features are not intended to diagnose, treat, cure, mitigate, monitor, or prevent any disease or medical condition. The information provided by this solution is not a substitute for professional medical advice, diagnosis, or treatment. Users should consult a qualified healthcare professional regarding any medical concerns or healthcare decisions. Some results were predicted using AI/machine learning technology.`,
+            "default": `Health insights, wellness metrics, and condition likelihood assessments are intended for informational and wellness purposes only. These features are not intended to diagnose, treat, cure, mitigate, monitor, or prevent any disease or medical condition. The information provided by this solution is not a substitute for professional medical advice, diagnosis, or treatment. Users should consult a qualified healthcare professional regarding any medical concerns or healthcare decisions.`,
             "zh": `本产品/服务所提供的测量结果仅供一般健康认知及娱乐性用途参考，并非医疗用途。这些测量结果不构成医疗建议，亦不用于任何疾病的诊断、治疗、缓解、预防或治愈。用户不应依据这些结果作出任何医疗决定。对于测量结果的任何疑问或健康相关问题，用户应咨询具备资质的医疗保健专业人士。`
+        },
+        "RESULTS_DISCLAIMER_AI": {
+            "default": `Some of these results were predicted using AI.`
         },
         "SCREEN_RESULTS_SUBTITLE_VITALS": {
             "default": "Vitals",
@@ -2050,7 +2053,7 @@ const DeepAffexWebResultsData = (() => {
             "zh": "心血管疾病风险预测年限"
         },
         "DFXPOINT_TITLE:BP_CVD": {
-            "default": "Cardiovascular Disease Likelihood Index",
+            "default": "Cardiovascular Event Likelihood Index",
             "ko": "심혈관 질환 위험",
             "zh": "心血管疾病风险"
         },
@@ -2303,10 +2306,6 @@ According to the [European Society of Cardiology and the European Society of Hyp
 | High Normal | 130 - 139 |
 | Hypertension | ≥ 140 |
 
-#### DISCLAIMER:
-
-This product and this health insight is not a medical device and should not be used for diagnosis, treatment, cure or any medical purposes. Always consult with your physician or other medical professional should you have any health-related question, issues or emergency.
-
 #### Accuracy of blood pressure estimates:
 
 In a study published in the [American Heart Association journal – Circulation: Cardiovascular Imaging (Vol. 12, No. 8)](https://www.ahajournals.org/doi/10.1161/CIRCIMAGING.119.008857) the proprietary technique used by {APP_NAME} called Transdermal Optical Imaging (TOI) has been shown to measure blood pressure with an average overall accuracy of 95% over the following ranges:
@@ -2377,10 +2376,6 @@ According to the [European Society of Cardiology and the European Society of Hyp
 | Normal | 80 - 84 |
 | High Normal | 85 - 89 |
 | Hypertension | ≥ 90 |
-
-#### DISCLAIMER:
-
-This product and this health insight is not a medical device and should not be used for diagnosis, treatment, cure or any medical purposes. Always consult with your physician or other medical professional should you have any health-related question, issues or emergency.
 
 #### Accuracy of blood pressure estimates:
 
@@ -2908,7 +2903,7 @@ When measured at rest, this index can be used as an indicator of cardiovascular 
 
 A person with a high Vascular Capacity has better vascular health than a person with a low Vascular Capacity.
 
-***Disclaimer/Note*** Also, certain transient activities and physiological events can lead to immediate changes in Vascular Capacity (e.g., drinking alcohol, smoking).`,
+**Disclaimer/Note** Also, certain transient activities and physiological events can lead to immediate changes in Vascular Capacity (e.g., drinking alcohol, smoking).`,
             "zh": `血管功能，或Tau，是衡量血管弹性的一个指标。
 
 血管功能可用以下公式计算：
@@ -2936,11 +2931,12 @@ Multi-year Cardiovascular Disease Risk does not apply to subjects who have alrea
         },
         "DFXPOINT_DESC:AGE": {
             "default": `Skin Age is an estimate of your age based on the condition of the surface of your face.
-This estimate can be used as an indicator for subject's facial skin aging. It may be influenced by many factors such as fatigue level, the use of skincare or cosmetics products.
 
-Video images taken in poor lighting conditions (e.g., back-lighting, overhead lighting) may distort the estimation of subject's facial skin age.
+This estimation can be used as an indicator for your facial skin aging.
 
-There is no interpretation table for AGE`
+This estimation may be influenced by many factors such as fatigue level, the use of skincare or cosmetics products.
+
+Video images taken in poor lighting conditions (e.g., backlighting, overhead lighting) may distort the estimation of your facial skin age.`
         },
         "DFXPOINT_DESC:HEIGHT": {
             "default": `*Estimated Height* is an estimate of the subject's height in centimetres.

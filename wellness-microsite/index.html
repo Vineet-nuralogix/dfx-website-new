@@ -14,56 +14,14 @@
             height: 100vh;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* Fullscreen video */
-        #promo-video {
-            position: fixed;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            background: #000;
-            z-index: 0;
-        }
-
-        #promo-video::-webkit-media-controls,
-        #promo-video::-webkit-media-controls-enclosure,
-        #promo-video::-webkit-media-controls-panel,
-        #promo-video::-webkit-media-controls-play-button,
-        #promo-video::-webkit-media-controls-overlay-play-button {
-            display: none !important;
-            opacity: 0 !important;
-        }
-
-        /* UI overlay — hidden by default, shown on touch */
-        .ui-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 10;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-            background: linear-gradient(
-                to bottom,
-                rgba(0,0,0,0.55) 0%,
-                transparent 30%,
-                transparent 65%,
-                rgba(0,0,0,0.65) 100%
-            );
-        }
-
-        .ui-overlay.visible {
-            opacity: 1;
-            pointer-events: all;
-        }
-
-        /* Logo — top center */
+        /* Logo — center of screen */
         .overlay-logo {
-            position: absolute;
-            top: 32px;
-            left: 50%;
-            transform: translateX(-50%);
             width: 90%;
             max-width: 520px;
             height: auto;
@@ -72,7 +30,7 @@
 
         /* Action buttons — bottom center */
         .overlay-footer {
-            position: absolute;
+            position: fixed;
             bottom: 48px;
             left: 50%;
             transform: translateX(-50%);
@@ -100,7 +58,7 @@
 
         /* Settings & language — top right */
         .floating-actions {
-            position: absolute;
+            position: fixed;
             top: 20px;
             right: 20px;
             display: flex;
@@ -158,107 +116,31 @@
         }
 
         .language-option:hover { background: rgba(255,255,255,0.1); }
-
-        /* Video playlist menu — bottom left */
-        .video-menu-button {
-            position: absolute;
-            bottom: 60px;
-            left: 20px;
-            width: 44px;
-            height: 44px;
-            background: rgba(255,255,255,0.15);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-        }
-
-        .video-menu-button:hover { background: rgba(255,255,255,0.25); }
-
-        .video-menu-button svg {
-            width: 20px;
-            height: 20px;
-            stroke: #fff;
-            fill: none;
-            stroke-width: 1.6;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
-
-        .video-menu {
-            position: absolute;
-            bottom: 114px;
-            left: 20px;
-            display: none;
-            flex-direction: column;
-            gap: 4px;
-            min-width: 200px;
-            max-width: 280px;
-            padding: 8px;
-            background: #1a1a1a;
-            border-radius: 12px;
-            border: 1px solid #444;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.6);
-        }
-
-        .video-menu.active { display: flex; }
-
-        .video-menu-option {
-            background: transparent;
-            border: none;
-            color: #fff;
-            font-size: 0.9rem;
-            padding: 9px 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            text-align: left;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .video-menu-option:hover { background: rgba(255,255,255,0.08); }
-        .video-menu-option.active { background: #005DBC; }
     </style>
 </head>
 <body>
 
-    <!-- Fullscreen video -->
-    <video id="promo-video" autoplay playsinline webkit-playsinline preload="auto" disablePictureInPicture poster="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"></video>
+    <!-- Logo — center of screen -->
+    <img class="overlay-logo" src="assets/imgs/Anura-MagicMirror-english.png" alt="MagicMirror Appliance">
 
-    <!-- UI overlay (hidden until touched) -->
-    <div class="ui-overlay" id="ui-overlay">
-
-        <!-- Logo -->
-        <img class="overlay-logo" src="assets/imgs/Anura-MagicMirror-english.png" alt="MagicMirror Appliance">
-
-        <!-- Settings & Language — top right -->
-        <div class="floating-actions">
-            <div class="settings-button" onclick="navigateToSettings()">
-                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-            </div>
-            <div class="settings-button" id="language-button" onclick="toggleLanguageMenu(event)">
-                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3c-2.5 3-4 5.7-4 9s1.5 6 4 9"/><path d="M12 3c2.5 3 4 5.7 4 9s-1.5 6-4 9"/><line x1="3" y1="12" x2="21" y2="12"/><path d="M3.6 7.5h16.8M3.6 16.5h16.8"/></svg>
-            </div>
-            <div class="language-menu" id="language-menu">
-                <button class="language-option" onclick="handleLanguageSelection('zh')">中文</button>
-                <button class="language-option" onclick="handleLanguageSelection('en')">English</button>
-            </div>
+    <!-- Settings & Language — top right -->
+    <div class="floating-actions">
+        <div class="settings-button" onclick="navigateToSettings()">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
         </div>
-
-        <!-- Video playlist menu — bottom left -->
-        <div class="video-menu" id="video-menu"></div>
-        <div class="video-menu-button" id="video-menu-button" onclick="toggleVideoMenu(event)">
-            <svg viewBox="0 0 24 24"><line x1="3" y1="7" x2="15" y2="7"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="17" x2="15" y2="17"/><polygon points="18,9 23,12 18,15" fill="#fff" stroke="none"/></svg>
+        <div class="settings-button" id="language-button" onclick="toggleLanguageMenu(event)">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3c-2.5 3-4 5.7-4 9s1.5 6 4 9"/><path d="M12 3c2.5 3 4 5.7 4 9s-1.5 6-4 9"/><line x1="3" y1="12" x2="21" y2="12"/><path d="M3.6 7.5h16.8M3.6 16.5h16.8"/></svg>
         </div>
-
-        <!-- Action buttons — bottom center -->
-        <div class="overlay-footer">
-            <button class="next-button" id="profile-button" onclick="navigateToProfile()">Continue</button>
-            <button class="next-button" id="sample-results-button" style="background:transparent;border:1px solid #fff;" onclick="showSampleResults()">Sample Results</button>
+        <div class="language-menu" id="language-menu">
+            <button class="language-option" onclick="handleLanguageSelection('zh')">中文</button>
+            <button class="language-option" onclick="handleLanguageSelection('en')">English</button>
         </div>
+    </div>
 
+    <!-- Action buttons — bottom center -->
+    <div class="overlay-footer">
+        <button class="next-button" id="profile-button" onclick="navigateToProfile()">Continue</button>
+        <button class="next-button" id="sample-results-button" style="background:transparent;border:1px solid #fff;" onclick="showSampleResults()">Sample Results</button>
     </div>
 
     <script src="config.js"></script>
@@ -269,47 +151,19 @@
             'en': { 'profile-button': 'Continue', 'sample-results-button': 'Sample Results' }
         };
 
-        // --- Touch-to-reveal overlay ---
-        const overlay = document.getElementById('ui-overlay');
-        let hideTimer = null;
-        const HIDE_DELAY = 4000;
-
-        function showOverlay() {
-            overlay.classList.add('visible');
-            resetHideTimer();
-        }
-
-        function resetHideTimer() {
-            clearTimeout(hideTimer);
-            hideTimer = setTimeout(hideOverlay, HIDE_DELAY);
-        }
-
-        function hideOverlay() {
-            // Don't hide if language or video menu is open
-            const langMenu = document.getElementById('language-menu');
-            const vidMenu = document.getElementById('video-menu');
-            if (langMenu.classList.contains('active') || vidMenu.classList.contains('active')) {
-                resetHideTimer();
-                return;
-            }
-            overlay.classList.remove('visible');
-        }
-
-        document.addEventListener('touchstart', showOverlay, { passive: true });
-        document.addEventListener('click', showOverlay);
-
         // --- Android bridge helpers ---
         function isAndroidBridgeAvailable() {
             return typeof AndroidBridge !== 'undefined';
         }
 
         function showSampleResults() {
-            window.location.href = 'result.html?r=TlExkyFmm6Qab1X0k6xTSQrGR9i5lkRgCn9SXMJ8VSbzADyYt3JBJmBEVHlaAEL4agdUcZJ1Q2Op%2Fjb4wABJHNF9Qh0OQETKAwBCSxjmUGuVhFQ1jCZI9s7RV8MiklBOPZpQSCxLTfITZ06U6YBOv6deTVGFkVTxTVpJGydASSfTVUOwKjYoU%2BpIWa6RU0ITZms209dATxW%2B5ERAzNBDSqa8T00KAABsnrZAQLAlRP8MklDYTwBCn6gATYQoWT5F6KI%2BBenpPsQpED%2BF61I%2FRCtvPwQqnj%2FF6v8%2Fhe4ZQEQuTEAp57xA6CfzQagmJUJp5oZCKCRIROnkl0Wp5axFaCXBRSgh1kXp4etF&mid=806e1a9d-3dd8-4847-b64d-3bce3043535e&pid=';
+            // Store encoded sample data for result.html to decode — no ?r= in URL so
+            // isStandalone stays false and Exit/Try Again buttons are shown (native flow).
+            sessionStorage.setItem('nativeSampleEncoded', 'TlExkyFmm6Qab1X0k6xTSQrGR9i5lkRgCn9SXMJ8VSbzADyYt3JBJmBEVHlaAEL4agdUcZJ1Q2Op/jb4wABJHNF9Qh0OQETKAwBCSxjmUGuVhFQ1jCZI9s7RV8MiklBOPZpQSCxLTfITZ06U6YBOv6deTVGFkVTxTVpJGydASSfTVUOwKjYoU+pIWa6RU0ITZms209dATxW+5ERAzNBDSqa8T00KAABsnrZAQLAlRP8MklDYTwBCn6gATYQoWT5F6KI+BenpPsQpED+F61I/RCtvPwQqnj/F6v8/he4ZQEQuTEAp57xA6CfzQagmJUJp5oZCKCRIROnkl0Wp5axFaCXBRSgh1kXp4etF');
+            window.location.href = 'result.html';
         }
 
         function navigateToProfile() {
-            const video = document.getElementById('promo-video');
-            if (video) { video.pause(); video.src = ''; video.load(); }
             window.location.href = 'profile.html';
         }
 
@@ -338,7 +192,6 @@
 
         // --- Language ---
         const languageMenu = document.getElementById('language-menu');
-        const languageButton = document.getElementById('language-button');
         let isLanguageMenuVisible = false;
 
         function updateLanguageMenuVisibility() {
@@ -349,7 +202,6 @@
             if (event) event.stopPropagation();
             isLanguageMenuVisible = !isLanguageMenuVisible;
             updateLanguageMenuVisibility();
-            resetHideTimer();
         }
 
         function handleLanguageSelection(languageCode) {
@@ -381,90 +233,9 @@
             });
         }
 
-        // --- Video playlist ---
         document.addEventListener('DOMContentLoaded', function () {
-            console.log('Index page loaded');
-
             const savedLang = localStorage.getItem('selectedLanguage');
             handleLanguageSelection(savedLang || getCurrentLanguageCode());
-
-            const video = document.getElementById('promo-video');
-            const playlist = (typeof APP_CONFIG !== 'undefined' && APP_CONFIG.videos && APP_CONFIG.videos.length)
-                ? APP_CONFIG.videos : [];
-            let currentIndex = 0;
-            let currentMode = 'all';
-
-            function getVideoDisplayName(path) {
-                return path.split('/').pop().replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ');
-            }
-
-            function loadAndPlay(index) {
-                if (!playlist.length) return;
-                video.src = playlist[index];
-                video.load();
-                video.play().catch(function () {
-                    document.addEventListener('touchstart', function retry() {
-                        video.play();
-                        document.removeEventListener('touchstart', retry);
-                    }, { once: true });
-                });
-            }
-
-            function buildVideoMenu() {
-                const menu = document.getElementById('video-menu');
-                menu.innerHTML = '';
-                const allOpt = document.createElement('button');
-                allOpt.className = 'video-menu-option' + (currentMode === 'all' ? ' active' : '');
-                allOpt.textContent = 'Play all';
-                allOpt.onclick = function () { selectVideoMode('all'); };
-                menu.appendChild(allOpt);
-                playlist.forEach(function (path, i) {
-                    const opt = document.createElement('button');
-                    opt.className = 'video-menu-option' + (currentMode === i ? ' active' : '');
-                    opt.textContent = getVideoDisplayName(path);
-                    opt.onclick = function () { selectVideoMode(i); };
-                    menu.appendChild(opt);
-                });
-            }
-
-            function selectVideoMode(mode) {
-                currentMode = mode;
-                if (typeof mode === 'number') currentIndex = mode;
-                toggleVideoMenu(null, false);
-                buildVideoMenu();
-                loadAndPlay(currentIndex);
-            }
-
-            window.toggleVideoMenu = function (event, forceClose) {
-                if (event) event.stopPropagation();
-                const menu = document.getElementById('video-menu');
-                const show = forceClose === false ? false : !menu.classList.contains('active');
-                if (show) { buildVideoMenu(); menu.classList.add('active'); }
-                else { menu.classList.remove('active'); }
-                resetHideTimer();
-            };
-
-            if (video && playlist.length) {
-                video.addEventListener('ended', function () {
-                    if (currentMode === 'all') currentIndex = (currentIndex + 1) % playlist.length;
-                    loadAndPlay(currentIndex);
-                });
-                loadAndPlay(0);
-            }
-
-            // Free video memory when page is hidden (e.g. scan overlay shown by Android)
-            document.addEventListener('visibilitychange', function () {
-                if (!video) return;
-                if (document.hidden) {
-                    video.pause();
-                    video.src = '';
-                    video.load();
-                } else {
-                    loadAndPlay(currentIndex);
-                }
-            });
-
-            buildVideoMenu();
         });
     </script>
 </body>

@@ -1,12 +1,7 @@
 function renderResults(results, definitions, sections, pageLocale) {
     let container = document.getElementById('results-container')
-    let timestamp = document.getElementById("timestamp")
     let measurementInfo = document.getElementById("measurementInfo")
 
-    timestamp.innerHTML = Intl.DateTimeFormat(pageLocale, {
-        dateStyle: 'medium',
-        timeStyle: 'short'
-    }).format(results["timestamp"])
 
     let snr = getPointResult("SNR", results)
     if (snr && !isNaN(snr)) {
@@ -56,7 +51,6 @@ function renderResults(results, definitions, sections, pageLocale) {
     const infoBar = document.createElement('div')
     infoBar.className = 'info-bar'
     infoBar.appendChild(measurementInfo)
-    infoBar.appendChild(timestamp)
     stickyHeader.appendChild(infoBar)
 
     sections.forEach(section => {
@@ -101,7 +95,6 @@ function renderResults(results, definitions, sections, pageLocale) {
                     const selectedIndex = values.length > 1 ? Math.min(9, values.length - 1) : firstAvailableIndex
                     result = values[selectedIndex]
                 }
-                dialogDefinitionOverride = multiYearDef
             }
 
             if (Number.isFinite(result) && pointDefinition.multiplier) {
@@ -114,7 +107,18 @@ function renderResults(results, definitions, sections, pageLocale) {
 
             let titleKeyOverride = section.pointTitleOverrides?.[pointID] ?? null;
             let iconKeyOverride = section.pointIconOverrides?.[pointID] ?? null;
-            renderResultRow(result, definitions[pointID], container, pageLocale, titleKeyOverride, dialogDefinitionOverride, iconKeyOverride);
+
+            const isTempPoint = pointID === "TEMPERATURE_SENSOR" || pointID === "BODY_TEMPERATURE";
+            let defForRow = definitions[pointID];
+            if (isTempPoint && Number.isFinite(result)) {
+                const fahrenheit = parseFloat(((result * 9 / 5) + 32).toFixed(1));
+                defForRow = Object.assign({}, definitions[pointID], {
+                    _tempCelsius: result,
+                    _tempFahrenheit: fahrenheit,
+                });
+            }
+
+            renderResultRow(result, defForRow, container, pageLocale, titleKeyOverride, dialogDefinitionOverride, iconKeyOverride);
             numberOfChildren += 1;
         }
 
@@ -284,7 +288,9 @@ function renderResultRow(result, pointDefinition, container, locale, titleKeyOve
         : result
 
     let colorClass = getColorClass(displayResult, pointDefinition);
-    let formattedValue = formatResultValue(displayResult, pointDefinition.decimalPlaces, pointDefinition.units, locale);
+    let formattedValue = (pointDefinition._tempCelsius !== undefined)
+        ? `${pointDefinition._tempCelsius.toFixed(1)}°C (${pointDefinition._tempFahrenheit.toFixed(1)}°F)`
+        : formatResultValue(displayResult, pointDefinition.decimalPlaces, pointDefinition.units, locale);
     let resultEl = document.createElement('div');
     resultEl.className = 'result';
     resultEl.dataset.pointKey = pointDefinition.key;
@@ -303,7 +309,7 @@ function renderResultRow(result, pointDefinition, container, locale, titleKeyOve
     valueEl.textContent = formattedValue
 
     let unitEl = document.createElement('span')
-    if (pointDefinition.units !== "" && pointDefinition.units !== "PERCENT") {
+    if (pointDefinition._tempCelsius === undefined && pointDefinition.units !== "" && pointDefinition.units !== "PERCENT") {
         unitEl.className = 'result-unit'
         unitEl.textContent = localize(`DFXPOINT_UNIT:${pointDefinition.units}`, locale)
     }
@@ -526,8 +532,8 @@ function createInlineGaugeBar(result, pointDefinition) {
 
     let pointer = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
     pointer.setAttribute('class', 'result-gauge-pointer')
-    pointer.setAttribute('width', '12')
-    pointer.setAttribute('height', '12')
+    pointer.setAttribute('width', '18')
+    pointer.setAttribute('height', '18')
     pointer.setAttribute('viewBox', '0 0 20 20')
     pointer.style.left = `${calculateGaugePointerPct(result, boundaries)}%`
     let whitePath = document.createElementNS('http://www.w3.org/2000/svg', 'path')
@@ -649,6 +655,7 @@ function renderHeader(lang) {
 function renderDisclaimer(lang) {
     let container = document.getElementById('disclaimer-container');
     if (!container) return;
+
     let p = document.createElement('p');
     p.className = "footer-disclaimer";
 
@@ -657,8 +664,15 @@ function renderDisclaimer(lang) {
     icon.alt = 'Warning';
     icon.style.cssText = 'width:18px;height:18px;margin-right:5px;vertical-align:middle;display:inline-block;';
 
-    let text = document.createTextNode(localize("RESULTS_DISCLAIMER", lang));
     p.appendChild(icon);
-    p.appendChild(text);
+    p.appendChild(document.createTextNode(localize("RESULTS_DISCLAIMER", lang)));
     container.appendChild(p);
+
+    let aiText = localize("RESULTS_DISCLAIMER_AI", lang);
+    if (aiText) {
+        let pAi = document.createElement('p');
+        pAi.className = "footer-disclaimer";
+        pAi.textContent = aiText;
+        container.appendChild(pAi);
+    }
 }

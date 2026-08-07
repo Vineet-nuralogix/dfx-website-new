@@ -25,9 +25,14 @@
         }
 
         .sticky-top-cards {
-            position: sticky;
+            position: fixed;
             top: 0;
+            left: 1em;
+            right: 1em;
             z-index: 50;
+            max-width: 55em;
+            margin-left: auto;
+            margin-right: auto;
             background: url('assets/imgs/common_wallpaper.png') center center / cover no-repeat fixed;
             padding-bottom: 4px;
         }
@@ -117,6 +122,10 @@
             margin-right: 0;
         }
 
+        #starsContainer .result-info-icon {
+            align-self: flex-start;
+        }
+
         .result-info-icon:hover,
         .result-info-icon:active,
         .result-info-icon:focus {
@@ -164,7 +173,7 @@
 
         .result-gauge-pointer-wrapper {
             position: relative;
-            height: 14px;
+            height: 20px;
             margin-top: -2px;
         }
 
@@ -364,11 +373,7 @@
             color: #aaa;
         }
 
-        #timestamp {
-            color: #aaa;
-            font-weight: bold;
-            font-size: 0.9em;
-        }
+
 
         #main-container {
             margin: 1em;
@@ -531,7 +536,7 @@
         .point-info-title {
             margin-top: 0;
             margin-bottom: 0.5rem;
-            color: #005DBC;
+            color: #56AAFF;
         }
 
         .point-info-close {
@@ -626,7 +631,7 @@
         }
 
         .point-info-markdown h3,
-        .point-info-markdown h4 { margin: 1rem 0 0.35rem; color: #005DBC; }
+        .point-info-markdown h4 { margin: 1rem 0 0.35rem; color: #56AAFF; }
 
         .point-info-markdown p { margin: 0.4rem 0; }
 
@@ -661,7 +666,7 @@
             margin-top: 1rem;
             margin-bottom: 0.25rem;
             font-weight: 600;
-            color: #005DBC;
+            color: #56AAFF;
         }
 
         .point-info-scale-list { list-style: none; padding: 0; margin: 0.5rem 0 0; }
@@ -765,7 +770,6 @@
     <div id="bg-wallpaper"></div>
     <div id="main-container">
         <div id="measurementInfo"></div>
-        <div id="timestamp"></div>
 
         <div id="loadingMessage" class="loading">
             <div class="loading-spinner"></div>
@@ -804,7 +808,12 @@
     <script>
         // Dev helper: decode microsite-style ?r= URL param into sessionStorage
         (function () {
-            const r = new URLSearchParams(window.location.search).get('r');
+            let r = new URLSearchParams(window.location.search).get('r');
+            if (!r) {
+                // Native simulation: index.html Sample Results button stores encoded data here
+                r = sessionStorage.getItem('nativeSampleEncoded');
+                if (r) sessionStorage.removeItem('nativeSampleEncoded');
+            }
             if (!r || sessionStorage.getItem('measurementData')) return;
             try {
                 const { getFloat16 } = float16;
@@ -839,14 +848,17 @@
                     throw new Error('Invalid NuraQR header');
 
                 const tsNum = new DataView(bytes.buffer, 3, 4).getUint32(0, true);
-                const ts = tsNum.toString();
-                const timestamp = new Date(
+                const ts = tsNum.toString().padStart(10, '0');
+                const parsedTs = new Date(
                     parseInt('20' + ts.slice(0, 2)), parseInt(ts.slice(2, 4)) - 1,
                     parseInt(ts.slice(4, 6)), parseInt(ts.slice(6, 8)), parseInt(ts.slice(8, 10))
                 );
+                const tsYear = parsedTs.getFullYear();
+                const timestamp = (!isNaN(parsedTs.getTime()) && tsYear >= 2020 && tsYear <= 2099)
+                    ? parsedTs : null;
 
                 const payload = bytes.slice(7);
-                const results = { timestamp: timestamp.toISOString() };
+                const results = timestamp ? { timestamp: timestamp.toISOString() } : {};
                 for (let i = 0; i + 3 < payload.length; i += 4) {
                     const hash = `${payload[i]}${payload[i + 1]}`;
                     const pointID = reverseMap[hash];
@@ -878,7 +890,7 @@
         // Standalone mode: hide kiosk navigation when page is opened via QR
         // ------------------------------------------------------------------
         const _urlParams = new URLSearchParams(window.location.search);
-        const isStandalone = _urlParams.get('standalone') === '1';
+        const isStandalone = _urlParams.has('r');
         // ------------------------------------------------------------------
         // NuraQR v1 encoder — mirrors the Android MeasurementResultViewModel
         // ------------------------------------------------------------------
@@ -933,7 +945,7 @@
             const cfgUrl = (typeof APP_CONFIG !== 'undefined' && APP_CONFIG.qrCodeResults?.url) || '';
             const base = cfgUrl || (window.location.origin + window.location.pathname);
             const sep = base.includes('?') ? '&' : '?';
-            return `${base}${sep}r=${encoded}&mid=${encodeURIComponent(mid)}&standalone=1`;
+            return `${base}${sep}r=${encoded}&mid=${encodeURIComponent(mid)}`;
         }
 
         // ------------------------------------------------------------------
@@ -977,16 +989,7 @@
         // ------------------------------------------------------------------
         function maybeAddShareButton() {
             const infoBar = document.querySelector('.info-bar');
-            const timestamp = document.getElementById('timestamp');
-            if (!infoBar || !timestamp) return;
-
-            if (isStandalone) {
-                // Date is already in the info bar — nothing to change
-                return;
-            }
-
-            // Non-standalone: replace date with action buttons
-            timestamp.remove();
+            if (!infoBar || isStandalone) return;
 
             const btnGroup = document.createElement('div');
             btnGroup.style.cssText = 'display:flex;align-items:center;gap:8px';
@@ -1088,6 +1091,12 @@
             );
             renderDisclaimer(locale);
             maybeAddShareButton();
+            requestAnimationFrame(function() {
+                var fixed = document.querySelector('.sticky-top-cards');
+                if (fixed) {
+                    document.getElementById('main-container').style.paddingTop = fixed.offsetHeight + 'px';
+                }
+            });
         }
 
         function showError(message) {

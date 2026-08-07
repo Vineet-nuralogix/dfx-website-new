@@ -5,18 +5,13 @@ var APP_CONFIG = {
         "WEIGHT",
         "WAIST_CIRCUM"
     ],
-    videos: [
-        "assets/videos/Anura-MagicMirror.mp4",
-        "assets/videos/Inter_Miami_JoJo_Convers.mp4",
-        "assets/videos/Argentina_Video.mp4",
-        "assets/videos/Nestle_mirror_Greece.mp4"
-    ],
     qrCodeResults: {
         // Set to true to show a Share button on the results screen that generates a QR code.
         enabled: true,
-        // URL base for the QR code. The encoded results (?r=), measurement ID (?mid=), and
-        // standalone flag (?standalone=1) are appended automatically.
+        // URL base for the QR code. The encoded results (?r=) and measurement ID (?mid=)
+        // are appended automatically. Pages opened via QR code are automatically detected
+        // as standalone (no Exit/Try Again buttons) because the ?r= param is present.
         // Leave empty to use the current page's own URL
-        url: "https://vineet-nuralogix.github.io/dfx-website-new/wellness-microsite/result.html"
+        url: ""
     }
 };
