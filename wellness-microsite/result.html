@@ -897,9 +897,11 @@
 
         // ------------------------------------------------------------------
         // Standalone mode: hide kiosk navigation when page is opened via QR
+        // ?r= present on a user's phone (no AndroidBridge) → standalone
+        // ?r= present on MMA device (AndroidBridge available) → kiosk, show controls
         // ------------------------------------------------------------------
         const _urlParams = new URLSearchParams(window.location.search);
-        const isStandalone = _urlParams.has('r');
+        const isStandalone = _urlParams.has('r') && typeof AndroidBridge === 'undefined';
         // ------------------------------------------------------------------
         // NuraQR v1 encoder — mirrors the Android MeasurementResultViewModel
         // ------------------------------------------------------------------
