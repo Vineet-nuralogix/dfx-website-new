@@ -1032,7 +1032,14 @@
         let measurementData = null;
 
         function isAndroidBridgeAvailable() {
-            return typeof AndroidBridge !== 'undefined' && AndroidBridge !== null;
+            return typeof AndroidBridge !== 'undefined' && AndroidBridge !== null
+                && typeof AndroidBridge.onJSRequest === 'function';
+        }
+
+        // WebResultScreen injects a minimal bridge with only onJSNavigateBack (no onJSRequest)
+        function isWebResultBridge() {
+            return typeof AndroidBridge !== 'undefined' && AndroidBridge !== null
+                && typeof AndroidBridge.onJSNavigateBack === 'function';
         }
 
         // Called by Android native to deliver results
@@ -1145,6 +1152,9 @@
                 } catch (error) {
                     console.error('Failed to start new measurement:', error);
                 }
+            } else if (isWebResultBridge()) {
+                // WebResultScreen (public kiosk): navigate back and let native handle re-scan
+                AndroidBridge.onJSNavigateBack();
             } else {
                 window.location.href = 'profile.html';
             }
@@ -1162,6 +1172,9 @@
                 } catch (error) {
                     console.error('Failed to navigate to home:', error);
                 }
+            } else if (isWebResultBridge()) {
+                // WebResultScreen (public kiosk): navigate back to native home
+                AndroidBridge.onJSNavigateBack();
             } else {
                 window.location.href = 'index.html';
             }
