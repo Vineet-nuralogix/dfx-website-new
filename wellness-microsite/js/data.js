@@ -1069,6 +1069,14 @@ const DeepAffexWebResultsData = (() => {
                 "lowerBound": 18,
                 "hideWhenMissing": true
             },
+            "AGE_MMA": {
+                "scales": {},
+                "decimalPlaces": 0,
+                "upperBound": 100,
+                "key": "AGE_MMA",
+                "units": "YEARS",
+                "lowerBound": 10
+            },
             "HPT_RISK_PROB_AVG": {
                 "units": "PERCENT",
                 "scales": {
@@ -2011,6 +2019,9 @@ const DeepAffexWebResultsData = (() => {
             "default": "Cardiovascular Metabolic Age",
             "zh": "心血管代谢年龄"
         },
+        "DFXPOINT_TITLE:AGE_MMA": {
+            "default": "Predicted Age MMA"
+        },
         "DFXPOINT_TITLE:WAIST_TO_HEIGHT": {
             "default": "Waist-to-Height Ratio",
             "ko": "허리둘레-신장 비율",
@@ -2928,6 +2939,9 @@ Cardiovascular Metabolic Age compares the subject's overall cardiovascular and m
 Cardiovascular disease refers to conditions affecting the heart and blood vessels, such as heart attack and stroke. This risk score is based on advanced machine learning and estimates your likelihood of developing cardiovascular disease over a user-selected time window.
 
 Multi-year Cardiovascular Disease Risk does not apply to subjects who have already had a heart attack or stroke.`
+        },
+        "DFXPOINT_DESC:AGE_MMA": {
+            "default": "AGE MMA internal use only"
         },
         "DFXPOINT_DESC:AGE": {
             "default": `Skin Age is an estimate of your age based on the condition of the surface of your face.
