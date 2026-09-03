@@ -12,6 +12,6 @@ var APP_CONFIG = {
         // are appended automatically. Pages opened via QR code are automatically detected
         // as standalone (no Exit/Try Again buttons) because the ?r= param is present.
         // Leave empty to use the current page's own URL
-        url: "https://mma.na-east.dev.anura.ai/mma-webapp/result.html"
+        url: "https://vineet-nuralogix.github.io/dfx-website-new/wellness-microsite/result.html"
     }
 };
