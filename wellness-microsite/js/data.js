@@ -53,6 +53,7 @@ const DeepAffexWebResultsData = (() => {
             "pointsIDs": [
                 "AGE",
                 "AGE_CVM",
+                "AGE_MMA",
                 "HEIGHT",
                 "WEIGHT",
                 "WAIST_CIRCUM",

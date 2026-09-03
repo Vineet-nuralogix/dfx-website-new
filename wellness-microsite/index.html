@@ -157,9 +157,69 @@
         }
 
         function showSampleResults() {
-            // Store encoded sample data for result.html to decode — no ?r= in URL so
-            // isStandalone stays false and Exit/Try Again buttons are shown (native flow).
-            sessionStorage.setItem('nativeSampleEncoded', 'TlExkyFmm6Qab1X0k6xTSQrGR9i5lkRgCn9SXMJ8VSbzADyYt3JBJmBEVHlaAEL4agdUcZJ1Q2Op/jb4wABJHNF9Qh0OQETKAwBCSxjmUGuVhFQ1jCZI9s7RV8MiklBOPZpQSCxLTfITZ06U6YBOv6deTVGFkVTxTVpJGydASSfTVUOwKjYoU+pIWa6RU0ITZms209dATxW+5ERAzNBDSqa8T00KAABsnrZAQLAlRP8MklDYTwBCn6gATYQoWT5F6KI+BenpPsQpED+F61I/RCtvPwQqnj/F6v8/he4ZQEQuTEAp57xA6CfzQagmJUJp5oZCKCRIROnkl0Wp5axFaCXBRSgh1kXp4etF');
+            // Store sample data as plain JSON — no ?r= in URL so isStandalone stays false
+            // and Exit/Try Again buttons are shown, simulating the native bridge flow.
+            var sample = {
+                "timestamp": 1741900000000,
+                "SNR": 14.5,
+                "STAR_RATING": 4,
+                "HR_BPM": 72,
+                "IHB_COUNT": 0,
+                "BR_BPM": 16,
+                "BP_SYSTOLIC": 118,
+                "BP_DIASTOLIC": 76,
+                "TEMPERATURE_SENSOR": 36.6,
+                "HRV_SDNN": 42,
+                "BP_RPP": 4.1,
+                "BP_TAU": 1.2,
+                "VITALITY": 72,
+                "MSI": 1.2,
+                "SLEEP_QUALITY": 2.3,
+                "ANXIETY_INDEX": 1.1,
+                "AGE": 35,
+                "AGE_CVM": 32,
+                "AGE_MMA": 34,
+                "BMI_CALC": 23.1,
+                "ABSI": 0.071,
+                "WAIST_TO_HEIGHT": 0.46,
+                "BP_CVD": 0.03,
+                "CVD_MULTI_YEAR_RISK_PROBS_COUNT": 20,
+                "CVD_MULTI_YEAR_RISK_PROBS_0": 0.005,
+                "CVD_MULTI_YEAR_RISK_PROBS_1": 0.010,
+                "CVD_MULTI_YEAR_RISK_PROBS_2": 0.015,
+                "CVD_MULTI_YEAR_RISK_PROBS_3": 0.020,
+                "CVD_MULTI_YEAR_RISK_PROBS_4": 0.026,
+                "CVD_MULTI_YEAR_RISK_PROBS_5": 0.031,
+                "CVD_MULTI_YEAR_RISK_PROBS_6": 0.037,
+                "CVD_MULTI_YEAR_RISK_PROBS_7": 0.043,
+                "CVD_MULTI_YEAR_RISK_PROBS_8": 0.049,
+                "CVD_MULTI_YEAR_RISK_PROBS_9": 0.056,
+                "CVD_MULTI_YEAR_RISK_PROBS_10": 0.063,
+                "CVD_MULTI_YEAR_RISK_PROBS_11": 0.070,
+                "CVD_MULTI_YEAR_RISK_PROBS_12": 0.078,
+                "CVD_MULTI_YEAR_RISK_PROBS_13": 0.086,
+                "CVD_MULTI_YEAR_RISK_PROBS_14": 0.094,
+                "CVD_MULTI_YEAR_RISK_PROBS_15": 0.103,
+                "CVD_MULTI_YEAR_RISK_PROBS_16": 0.112,
+                "CVD_MULTI_YEAR_RISK_PROBS_17": 0.121,
+                "CVD_MULTI_YEAR_RISK_PROBS_18": 0.131,
+                "CVD_MULTI_YEAR_RISK_PROBS_19": 0.141,
+                "BP_HEART_ATTACK": 0.02,
+                "BP_STROKE": 0.01,
+                "OVERALL_METABOLIC_RISK_PROB": 0.12,
+                "HPT_RISK_PROB": 0.09,
+                "DBT_RISK_PROB": 0.07,
+                "HDLTC_RISK_PROB": 0.11,
+                "TG_RISK_PROB": 0.08,
+                "FLD_RISK_PROB": 0.06,
+                "HBA1C_RISK_PROB": 0.05,
+                "MFBG_RISK_PROB": 0.04,
+                "VITAL_SCORE": 4,
+                "PHYSIO_SCORE": 3,
+                "MENTAL_SCORE": 3,
+                "PHYSICAL_SCORE": 4
+            };
+            sessionStorage.setItem('measurementData', JSON.stringify(sample));
             window.location.href = 'result.html';
         }
 
