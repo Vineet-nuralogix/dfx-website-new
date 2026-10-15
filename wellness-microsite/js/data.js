@@ -53,7 +53,6 @@ const DeepAffexWebResultsData = (() => {
             "pointsIDs": [
                 "AGE",
                 "AGE_CVM",
-                "AGE_MMA",
                 "HEIGHT",
                 "WEIGHT",
                 "WAIST_CIRCUM",
@@ -1070,14 +1069,6 @@ const DeepAffexWebResultsData = (() => {
                 "lowerBound": 18,
                 "hideWhenMissing": true
             },
-            "AGE_MMA": {
-                "scales": {},
-                "decimalPlaces": 0,
-                "upperBound": 100,
-                "key": "AGE_MMA",
-                "units": "YEARS",
-                "lowerBound": 10
-            },
             "HPT_RISK_PROB_AVG": {
                 "units": "PERCENT",
                 "scales": {
@@ -2017,11 +2008,8 @@ const DeepAffexWebResultsData = (() => {
             "zh": "皮肤年龄"
         },
         "DFXPOINT_TITLE:AGE_CVM": {
-            "default": "Cardiovascular Metabolic Age",
-            "zh": "心血管代谢年龄"
-        },
-        "DFXPOINT_TITLE:AGE_MMA": {
-            "default": "Predicted Age MMA"
+            "default": "Physiological Age",
+            "zh": "生理年龄"
         },
         "DFXPOINT_TITLE:WAIST_TO_HEIGHT": {
             "default": "Waist-to-Height Ratio",
@@ -2926,13 +2914,13 @@ R (血管阻力) x C (动脉顺应性)。
 通常情况下，Tau值高的人比Tau值低的人有更好的血管健康状况。此外，某些活动可导致Tau值立即发生变化 (例如饮酒、吸烟)。`
         },
         "DFXPOINT_DESC:AGE_CVM": {
-            "default": `*Cardiovascular Metabolic Age* is an estimate of the subject's cardiovascular and metabolic health age, calculated using the subject's chronological age and health indicators derived from a facial blood flow (TOI) measurement.
+            "default": `*Physiological Age* is an estimate of the subject's cardiovascular and metabolic health age, calculated using the subject's chronological age and health indicators derived from a facial blood flow (TOI) measurement.
 
-Cardiovascular Metabolic Age is derived from a formula that combines the subject's chronological age with health indicators estimated from facial blood flow information captured using TOI. This estimate reflects several contributing factors, including cardiovascular disease risk; metabolic health risks such as hypertension, diabetes and pre-diabetes risk, hypercholesterolemia, and hypertriglyceridemia; cardiac health indicators such as cardiac workload and vascular capacity; and demographic information such as Body Mass Index.
+Physiological Age is derived from a formula that combines the subject's chronological age with health indicators estimated from facial blood flow information captured using TOI. This estimate reflects several contributing factors, including cardiovascular disease risk; metabolic health risks such as hypertension, diabetes and pre-diabetes risk, hypercholesterolemia, and hypertriglyceridemia; cardiac health indicators such as cardiac workload and vascular capacity; and demographic information such as Body Mass Index.
 
-Cardiovascular Metabolic Age compares the subject's overall cardiovascular and metabolic health with their chronological age. A subject with a healthier lifestyle, lower cardiovascular and metabolic risk, and better cardiac health is more likely to have a Cardiovascular Metabolic Age lower than their chronological age.
+Physiological Age compares the subject's overall cardiovascular and metabolic health with their chronological age. A subject with a healthier lifestyle, lower cardiovascular and metabolic risk, and better cardiac health is more likely to have a Physiological Age lower than their chronological age.
 
-*There is no interpretation table for AGE_CVM.*`
+*There is no interpretation table for Physiological Age.*`
         },
         "DFXPOINT_DESC:CVD_MULTI_YEAR_RISK_PROBS": {
             "default": `Multi-year CVD Risk is your likelihood of experiencing your first cardiovascular disease event within a selected time horizon from 1 to 20 years, expressed as a percentage.
@@ -2940,9 +2928,6 @@ Cardiovascular Metabolic Age compares the subject's overall cardiovascular and m
 Cardiovascular disease refers to conditions affecting the heart and blood vessels, such as heart attack and stroke. This risk score is based on advanced machine learning and estimates your likelihood of developing cardiovascular disease over a user-selected time window.
 
 Multi-year Cardiovascular Disease Risk does not apply to subjects who have already had a heart attack or stroke.`
-        },
-        "DFXPOINT_DESC:AGE_MMA": {
-            "default": "AGE MMA internal use only"
         },
         "DFXPOINT_DESC:AGE": {
             "default": `Skin Age is an estimate of your age based on the condition of the surface of your face.
