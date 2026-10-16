@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MagicMirror Appliance</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: #000;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Logo — center of screen */
+        .overlay-logo {
+            width: 90%;
+            max-width: 520px;
+            height: auto;
+            display: block;
+        }
+
+        /* Action buttons — bottom center */
+        .overlay-footer {
+            position: fixed;
+            bottom: 48px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            width: 80%;
+            max-width: 300px;
+        }
+
+        .next-button {
+            background: #005DBC;
+            color: white;
+            border: none;
+            padding: 14px 36px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .next-button:hover { opacity: 0.85; }
+
+        /* Settings & language — top right */
+        .floating-actions {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 12px;
+        }
+
+        .settings-button {
+            width: 44px;
+            height: 44px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .settings-button svg {
+            width: 20px;
+            height: 20px;
+            stroke: #fff;
+            fill: none;
+            stroke-width: 1.6;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .settings-button:hover { background: rgba(255,255,255,0.25); }
+
+        .language-menu {
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            width: 100px;
+            padding: 8px;
+            background: #1a1a1a;
+            border-radius: 12px;
+            border: 1px solid #444;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        .language-menu.active { display: flex; }
+
+        .language-option {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 0.95rem;
+            padding: 8px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: right;
+        }
+
+        .language-option:hover { background: rgba(255,255,255,0.1); }
+    </style>
+</head>
+<body>
+
+    <!-- Logo — center of screen -->
+    <img class="overlay-logo" src="assets/imgs/Anura-MagicMirror-english.png" alt="MagicMirror Appliance">
+
+    <!-- Settings & Language — top right -->
+    <div class="floating-actions">
+        <div class="settings-button" onclick="navigateToSettings()">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </div>
+        <div class="settings-button" id="language-button" onclick="toggleLanguageMenu(event)">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3c-2.5 3-4 5.7-4 9s1.5 6 4 9"/><path d="M12 3c2.5 3 4 5.7 4 9s-1.5 6-4 9"/><line x1="3" y1="12" x2="21" y2="12"/><path d="M3.6 7.5h16.8M3.6 16.5h16.8"/></svg>
+        </div>
+        <div class="language-menu" id="language-menu">
+            <button class="language-option" onclick="handleLanguageSelection('zh')">中文</button>
+            <button class="language-option" onclick="handleLanguageSelection('en')">English</button>
+        </div>
+    </div>
+
+    <!-- Action buttons — bottom center -->
+    <div class="overlay-footer">
+        <button class="next-button" id="profile-button" onclick="navigateToProfile()">Continue</button>
+        <button class="next-button" id="sample-results-button" style="background:transparent;border:1px solid #fff;" onclick="showSampleResults()">Sample Results</button>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="js/common.js"></script>
+    <script>
+        const languages = {
+            'zh': { 'profile-button': '继续', 'sample-results-button': '样本结果' },
+            'en': { 'profile-button': 'Continue', 'sample-results-button': 'Sample Results' }
+        };
+
+        // --- Android bridge helpers ---
+        function isAndroidBridgeAvailable() {
+            return typeof AndroidBridge !== 'undefined';
+        }
+
+        function showSampleResults() {
+            // Store encoded sample data for result.html to decode — no ?r= in URL so
+            // isStandalone stays false and Exit/Try Again buttons are shown (native flow).
+            sessionStorage.setItem('nativeSampleEncoded', 'TlExkyFmm6Qab1X0k6xTSQrGR9i5lkRgCn9SXMJ8VSbzADyYt3JBJmBEVHlaAEL4agdUcZJ1Q2Op/jb4wABJHNF9Qh0OQETKAwBCSxjmUGuVhFQ1jCZI9s7RV8MiklBOPZpQSCxLTfITZ06U6YBOv6deTVGFkVTxTVpJGydASSfTVUOwKjYoU+pIWa6RU0ITZms209dATxW+5ERAzNBDSqa8T00KAABsnrZAQLAlRP8MklDYTwBCn6gATYQoWT5F6KI+BenpPsQpED+F61I/RCtvPwQqnj/F6v8/he4ZQEQuTEAp57xA6CfzQagmJUJp5oZCKCRIROnkl0Wp5axFaCXBRSgh1kXp4etF');
+            window.location.href = 'result.html';
+        }
+
+        function navigateToProfile() {
+            window.location.href = 'profile.html';
+        }
+
+        function getDeviceID() {
+            if (isAndroidBridgeAvailable()) {
+                try { return AndroidBridge.onJSRequest(JSON.stringify({ type: "getDeviceID", data: null })); }
+                catch (e) { return "error"; }
+            }
+            return "mock_device_id";
+        }
+
+        function getCurrentLanguageCode() {
+            if (isAndroidBridgeAvailable()) {
+                try { return AndroidBridge.onJSRequest(JSON.stringify({ type: "getCurrentLanguageCode", data: null })); }
+                catch (e) { return "en"; }
+            }
+            return "en";
+        }
+
+        function navigateToSettings() {
+            if (isAndroidBridgeAvailable()) {
+                try { AndroidBridge.onJSRequest(JSON.stringify({ type: "navigate", data: JSON.stringify({ destination: "agent/login", params: {} }) })); }
+                catch (e) { console.error(e); }
+            }
+        }
+
+        // --- Language ---
+        const languageMenu = document.getElementById('language-menu');
+        let isLanguageMenuVisible = false;
+
+        function updateLanguageMenuVisibility() {
+            languageMenu.classList.toggle('active', isLanguageMenuVisible);
+        }
+
+        function toggleLanguageMenu(event) {
+            if (event) event.stopPropagation();
+            isLanguageMenuVisible = !isLanguageMenuVisible;
+            updateLanguageMenuVisibility();
+        }
+
+        function handleLanguageSelection(languageCode) {
+            const lang = languages[languageCode];
+            if (lang) {
+                Object.keys(lang).forEach(k => {
+                    const el = document.getElementById(k);
+                    if (el) el.innerText = lang[k];
+                });
+            }
+            localStorage.setItem('selectedLanguage', languageCode);
+            if (isAndroidBridgeAvailable()) {
+                try { AndroidBridge.onJSRequest(JSON.stringify({ type: "switchLanguage", data: languageCode })); }
+                catch (e) { console.error(e); }
+            }
+            updateSelectedLanguage(languageCode);
+            isLanguageMenuVisible = false;
+            updateLanguageMenuVisibility();
+        }
+
+        function updateSelectedLanguage(selectedCode) {
+            document.querySelectorAll('.language-option').forEach(option => {
+                const match = option.onclick.toString().match(/handleLanguageSelection\('([^']+)'\)/);
+                if (match) {
+                    const code = match[1];
+                    const base = option.textContent.replace(' ✓', '').replace('✔', '');
+                    option.innerHTML = code === selectedCode ? base + ' <span style="color:#F65F77;">✔</span>' : base;
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const savedLang = localStorage.getItem('selectedLanguage');
+            handleLanguageSelection(savedLang || getCurrentLanguageCode());
+        });
+    </script>
+</body>
+</html>
